@@ -43,7 +43,7 @@ export function VoicemailGreetingComponent() {
       <div className="grid grid-cols-3 gap-4 border-t border-b py-4">
         <div>
           <Label htmlFor="language">Language</Label>
-          <Select id="language">
+          <Select>
             <SelectTrigger>
               <SelectValue placeholder="English" />
             </SelectTrigger>
@@ -56,7 +56,7 @@ export function VoicemailGreetingComponent() {
         </div>
         <div>
           <Label htmlFor="accent">Accent</Label>
-          <Select id="accent">
+          <Select>
             <SelectTrigger>
               <SelectValue placeholder="USA" />
             </SelectTrigger>
@@ -69,7 +69,7 @@ export function VoicemailGreetingComponent() {
         </div>
         <div>
           <Label htmlFor="voice">Voice</Label>
-          <Select id="voice">
+          <Select>
             <SelectTrigger>
               <SelectValue placeholder="Jenny" />
             </SelectTrigger>
@@ -84,7 +84,7 @@ export function VoicemailGreetingComponent() {
       <div className="grid grid-cols-2 gap-4 py-4">
         <div>
           <Label htmlFor="category">Category</Label>
-          <Select id="category">
+          <Select>
             <SelectTrigger>
               <SelectValue placeholder="Corporate" />
             </SelectTrigger>
@@ -97,7 +97,7 @@ export function VoicemailGreetingComponent() {
         </div>
         <div>
           <Label htmlFor="music">Music</Label>
-          <Select id="music">
+          <Select>
             <SelectTrigger>
               <SelectValue placeholder="Popular corporate upbeat" />
             </SelectTrigger>

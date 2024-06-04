@@ -1,4 +1,3 @@
-import { NextApiRequest } from "next"
 import { NextResponse } from "next/server"
 import generateVoices from "../server/config/voices"
 import ElevenLabs from "../server/lib/ElevenLabs"

@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  // Gradinate color of amirca flag
+  background: linear-gradient(120deg, rgba(var(--background-start-rgb), 1) 0%, rgba(var(--background-start-rgb), 1) 15%, rgba(var(--background-end-rgb), 1) 10%, rgba(var(--background-end-rgb), 1) 10%)
+    opacity(50%);
+
+  background-size: 45px 45px;
+  color: rgb(var(--foreground-rgb));
+  font-family: var(--font-libre_franklin), sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  margin: 0;
+  min-height: 100vh;
+  padding: 0;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-libre_franklin), sans-serif;
+}

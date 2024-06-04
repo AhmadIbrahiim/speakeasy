@@ -15,7 +15,7 @@ export async function GET(req: Request, res: NextResponse) {
     })
 
     await addMusic(fileName, fileId)
-    let usersPath = path.join(process.cwd(), `tmp/${fileId}-bg.mp3`)
+    let usersPath = path.join(require("os").tmpdir(), `${fileId}-bg.mp3`)
     let audioInMp3Buffer = fs.readFileSync(usersPath)
     return new Response(audioInMp3Buffer, {
       status: 200,

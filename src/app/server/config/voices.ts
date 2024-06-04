@@ -45,7 +45,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
       .input("background.mp3")
       .inputFormat("mp3")
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
-      .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.5[a1]", "[a0][a1]amix=inputs=2:duration=first"])
+      .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.3[a1]", "[a0][a1]amix=inputs=2:duration=first"])
       .audioCodec("libmp3lame")
       .output(`temp/${fileId}-bg.mp3`)
       .outputOptions("-c:v", "copy")

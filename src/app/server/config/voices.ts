@@ -17,7 +17,7 @@ async function generateVoices({ text }: { text: string }) {
 
         text,
       })
-      const fileName = `tmp/${fileId}.mp3`
+      const fileName = process.cwd() + `/tmp/${fileId}.mp3`
 
       const fileStream = createWriteStream(fileName)
 
@@ -47,7 +47,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
       .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.3[a1]", "[a0][a1]amix=inputs=2:duration=first"])
       .audioCodec("libmp3lame")
-      .output(`tmp/${fileId}-bg.mp3`)
+      .output(process.cwd() + `/tmp/${fileId}-bg.mp3`)
       .outputOptions("-c:v", "copy")
 
     const ffmpegWav = FFmpeg()
@@ -60,7 +60,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
       .audioCodec("pcm_s16le")
       .outputOptions("-c:v", "copy")
       .outputOptions("-f", "wav")
-      .output(`tmp/${fileId}-bg.wav`)
+      .output(process.cwd() + `/tmp/${fileId}-bg.wav`)
 
     let ffmpegMp3Ended = false
     let ffmpegWavEnded = false

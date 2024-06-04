@@ -14,7 +14,7 @@ export async function GET(req: Request, res: NextResponse) {
     })
 
     await addMusic(fileName, fileId)
-    const audioInMp3Buffer = readFileSync(`temp/${fileId}-bg.mp3`)
+    const audioInMp3Buffer = readFileSync(`tmp/${fileId}-bg.mp3`)
 
     return new Response(audioInMp3Buffer, {
       status: 200,

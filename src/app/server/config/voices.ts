@@ -1,25 +1,95 @@
 import { randomUUID } from "crypto"
 import ElevenLabs from "../lib/ElevenLabs"
 import { createWriteStream } from "fs"
+const FFmpeg = require("fluent-ffmpeg")
 
 async function generateVoices({ text }: { text: string }) {
-  return new Promise<string>(async (resolve, reject) => {
+  return new Promise<{
+    fileName: string
+    fileId: string
+  }>(async (resolve, reject) => {
     try {
+      const fileId = randomUUID()
       const audio = await ElevenLabs.generate({
         voice: "Rachel",
         model_id: "eleven_turbo_v2",
+        output_format: "mp3_44100_128",
+
         text,
       })
-      const fileName = `${randomUUID()}.mp3`
+      const fileName = `temp/${fileId}.mp3`
+
       const fileStream = createWriteStream(fileName)
 
+      // waveFile.fromMuLaw(audio)
       audio.pipe(fileStream)
-      fileStream.on("finish", () => resolve(fileName)) // Resolve with the fileName
+      fileStream.on("finish", () =>
+        resolve({
+          fileName,
+          fileId: fileId,
+        }),
+      ) // Resolve with the fileName
       fileStream.on("error", reject)
     } catch (error) {
       console.error(error)
       reject(error)
     }
+  })
+}
+
+export const addMusic = async (fileName: string, fileId: string) => {
+  return new Promise<void>((resolve, reject) => {
+    const ffmpegMp3 = FFmpeg()
+      .input(fileName)
+      .inputFormat("mp3")
+      .input("background.mp3")
+      .inputFormat("mp3")
+      // Add background music to the audio with a 0.5 volume and let the audio volume be 1
+      .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.5[a1]", "[a0][a1]amix=inputs=2:duration=first"])
+      .audioCodec("libmp3lame")
+      .output(`temp/${fileId}-bg.mp3`)
+      .outputOptions("-c:v", "copy")
+
+    const ffmpegWav = FFmpeg()
+      .input(fileName)
+      .inputFormat("mp3")
+      .input("background.mp3")
+      .inputFormat("mp3")
+      // Add background music to the audio with a 0.5 volume and let the audio volume be 1
+      .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.5[a1]", "[a0][a1]amix=inputs=2:duration=first"])
+      .audioCodec("pcm_s16le")
+      .outputOptions("-c:v", "copy")
+      .outputOptions("-f", "wav")
+      .output(`temp/${fileId}-bg.wav`)
+
+    let ffmpegMp3Ended = false
+    let ffmpegWavEnded = false
+    ffmpegMp3.on("error", (err: any) => {
+      console.error("An error occurred during mp3 conversion: " + err.message)
+    })
+
+    ffmpegMp3.on("end", () => {
+      console.log("MP3 conversion completed")
+      ffmpegMp3Ended = true
+      if (ffmpegWavEnded) {
+        resolve()
+      }
+    })
+
+    ffmpegWav.on("error", (err: any) => {
+      console.error("An error occurred during wav conversion: " + err.message)
+    })
+
+    ffmpegWav.on("end", () => {
+      console.log("WAV conversion completed")
+      ffmpegWavEnded = true
+      if (ffmpegMp3Ended) {
+        resolve()
+      }
+    })
+
+    ffmpegMp3.run()
+    ffmpegWav.run()
   })
 }
 export default generateVoices

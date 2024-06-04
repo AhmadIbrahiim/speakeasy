@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
 import generateVoices, { addMusic } from "../server/config/voices"
 import ElevenLabs from "../server/lib/ElevenLabs"
-import { readFileSync } from "fs"
+import fs from "fs"
+import path from "path"
 const FFmpeg = require("fluent-ffmpeg")
 
 const runtime = "node"
@@ -14,8 +15,8 @@ export async function GET(req: Request, res: NextResponse) {
     })
 
     await addMusic(fileName, fileId)
-    const audioInMp3Buffer = readFileSync(`tmp/${fileId}-bg.mp3`)
-
+    let usersPath = path.join(process.cwd(), `tmp/${fileId}-bg.mp3`)
+    let audioInMp3Buffer = fs.readFileSync(usersPath)
     return new Response(audioInMp3Buffer, {
       status: 200,
       headers: {

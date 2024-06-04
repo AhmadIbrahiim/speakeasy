@@ -14,9 +14,17 @@ export async function GET(req: Request, res: NextResponse) {
       text: `... <break time="2.0s" /> Hello, I am a voice assistant. I can help you with your tasks. How can I help you today?`,
     })
 
+    console.log(require("os").tmpdir())
     await addMusic(fileName, fileId)
     let usersPath = path.join(require("os").tmpdir(), `${fileId}-bg.mp3`)
+    let wavePath = path.join(require("os").tmpdir(), `${fileId}-bg.wav`)
+    let originalPath = path.join(require("os").tmpdir(), `${fileId}.mp3`)
     let audioInMp3Buffer = fs.readFileSync(usersPath)
+
+    // Remove the file after reading it
+    fs.unlinkSync(usersPath)
+    fs.unlinkSync(wavePath)
+    fs.unlinkSync(originalPath)
     return new Response(audioInMp3Buffer, {
       status: 200,
       headers: {

@@ -24,8 +24,12 @@ export async function GET(req: Request, res: NextResponse) {
       },
     })
   } catch (error) {
-    return new Response("An error occurred", {
-      status: 500,
-    })
+    return new Response(
+      JSON.stringify(error, null, 10),
+
+      {
+        status: 500,
+      },
+    )
   }
 }

@@ -19,7 +19,7 @@ export async function POST(req: Request, res: NextResponse) {
         <break time="2.0s" />
         ...
 
-      ${text}
+  "${text}"
 
       ...
       <break time="2.0s" />

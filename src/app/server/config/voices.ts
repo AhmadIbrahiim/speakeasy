@@ -45,10 +45,12 @@ export const addMusic = async (fileName: string, fileId: string) => {
     const sourceMp3 = `/tmp/${fileId}.mp3`
     const mp3 = `/tmp/${fileId}-bg.mp3`
     const wav = `/tmp/${fileId}-bg.wav`
+    const backgroundMusic = process.cwd() + "/src/app/assets/background.mp3"
+    console.log(backgroundMusic)
     const ffmpegMp3 = FFmpeg()
       .input(sourceMp3)
       .inputFormat("mp3")
-      .input("background.mp3")
+      .input(backgroundMusic)
       .inputFormat("mp3")
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
       .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.3[a1]", "[a0][a1]amix=inputs=2:duration=first"])
@@ -59,7 +61,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
     const ffmpegWav = FFmpeg()
       .input(sourceMp3)
       .inputFormat("mp3")
-      .input("background.mp3")
+      .input(backgroundMusic)
       .inputFormat("mp3")
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
       .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.5[a1]", "[a0][a1]amix=inputs=2:duration=first"])

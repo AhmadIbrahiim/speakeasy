@@ -3,23 +3,18 @@ import generateVoices, { addMusic } from "../server/config/voices"
 import ElevenLabs from "../server/lib/ElevenLabs"
 import fs from "fs"
 import path from "path"
-const FFmpeg = require("fluent-ffmpeg")
 
 export async function GET(req: Request, res: NextResponse) {
   try {
     // Your API logic goes here
     const { fileId, fileName } = await generateVoices({
-      text: `... <break time="2.0s" /> Hello, I am a voice assistant. I can help you with your tasks. How can I help you today?`,
+      text: `... <break time="2.0s" /> Hello, I am a voice assistant. I can help you with your tasks. How can I help you today? <break time="2.0s" /> ...`,
     })
 
-    const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
-    FFmpeg.setFfmpegPath(ffmpegPath)
-    console.log(FFmpeg.path, FFmpeg.version)
-
     await addMusic(fileName, fileId)
-    let usersPath = path.join("", `${fileId}-bg.mp3`)
-    let wavePath = path.join("", `${fileId}-bg.wav`)
-    let originalPath = path.join("", `${fileId}.mp3`)
+    let usersPath = path.join("/tmp/", `${fileId}-bg.mp3`)
+    let wavePath = path.join("/tmp/", `${fileId}-bg.wav`)
+    let originalPath = path.join("/tmp/", `${fileId}.mp3`)
     let audioInMp3Buffer = fs.readFileSync(usersPath)
 
     // Remove the file after reading it

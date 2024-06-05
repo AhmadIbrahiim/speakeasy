@@ -30,11 +30,11 @@ async function generateVoices({ text, id = "Rachel" }: { text: string; id: strin
         }),
       ) // Resolve with the fileName
       fileStream.on("error", (er) => {
-        console.error(er)
+        console.error("Elabs error " + JSON.stringify(er, null, 10))
         reject(er)
       })
     } catch (error) {
-      console.info(JSON.stringify(error, null, 10))
+      console.info("Elabs error " + JSON.stringify(error, null, 10))
       reject(error)
     }
   })
@@ -48,13 +48,14 @@ export const addMusic = async (fileName: string, fileId: string, bg: string) => 
 
     const backgroundMusic = process.cwd() + `/src/app/assets/${bg}.mp3`
     console.log(backgroundMusic)
+    const compressLogic = ["[0:a]volume=2[a0]", "[1:a]volume=0.1[a1]", "[a0][a1]amix=inputs=2:duration=first"]
     const ffmpegMp3 = FFmpeg()
       .input(sourceMp3)
       .inputFormat("mp3")
       .input(backgroundMusic)
       .inputFormat("mp3")
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
-      .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.3[a1]", "[a0][a1]amix=inputs=2:duration=first"])
+      .complexFilter(compressLogic)
       .audioCodec("libmp3lame")
       .output(mp3)
       .outputOptions("-c:v", "copy")
@@ -65,7 +66,7 @@ export const addMusic = async (fileName: string, fileId: string, bg: string) => 
       .input(backgroundMusic)
       .inputFormat("mp3")
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
-      .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.5[a1]", "[a0][a1]amix=inputs=2:duration=first"])
+      .complexFilter(compressLogic)
       .audioCodec("pcm_s16le")
       .outputOptions("-c:v", "copy")
       .outputOptions("-f", "wav")

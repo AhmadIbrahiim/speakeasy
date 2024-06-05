@@ -15,6 +15,7 @@ import getAllVoices from "@/app/server/get-voices"
 import { Voice, VoiceResponse } from "@/types"
 import _ from "lodash"
 import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
+import CONSTANTS from "@/app/config/constants"
 
 type Props = {
   voices: Voice[]
@@ -23,11 +24,14 @@ type Props = {
 
 export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [text, setText] = useState("")
+  const [text, setText] = useState(
+    "Thank you for calling. I apologize for missing your call. I'm busy right now, but if you leave your name, number, and message, I will return your call as soon as possible.",
+  )
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const [music, setMusic] = useState<string>("popular-corporate-upbeat")
   const [accent, setAccent] = useState<string>("american")
-  const [selectedVoice, setVoice] = useState<string>("")
-  const mutation = useCreateAudioBuffer(text, selectedVoice)
+  const [selectedVoice, setVoice] = useState<string>("Rachel")
+  const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
   console.log(allVoices)
   const handlePlay = () => {
@@ -121,14 +125,16 @@ export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
         </div>
         <div>
           <Label htmlFor="music">Music</Label>
-          <Select>
+          <Select value={music} onValueChange={setMusic}>
             <SelectTrigger>
               <SelectValue placeholder="Popular corporate upbeat" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Popular corporate upbeat">Popular corporate upbeat</SelectItem>
-              <SelectItem value="Classical">Classical</SelectItem>
-              <SelectItem value="Jazz">Jazz</SelectItem>
+              {CONSTANTS.BG_MUSIC.map((music) => (
+                <SelectItem key={music.text} value={music.file}>
+                  {music.text}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

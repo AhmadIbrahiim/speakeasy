@@ -11,6 +11,7 @@ export async function POST(req: Request, res: NextResponse) {
     console.log({
       text,
       id,
+      bgId,
     })
     // Your API logic goes here
     const { fileId, fileName } = await generateVoices({

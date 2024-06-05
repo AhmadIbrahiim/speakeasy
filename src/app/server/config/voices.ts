@@ -2,7 +2,8 @@ import { randomUUID } from "crypto"
 import ElevenLabs from "../lib/ElevenLabs"
 import { createWriteStream } from "fs"
 const FFmpeg = require("fluent-ffmpeg")
-
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
+FFmpeg.setFfmpegPath(ffmpegPath)
 async function generateVoices({ text }: { text: string }) {
   return new Promise<{
     fileName: string

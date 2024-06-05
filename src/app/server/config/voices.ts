@@ -74,7 +74,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
     let ffmpegMp3Ended = false
     let ffmpegWavEnded = false
     ffmpegMp3.on("error", (err: any) => {
-      console.error("An error occurred during mp3 conversion: " + err.message)
+      console.error("An error occurred during mp3 conversion: " + JSON.stringify(err, null, 10))
       reject()
     })
 
@@ -87,7 +87,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
     })
 
     ffmpegWav.on("error", (err: any) => {
-      console.error("An error occurred during wav conversion: " + err.message)
+      console.error("An error occurred during wav conversion: " + JSON.stringify(err, null, 10))
       reject()
     })
 

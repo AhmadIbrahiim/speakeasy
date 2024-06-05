@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prod": "next build && pm2 start npm --name voicemail-greeting -- start",
+    "prod": "next build && npm run prod:stop && pm2 start npm --name voicemail-greeting -- start",
     "prod:stop": "pm2 stop voicemail-greeting"
   },
   "dependencies": {

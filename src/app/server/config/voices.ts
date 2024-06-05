@@ -29,7 +29,10 @@ async function generateVoices({ text }: { text: string }) {
           fileId: fileId,
         }),
       ) // Resolve with the fileName
-      fileStream.on("error", reject)
+      fileStream.on("error", (er) => {
+        console.error(er)
+        reject(er)
+      })
     } catch (error) {
       console.info(JSON.stringify(error, null, 10))
       reject(error)

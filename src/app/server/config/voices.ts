@@ -17,7 +17,7 @@ async function generateVoices({ text, id = "Rachel" }: { text: string; id: strin
 
         text,
       })
-      const fileName = `/tmp/${fileId}.mp3`
+      const fileName = `output/${fileId}.mp3`
 
       const fileStream = createWriteStream(fileName)
 
@@ -42,12 +42,17 @@ async function generateVoices({ text, id = "Rachel" }: { text: string; id: strin
 
 export const addMusic = async (fileName: string, fileId: string, bg: string) => {
   return new Promise<void>(async (resolve, reject) => {
-    const sourceMp3 = `/tmp/${fileId}.mp3`
-    const mp3 = `/tmp/${fileId}-bg.mp3`
-    const wav = `/tmp/${fileId}-bg.wav`
+    const sourceMp3 = process.cwd() + `/output/${fileId}.mp3`
+    const mp3 = process.cwd() + `/output/${fileId}-bg.mp3`
+    const wav = process.cwd() + `/output/${fileId}-bg.wav`
 
     const backgroundMusic = process.cwd() + `/src/app/assets/${bg}.mp3`
-    console.log(backgroundMusic)
+    console.log({
+      sourceMp3,
+      mp3,
+      wav,
+      backgroundMusic,
+    })
     const compressLogic = ["[0:a]volume=2[a0]", "[1:a]volume=0.1[a1]", "[a0][a1]amix=inputs=2:duration=first"]
     const ffmpegMp3 = FFmpeg()
       .input(sourceMp3)

@@ -20,9 +20,9 @@ export async function POST(req: Request, res: NextResponse) {
     })
 
     await addMusic(fileName, fileId, bgId)
-    let usersPath = path.join("/tmp/", `${fileId}-bg.mp3`)
-    let wavePath = path.join("/tmp/", `${fileId}-bg.wav`)
-    let originalPath = path.join("/tmp/", `${fileId}.mp3`)
+    let usersPath = path.join("output/", `${fileId}-bg.mp3`)
+    let wavePath = path.join("output/", `${fileId}-bg.wav`)
+    let originalPath = path.join("output/", `${fileId}.mp3`)
     let audioInMp3Buffer = fs.readFileSync(usersPath)
 
     // Remove the file after reading it

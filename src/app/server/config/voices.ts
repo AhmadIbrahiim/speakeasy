@@ -17,7 +17,7 @@ async function generateVoices({ text }: { text: string }) {
 
         text,
       })
-      const fileName = `${fileId}.mp3`
+      const fileName = `/tmp/${fileId}.mp3`
 
       const fileStream = createWriteStream(fileName)
 
@@ -42,19 +42,22 @@ async function generateVoices({ text }: { text: string }) {
 
 export const addMusic = async (fileName: string, fileId: string) => {
   return new Promise<void>(async (resolve, reject) => {
+    const sourceMp3 = `/tmp/${fileId}.mp3`
+    const mp3 = `/tmp/${fileId}-bg.mp3`
+    const wav = `/tmp/${fileId}-bg.wav`
     const ffmpegMp3 = FFmpeg()
-      .input(fileName)
+      .input(sourceMp3)
       .inputFormat("mp3")
       .input("background.mp3")
       .inputFormat("mp3")
       // Add background music to the audio with a 0.5 volume and let the audio volume be 1
       .complexFilter(["[0:a]volume=1[a0]", "[1:a]volume=0.3[a1]", "[a0][a1]amix=inputs=2:duration=first"])
       .audioCodec("libmp3lame")
-      .output(`${fileId}-bg.mp3`)
+      .output(mp3)
       .outputOptions("-c:v", "copy")
 
     const ffmpegWav = FFmpeg()
-      .input(fileName)
+      .input(sourceMp3)
       .inputFormat("mp3")
       .input("background.mp3")
       .inputFormat("mp3")
@@ -63,7 +66,7 @@ export const addMusic = async (fileName: string, fileId: string) => {
       .audioCodec("pcm_s16le")
       .outputOptions("-c:v", "copy")
       .outputOptions("-f", "wav")
-      .output(`${fileId}-bg.wav`)
+      .output(wav)
 
     let ffmpegMp3Ended = false
     let ffmpegWavEnded = false

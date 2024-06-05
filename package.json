@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prod": "next build && pm2 start npm --name voicemail-greeting -- start",
+    "prod:stop": "pm2 stop voicemail-greeting"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",

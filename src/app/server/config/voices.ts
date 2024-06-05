@@ -46,8 +46,6 @@ export const addMusic = async (fileName: string, fileId: string) => {
     const mp3 = `/tmp/${fileId}-bg.mp3`
     const wav = `/tmp/${fileId}-bg.wav`
 
-    const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
-    FFmpeg.setFfmpegPath(ffmpegPath)
     const backgroundMusic = process.cwd() + "/src/app/assets/background.mp3"
     console.log(backgroundMusic)
     const ffmpegMp3 = FFmpeg()

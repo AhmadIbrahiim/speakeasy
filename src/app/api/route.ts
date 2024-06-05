@@ -4,14 +4,21 @@ import ElevenLabs from "../server/lib/ElevenLabs"
 import fs from "fs"
 import path from "path"
 
-export async function GET(req: Request, res: NextResponse) {
+export async function POST(req: Request, res: NextResponse) {
   try {
+    const { text, id, bgId = "background" } = await req.json()
+
+    console.log({
+      text,
+      id,
+    })
     // Your API logic goes here
     const { fileId, fileName } = await generateVoices({
-      text: `... <break time="2.0s" /> Hello, I am a voice assistant. I can help you with your tasks. How can I help you today? <break time="2.0s" /> ...`,
+      text: `. <break time="2.0s" /> ... ${text} ... <break time="2.0s" />`,
+      id,
     })
 
-    await addMusic(fileName, fileId)
+    await addMusic(fileName, fileId, bgId)
     let usersPath = path.join("/tmp/", `${fileId}-bg.mp3`)
     let wavePath = path.join("/tmp/", `${fileId}-bg.wav`)
     let originalPath = path.join("/tmp/", `${fileId}.mp3`)

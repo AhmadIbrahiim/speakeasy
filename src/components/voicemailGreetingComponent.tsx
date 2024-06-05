@@ -11,21 +11,51 @@ import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@
 import Link from "next/link"
 import { PlayIcon } from "lucide-react"
 import { useState } from "react"
+import getAllVoices from "@/app/server/get-voices"
+import { Voice, VoiceResponse } from "@/types"
+import _ from "lodash"
+import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
 
-export function VoicemailGreetingComponent() {
+type Props = {
+  voices: Voice[]
+  allVoices: VoiceResponse[]
+}
+
+export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [text, setText] = useState("")
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const [accent, setAccent] = useState<string>("american")
+  const [selectedVoice, setVoice] = useState<string>("")
+  const mutation = useCreateAudioBuffer(text, selectedVoice)
 
+  console.log(allVoices)
   const handlePlay = () => {
+    mutation.mutation.mutateAsync().then(async (d) => {
+      const buffer = await d.blob()
+      console.log(buffer)
+      const audio = new Audio(URL.createObjectURL(buffer))
+      audio.play()
+    })
+    onPlay()
     setIsPlaying(!isPlaying)
   }
+
+  const filteredVoices = allVoices.filter((voice) => voice.labels.accent === accent)
+
+  const onPlay = () => {
+    const previewUrl = allVoices.find((voice) => voice.voice_id === selectedVoice)?.preview_url
+    console.log(previewUrl)
+    if (!previewUrl) return
+    const audio = new Audio(previewUrl)
+    audio.play()
+    setAudio(audio)
+  }
+
   return (
     <div className="max-w-2xl mx-auto my-12 p-8 bg-white rounded-lg shadow-md">
       <div className="mb-6">
-        <Textarea
-          className="w-full h-32 resize-none"
-          placeholder='"Thank you for calling. I apologize for missing your call. I&apos;m busy right now, but if you leave your name, number and message, I will return your call as soon as possible."'
-        />
+        <Textarea className="w-full h-32 resize-none" onChange={(e) => setText(e.target.value)} value={text} />
         <div className="flex justify-end mt-4">
           {isPlaying ? (
             <Button variant="destructive" onClick={handlePlay}>
@@ -40,43 +70,37 @@ export function VoicemailGreetingComponent() {
           )}
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4 border-t border-b py-4">
-        <div>
-          <Label htmlFor="language">Language</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="English" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="Spanish">Spanish</SelectItem>
-              <SelectItem value="French">French</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="grid grid-cols-2 gap-4 border-t border-b py-4">
         <div>
           <Label htmlFor="accent">Accent</Label>
-          <Select>
+          <Select value={accent} onValueChange={setAccent}>
             <SelectTrigger>
               <SelectValue placeholder="USA" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="USA">USA</SelectItem>
-              <SelectItem value="UK">UK</SelectItem>
-              <SelectItem value="Australia">Australia</SelectItem>
+              {Object.entries(voices).map(([accent, voices]) => (
+                <SelectItem key={accent} value={accent}>
+                  {/* Remove - and capitalize first letter */}
+                  {accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
         <div>
           <Label htmlFor="voice">Voice</Label>
-          <Select>
+          <Select value={selectedVoice} onValueChange={setVoice}>
             <SelectTrigger>
-              <SelectValue placeholder="Jenny" />
+              <SelectValue placeholder={filteredVoices.length > 0 ? filteredVoices[0].name : ""} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Jenny">Jenny</SelectItem>
-              <SelectItem value="John">John</SelectItem>
-              <SelectItem value="Alice">Alice</SelectItem>
+              {allVoices
+                .filter((voice) => voice?.labels?.accent === accent)
+                .map((voice, i) => (
+                  <SelectItem key={voice.voice_id} value={voice.name}>
+                    {voice.name}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>

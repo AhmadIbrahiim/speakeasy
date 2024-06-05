@@ -3,7 +3,7 @@ import ElevenLabs from "../lib/ElevenLabs"
 import { createWriteStream } from "fs"
 const FFmpeg = require("fluent-ffmpeg")
 
-async function generateVoices({ text }: { text: string }) {
+async function generateVoices({ text, id = "Rachel" }: { text: string; id: string }) {
   return new Promise<{
     fileName: string
     fileId: string
@@ -11,7 +11,7 @@ async function generateVoices({ text }: { text: string }) {
     try {
       const fileId = randomUUID()
       const audio = await ElevenLabs.generate({
-        voice: "Rachel",
+        voice: id,
         model_id: "eleven_turbo_v2",
         output_format: "mp3_44100_128",
 
@@ -40,13 +40,13 @@ async function generateVoices({ text }: { text: string }) {
   })
 }
 
-export const addMusic = async (fileName: string, fileId: string) => {
+export const addMusic = async (fileName: string, fileId: string, bg: string) => {
   return new Promise<void>(async (resolve, reject) => {
     const sourceMp3 = `/tmp/${fileId}.mp3`
     const mp3 = `/tmp/${fileId}-bg.mp3`
     const wav = `/tmp/${fileId}-bg.wav`
 
-    const backgroundMusic = process.cwd() + "/src/app/assets/background.mp3"
+    const backgroundMusic = process.cwd() + `/src/app/assets/${bg}.mp3`
     console.log(backgroundMusic)
     const ffmpegMp3 = FFmpeg()
       .input(sourceMp3)

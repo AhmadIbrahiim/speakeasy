@@ -15,7 +15,16 @@ export async function POST(req: Request, res: NextResponse) {
     })
     // Your API logic goes here
     const { fileId, fileName } = await generateVoices({
-      text: `. <break time="2.0s" /> ... ${text} ... <break time="2.0s" />`,
+      text: ` ...
+        <break time="2.0s" />
+        ...
+
+      ${text}
+
+      ...
+      <break time="2.0s" />
+      ...
+      `,
       id,
     })
 

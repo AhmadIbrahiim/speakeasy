@@ -14,7 +14,6 @@ async function generateVoices({ text, id = "Rachel" }: { text: string; id: strin
         voice: id,
         model_id: "eleven_turbo_v2",
         output_format: "mp3_44100_128",
-
         text,
       })
       const fileName = `output/${fileId}.mp3`

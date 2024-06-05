@@ -3,15 +3,17 @@ import generateVoices, { addMusic } from "../server/config/voices"
 import ElevenLabs from "../server/lib/ElevenLabs"
 import fs from "fs"
 import path from "path"
-import { path as ffmpegPath } from "@ffmpeg-installer/ffmpeg"
 const FFmpeg = require("fluent-ffmpeg")
-FFmpeg.setFfmpegPath(ffmpegPath)
+
 export async function GET(req: Request, res: NextResponse) {
   try {
     // Your API logic goes here
     const { fileId, fileName } = await generateVoices({
       text: `... <break time="2.0s" /> Hello, I am a voice assistant. I can help you with your tasks. How can I help you today?`,
     })
+
+    const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
+    FFmpeg.setFfmpegPath(ffmpegPath)
     console.log(FFmpeg.path, FFmpeg.version)
 
     await addMusic(fileName, fileId)

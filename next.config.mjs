@@ -5,6 +5,7 @@ const nextConfig = {
       "/api": ["*"],
     },
   },
+  output: "standalone",
 }
 
 export default nextConfig

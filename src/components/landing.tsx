@@ -29,7 +29,7 @@ import React from "react"
 export function Landing({ children }: { children: React.ReactElement }) {
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-950 shadow-sm max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-14 flex items-center">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white  shadow-sm max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-14 flex items-center">
         <Link className="flex items-center justify-center" href="#">
           <VoicemailIcon className="h-6 w-6" />
           <span className="sr-only">Voicemail Greetings</span>
@@ -49,12 +49,10 @@ export function Landing({ children }: { children: React.ReactElement }) {
             <div className="space-y-4 text-left">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">Create 100% Free, Professional Voicemail Greetings Instantly</h1>
-                <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Generate and customize high-quality voicemail greetings for your business or personal use at no cost or subscription.
-                </p>
+                <p className="max-w-[600px] text-gray-500 md:text-xl ">Generate and customize high-quality voicemail greetings for your business or personal use at no cost or subscription.</p>
               </div>
               <Link
-                className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
                 href="#">
                 Try It Now
               </Link>
@@ -70,9 +68,9 @@ export function Landing({ children }: { children: React.ReactElement }) {
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">Key Features</div>
+                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">Key Features</div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Powerful Voicemail Greetings</h2>
-                <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+                <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Our tool offers a wide range of professional-sounding voicemail greetings that you can customize to fit your needs.
                 </p>
               </div>
@@ -84,19 +82,19 @@ export function Landing({ children }: { children: React.ReactElement }) {
                   <li>
                     <div className="grid gap-1">
                       <h3 className="text-xl font-bold">Customizable</h3>
-                      <p className="text-gray-500 dark:text-gray-400">Easily customize the tone, language, and content of your voicemail greetings.</p>
+                      <p className="text-gray-500 ">Easily customize the tone, language, and content of your voicemail greetings.</p>
                     </div>
                   </li>
                   <li>
                     <div className="grid gap-1">
                       <h3 className="text-xl font-bold">Professional-Sounding</h3>
-                      <p className="text-gray-500 dark:text-gray-400">Our greetings are recorded by professional voice artists to ensure a high-quality experience.</p>
+                      <p className="text-gray-500 ">Our greetings are recorded by professional voice artists to ensure a high-quality experience.</p>
                     </div>
                   </li>
                   <li>
                     <div className="grid gap-1">
                       <h3 className="text-xl font-bold">100% Free to Use</h3>
-                      <p className="text-gray-500 dark:text-gray-400">Create and use as many voicemail greetings as you need without any cost.</p>
+                      <p className="text-gray-500 ">Create and use as many voicemail greetings as you need without any cost.</p>
                     </div>
                   </li>
                 </ul>
@@ -108,21 +106,21 @@ export function Landing({ children }: { children: React.ReactElement }) {
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid gap-10 sm:px-10 md:gap-16 md:grid-cols-2">
               <div className="space-y-4">
-                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">Contact Us</div>
+                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm ">Contact Us</div>
                 <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">Have a Question? Get in Touch.</h2>
                 <Link
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+                  className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
                   href="#">
                   Contact Us
                 </Link>
               </div>
               <div className="flex flex-col items-start space-y-4">
-                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">Support</div>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed dark:text-gray-400">
+                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm ">Support</div>
+                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed ">
                   Our team is here to help you create the perfect voicemail greeting for your needs. {"Don't"} hesitate to reach out with any questions or feedback.
                 </p>
                 <Link
-                  className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                  className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
                   href="#">
                   Contact Support
                 </Link>
@@ -132,7 +130,7 @@ export function Landing({ children }: { children: React.ReactElement }) {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">2024 PrefectGreet. All rights reserved. </p>
+        <p className="text-xs text-gray-500 ">2024 PrefectGreet. All rights reserved. </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
             Terms of Service

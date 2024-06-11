@@ -102,6 +102,135 @@ export function Landing({ children }: { children: React.ReactElement }) {
             </div>
           </div>
         </section>
+
+        <section className="w-full max-w-[1200px] mx-auto py-12 md:py-24 lg:py-32 border-t" id="cta">
+          <div className="container mx-auto p-4">
+            <div className="root-content">
+              <p className="mb-4">
+                Looking for a professional voicemail greeting solution that elevates your communication? Your phone greeting is the first impression callers get. Make it count with Perfect Greet.
+              </p>
+              <p className="mb-4">
+                Our custom voicemail greeting generator enhances your image and professionalism. Personalize your text, choose a voice, add background music, and download in multiple formats.
+              </p>
+              <p className="mb-4">Take your phone greeting to the next level with our auto attendant voice generator. Here’s how our features can meet your specific needs:</p>
+              <h2 className="text-xl font-bold mb-2">Stand Out: Personalize Your Text</h2>
+              <p className="mb-4">Personalizing your text helps you communicate effectively with callers. Create greeting messages that convey exactly what you want.</p>
+              <h3 className="text-lg font-semibold mb-2">Craft Your Message, Your Way</h3>
+              <p className="mb-4">
+                Thank your customers for reaching out and show appreciation for their business. Share important details like office hours, reasons for missed calls, and expected callback times. Keep
+                callers informed and set clear expectations.
+              </p>
+              <p className="mb-4">Welcome callers warmly and encourage them to leave a message. Provide excellent customer service and never miss important messages.</p>
+              <p className="mb-4">
+                Offer alternative contact methods, such as email addresses or other phone numbers. Guide callers to the right departments even when you’re unavailable. Show that their needs are your
+                top priority.
+              </p>
+              <h3 className="text-lg font-semibold mb-2">Adapt to Different Occasions</h3>
+              <h4 className="text-md font-medium mb-2">After-Hours Message:</h4>
+              <p className="mb-4">
+                Inform callers that your office is currently closed. Provide office hours and expected callback times. Ensure all inquiries are addressed and never miss business opportunities.
+              </p>
+              <h4 className="text-md font-medium mb-2">Out of Office:</h4>
+              <p className="mb-4">
+                Inform callers of your return date, offer alternative contact methods, and provide an emergency contact number. Keep your customers satisfied even when you’re not available.
+              </p>
+              <h4 className="text-md font-medium mb-2">Special Holiday Greeting:</h4>
+              <p className="mb-4">
+                Create a friendly holiday greeting that informs callers of your office hours. Build stronger relationships by wishing them well and keeping them informed about any changes.
+              </p>
+              <h4 className="text-md font-medium mb-2">Customer Feedback:</h4>
+              <p className="mb-4">Invite callers to share their opinions, experiences, and suggestions. Collect valuable insights to improve your products and services.</p>
+              <h4 className="text-md font-medium mb-2">Sales or Promotions:</h4>
+              <p className="mb-4">Inform callers about your current offers, discounts, or promotions. Boost sales by reaching out to customers directly.</p>
+              <h4 className="text-md font-medium mb-2">Weather-Related Closures:</h4>
+              <p className="mb-4">
+                Inform callers of office closures due to severe weather. Provide updates on when your office will resume operations. Show that you prioritize their safety while maintaining smooth
+                business operations.
+              </p>
+              <h4 className="text-md font-medium mb-2">Technical Difficulties:</h4>
+              <p className="mb-4">
+                Address any technical issues affecting communication. Inform callers of alternative contact methods or expected resolution times. Keep communication open and show that you’re working
+                to resolve the issue quickly.
+              </p>
+              <h4 className="text-md font-medium mb-2">Frequently Asked Questions:</h4>
+              <p className="mb-4">Direct callers to a recorded FAQ section. Provide self-help information and reduce the need for callbacks. Save time for both callers and your team.</p>
+              <p className="mb-4">Our tool helps you create excellent voicemail greetings for various situations, including regular business calls, holiday messages, and special announcements.</p>
+              <h3 className="text-lg font-semibold mb-2">Tips for Perfecting Your Script</h3>
+              <p className="mb-4">Every detail matters when crafting a greeting script. Here are three tips for creating the perfect phone message:</p>
+              <h4 className="text-md font-medium mb-2">The Power of Punctuation</h4>
+              <p className="mb-4">
+                Commas and periods can significantly impact how your voicemail is perceived. Commas help your message flow smoothly, while periods clearly indicate the end of a thought. This makes
+                your greeting sound more professional.
+              </p>
+              <h4 className="text-md font-medium mb-2">Adding Pauses</h4>
+              <p className="mb-4">
+                Add pauses to your voice message recording by clicking the space bar between sentences. Each pause, adding just 0.5 seconds, makes your message sound more natural and thoughtful.
+              </p>
+              <h4 className="text-md font-medium mb-2">Using Examples</h4>
+              <p className="mb-4">
+                {`We provide a range of customized examples to suit different communication styles. Click "see examples" at the bottom right of the text box to view them. These examples can help you
+                start writing your own greeting that matches your brand voice.`}
+              </p>
+              <h2 className="text-xl font-bold mb-2">Enhance Your Brand Image: Choosing the Voice</h2>
+              <p className="mb-4">
+                Choosing the right voice, language, accent, and gender for your phone greeting can significantly impact callers. Build stronger relationships with customers, earn their trust, and make
+                your business stand out.
+              </p>
+              <h3 className="text-lg font-semibold mb-2">Choosing the Right Voice</h3>
+              <p className="mb-4">The right voice can make your brand stand out and leave a positive impression on callers.</p>
+              <p className="mb-4">
+                Imagine a tech startup choosing a friendly voice to appear young and welcoming. Conversely, a law firm might choose a calm and confident voice to convey professionalism and
+                trustworthiness.
+              </p>
+              <p className="mb-4">Our custom voicemail greeting maker allows you to choose the perfect voice to make your business sound professional and leave a lasting impression.</p>
+              <h3 className="text-lg font-semibold mb-2">Choosing the Right Language and Accent</h3>
+              <p className="mb-4">
+                The language and accent used in your phone greeting are crucial. For businesses serving a global audience, a neutral English accent ensures clarity and comfort for all callers. For
+                local businesses, a regional dialect can create an immediate connection.
+              </p>
+              <p className="mb-4">Whether you aim to reach a wide audience or connect locally, we offer various languages and accents for your voicemail recording.</p>
+              <h3 className="text-lg font-semibold mb-2">{`Choosing the Right Speaker's Gender`}</h3>
+              <p className="mb-4">
+                {`The speaker's gender can help align your brand identity with your customers. For example, a childcare center might choose a female voice to sound caring and welcoming, while a
+                technology company might choose a male voice to sound authoritative and experienced.`}
+              </p>
+              <p className="mb-4">Our voicemail recording creator offers a variety of voices to help your brand connect with more people and build trust.</p>
+              <h2 className="text-xl font-bold mb-2">Set the Mood with Background Music</h2>
+              <p className="mb-4">
+                The right music choice can leave a lasting impression on callers. Music that matches your brand identity helps you connect with customers and build stronger relationships.
+              </p>
+              <p className="mb-4">
+                Imagine a tech startup choosing an upbeat, modern song to sound energetic and innovative. Alternatively, a law firm might select classical music to convey professionalism and
+                trustworthiness.
+              </p>
+              <p className="mb-4">
+                Our professional voicemail greeting generator offers royalty-free music, allowing you to use it without extra costs or legal issues. Use your voice message recordings without limits
+                and maximize their potential.
+              </p>
+              <h2 className="text-xl font-bold mb-2">Hear Your Message: Listening to Your Unique Voicemail Greetings</h2>
+              <p className="mb-4">
+                Listening to your recorded audio message before downloading it is crucial. Catch any mistakes, ensure clarity, and verify the tone and music. Our tool makes this easy, helping you
+                create a professional and appealing greeting.
+              </p>
+              <p className="mb-4">{`When satisfied with your customizations, click the "add to cart" button to purchase.`}</p>
+              <p className="mb-4">
+                <b>Tip for Getting the Right Pronunciation</b>
+                <br />
+                {` Ensure your brand name and unique terms are pronounced correctly by spelling them out phonetically in the text box. This helps callers hear and pronounce your brand name correctly,
+                enhancing your business's professionalism.`}
+              </p>
+              <h2 className="text-xl font-bold mb-2">Get Your Voicemail Greetings in Any Format: Download with Ease</h2>
+              <p className="mb-4">After payment, you will be redirected to the download page to get your recordings. Enter your billing address and print your invoice.</p>
+              <p className="mb-4">
+                We provide downloads in various formats compatible with most phone systems, including MP3 and WAV. Need a specific format? Let us know, and we’ll convert your recording free of charge.
+              </p>
+              <p className="mb-4">
+                Want to look and sound more professional? Our easy-to-use service helps you create voice message recordings that stand out. Customize everything from the words to the voice to the
+                music. Try Perfect Greet today and see the difference! Your callers and your business will thank you.
+              </p>
+            </div>
+          </div>
+        </section>
         <section className="w-full max-w-[1200px] mx-auto py-12 md:py-24 lg:py-32 border-t" id="contact">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid gap-10 sm:px-10 md:gap-16 md:grid-cols-2">

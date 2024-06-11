@@ -278,4 +278,6 @@ const CONSTANTS = {
   ],
 }
 
+export const PROD_URL = "https://www.perfectgreet.site"
+
 export default CONSTANTS

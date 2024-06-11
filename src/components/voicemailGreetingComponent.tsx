@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import Link from "next/link"
-import { PlayIcon } from "lucide-react"
+import { Download, PlayIcon } from "lucide-react"
 import { useState } from "react"
 import getAllVoices from "@/app/server/get-voices"
 import { Voice, VoiceResponse } from "@/types"
 import _ from "lodash"
 import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
 import CONSTANTS from "@/app/config/constants"
+import { PlayButton } from "./ui/playButton"
 
 type Props = {
   voices: Voice[]
@@ -33,16 +34,32 @@ export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
   const [selectedVoice, setVoice] = useState<string>("Rachel")
   const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
-  console.log(allVoices)
   const handlePlay = () => {
     mutation.mutation.mutateAsync().then(async (d) => {
       const buffer = await d.blob()
       console.log(buffer)
       const audio = new Audio(URL.createObjectURL(buffer))
+
+      audio.onended = () => {
+        setIsPlaying(false)
+      }
+
+      audio.onplay = () => {
+        setIsPlaying(true)
+      }
       audio.play()
     })
-    onPlay()
-    setIsPlaying(!isPlaying)
+  }
+
+  const download = () => {
+    mutation.mutation.mutateAsync().then(async (d) => {
+      const buffer = await d.blob()
+      const url = URL.createObjectURL(buffer)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "VoicemailGreeting.mp3"
+      a.click()
+    })
   }
 
   const filteredVoices = allVoices.filter((voice) => voice.labels.accent === accent)
@@ -61,17 +78,7 @@ export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
       <div className="mb-6">
         <Textarea className="w-full h-32 resize-none" onChange={(e) => setText(e.target.value)} value={text} />
         <div className="flex justify-end mt-4">
-          {isPlaying ? (
-            <Button variant="destructive" onClick={handlePlay}>
-              <PauseIcon className="mr-2" />
-              Stop
-            </Button>
-          ) : (
-            <Button variant="destructive" onClick={handlePlay}>
-              <PlayIcon className="mr-2" />
-              Play
-            </Button>
-          )}
+          <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 border-t border-b py-4">
@@ -140,21 +147,13 @@ export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
         </div>
       </div>
       <div className="flex items-center justify-between py-4">
-        {isPlaying ? (
-          <Button variant="destructive" onClick={handlePlay}>
-            <PauseIcon className="mr-2" />
-            Stop
-          </Button>
-        ) : (
-          <Button variant="destructive" onClick={handlePlay}>
-            <PlayIcon className="mr-2" />
-            Play
-          </Button>
-        )}
+        <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
+
         <div className="flex items-center">
-          <span className="text-sm text-gray-500">0:00 / 0:14</span>
-          <Button className="ml-4" variant="default">
-            Add to Cart
+          {/* Download button */}
+          <Button variant="link" onClick={download}>
+            <Download className="mr-2" />
+            Download
           </Button>
         </div>
       </div>

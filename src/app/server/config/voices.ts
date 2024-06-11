@@ -1,19 +1,29 @@
 import { randomUUID } from "crypto"
 import ElevenLabs from "../lib/ElevenLabs"
-import { createWriteStream } from "fs"
+import { createWriteStream, promises as fs } from "fs"
+import _ from "lodash"
 const FFmpeg = require("fluent-ffmpeg")
 
-async function generateVoices({ text, id = "Rachel" }: { text: string; id: string }) {
+async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; id: string; bg: string }) {
   return new Promise<{
     fileName: string
     fileId: string
   }>(async (resolve, reject) => {
     try {
-      const fileId = randomUUID()
+      // Create a slug for the file name from the text and the voice id
+      const fileId = `${_.kebabCase(text)}-${id}-${bg}`
+
+      // Check if the file already exists
+      if (await fs.stat(`output/${fileId}.mp3`).catch(() => false)) {
+        console.log("File already exists")
+        return resolve({
+          fileName: `output/${fileId}.mp3`,
+          fileId: fileId,
+        })
+      }
       const audio = await ElevenLabs.generate({
         voice: id,
         model_id: "eleven_multilingual_v2",
-
         output_format: "mp3_44100_128",
         text,
       })

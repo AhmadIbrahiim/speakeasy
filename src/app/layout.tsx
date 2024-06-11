@@ -5,10 +5,17 @@ import "./globals.scss"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Create Free Voicemail Greetings | Professional Voicemail Generator",
-  description: "Generate high-quality professional voicemail greetings for free. Customize tone, language, and content with ease. No subscription required. Start now at PrefectGreet.site",
-  keywords:
-    "free voicemail greetings, professional voicemail generator, customize voicemail greetings, business voicemail greetings, personal voicemail greetings, professional voice artists, voicemail greeting service, 100% free voicemail greetings",
+  title: "Perfect Greet | Free Pro Voicemail Greeting - No Credit Card Needed",
+  description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
+  keywords: "free voicemail greeting, voicemail, no credit card required, free audio file, custom voicemail",
+  robots: "index, follow",
+  openGraph: {
+    title: "Perfect Greet | Free Pro Voicemail Greeting - No Credit Card Needed",
+    description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
+    type: "website",
+    locale: "en_US",
+    siteName: "Perfect Greet",
+  },
 }
 
 export default function RootLayout({

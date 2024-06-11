@@ -17,6 +17,7 @@ export async function POST(req: Request, res: NextResponse) {
     const { fileId, fileName } = await generateVoices({
       text: `"<break time="2.0s" / >" ${text} "<break time="2.0s" />"`,
       id,
+      bg: bgId,
     })
 
     await addMusic(fileName, fileId, bgId)
@@ -28,7 +29,7 @@ export async function POST(req: Request, res: NextResponse) {
     // Remove the file after reading it
     fs.unlinkSync(usersPath)
     fs.unlinkSync(wavePath)
-    fs.unlinkSync(originalPath)
+    // fs.unlinkSync(originalPath)
     return new Response(audioInMp3Buffer, {
       status: 200,
       headers: {

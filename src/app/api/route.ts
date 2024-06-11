@@ -15,7 +15,7 @@ export async function POST(req: Request, res: NextResponse) {
     })
     // Your API logic goes here
     const { fileId, fileName } = await generateVoices({
-      text: `"<break time="2.0s" / >" ${text} "<break time="2.0s" />"`,
+      text: `"<break time="2.0s" />" ${text} "<break time="2.0s" />"`,
       id,
       bg: bgId,
     })
@@ -27,9 +27,9 @@ export async function POST(req: Request, res: NextResponse) {
     let audioInMp3Buffer = fs.readFileSync(usersPath)
 
     // Remove the file after reading it
-    fs.unlinkSync(usersPath)
+    // fs.unlinkSync(usersPath)
     fs.unlinkSync(wavePath)
-    // fs.unlinkSync(originalPath)
+    fs.unlinkSync(originalPath)
     return new Response(audioInMp3Buffer, {
       status: 200,
       headers: {

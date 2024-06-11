@@ -14,7 +14,7 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
       const fileId = `${_.kebabCase(text)}-${id}-${bg}`
 
       // Check if the file already exists
-      if (await fs.stat(`output/${fileId}.mp3`).catch(() => false)) {
+      if (await fs.stat(`output/${fileId}-bg.mp3`).catch(() => false)) {
         console.log("File already exists")
         return resolve({
           fileName: `output/${fileId}.mp3`,

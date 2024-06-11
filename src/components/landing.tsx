@@ -47,9 +47,11 @@ export function Landing({ children }: { children: React.ReactElement }) {
         <section className="w-full max-w-[1200px] mx-auto py-12 ">
           <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-8">
             <div className="space-y-4 text-left">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">Create 100% Free, Professional Voicemail Greetings Instantly</h1>
-                <p className="max-w-[600px] text-gray-500 md:text-xl ">Generate and customize high-quality voicemail greetings for your business or personal use at no cost or subscription.</p>
+              <div className="space-y-6">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">100% Free Pro Voicemail Greeting</h1>
+                <p className="max-w-[600px] text-gray-500 md:text-xl  ">
+                  Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.
+                </p>
               </div>
               <Link
                 className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
@@ -67,7 +69,7 @@ export function Landing({ children }: { children: React.ReactElement }) {
         <section className="w-full max-w-[1200px] mx-auto py-10 bg-white bg-opacity-85" id="features">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
+              <div className="space-y-6">
                 <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">Key Features</div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Powerful Voicemail Greetings</h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -75,7 +77,7 @@ export function Landing({ children }: { children: React.ReactElement }) {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 lg:grid-cols-2 lg:gap-12">
+            <div className="mx-auto grid max-w-5xl items-center gap-10 lg:grid-cols-2 lg:gap-12">
               <img alt="Voicemail Greetings" className="mx-auto aspect-video overflow-hidden rounded-xl lg:order-last" width={500} src="https://mixavox.com/_nuxt/img/illus-recording.14859e6.svg" />
               <div className="flex flex-col justify-center space-y-4">
                 <ul className="grid gap-6">

@@ -5,8 +5,9 @@ import { NextRequest } from "next/server"
 export async function GET(req: NextRequest) {
   const allPosts = getSortedPostsData()
   // Your API logic goes here
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  const xml = `
+  <?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
         <loc>${PROD_URL}/</loc>
         <lastmod>${new Date().toISOString()}</lastmod>
@@ -25,8 +26,9 @@ export async function GET(req: NextRequest) {
       </url>`,
         )
         .join("")}
-    </sitemapindex>
-  `
+    </urlset>
+
+        `
 
   return new Response(xml, {
     status: 200,

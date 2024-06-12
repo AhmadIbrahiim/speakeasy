@@ -13,7 +13,7 @@ import { Download, PlayIcon } from "lucide-react"
 import { useState } from "react"
 import getAllVoices from "@/app/server/get-voices"
 import { Voice, VoiceResponse } from "@/types"
-import _ from "lodash"
+import _, { set } from "lodash"
 import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
 import CONSTANTS from "@/app/config/constants"
 import { PlayButton } from "./ui/playButton"
@@ -28,26 +28,37 @@ export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
   const [text, setText] = useState(
     "Thank you for calling. I apologize for missing your call. I'm busy right now, but if you leave your name, number, and message, I will return your call as soon as possible.",
   )
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
   const [accent, setAccent] = useState<string>("american")
   const [selectedVoice, setVoice] = useState<string>("Rachel")
   const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
   const handlePlay = () => {
+    if (isPlaying) {
+      console.log(audio)
+      audio?.pause()
+      setIsPlaying(false)
+      return
+    }
+
     mutation.mutation.mutateAsync().then(async (d) => {
       const buffer = await d.blob()
       console.log(buffer)
-      const audio = new Audio(URL.createObjectURL(buffer))
+      const url = URL.createObjectURL(buffer)
+      const newAudio = new Audio(url)
 
-      audio.onended = () => {
+      setAudio(newAudio)
+      newAudio.onended = () => {
         setIsPlaying(false)
       }
-
-      audio.onplay = () => {
+      newAudio.onplay = () => {
         setIsPlaying(true)
       }
-      audio.play()
+
+      newAudio.onloadedmetadata = () => {
+        newAudio.play()
+      }
     })
   }
 

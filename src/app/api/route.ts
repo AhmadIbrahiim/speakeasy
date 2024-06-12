@@ -14,13 +14,15 @@ export async function POST(req: Request, res: NextResponse) {
       bgId,
     })
     // Your API logic goes here
-    const { fileId, fileName } = await generateVoices({
+    const { fileId, fileName, preProcess } = await generateVoices({
       text: `"<break time="2.0s" />" ${text} "<break time="2.0s" />"`,
       id,
       bg: bgId,
     })
 
-    await addMusic(fileName, fileId, bgId)
+    if (preProcess) {
+      await addMusic(fileName, fileId, bgId)
+    }
     let usersPath = path.join("output/", `${fileId}-bg.mp3`)
     let wavePath = path.join("output/", `${fileId}-bg.wav`)
     let originalPath = path.join("output/", `${fileId}.mp3`)
@@ -28,8 +30,13 @@ export async function POST(req: Request, res: NextResponse) {
 
     // Remove the file after reading it
     // fs.unlinkSync(usersPath)
-    fs.unlinkSync(wavePath)
-    fs.unlinkSync(originalPath)
+    try {
+      fs.unlinkSync(wavePath)
+      fs.unlinkSync(originalPath)
+    } catch (error) {
+      console.log("Error deleting file", error)
+    }
+
     return new Response(audioInMp3Buffer, {
       status: 200,
       headers: {

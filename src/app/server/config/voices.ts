@@ -8,6 +8,7 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
   return new Promise<{
     fileName: string
     fileId: string
+    preProcess?: boolean
   }>(async (resolve, reject) => {
     try {
       // Create a slug for the file name from the text and the voice id
@@ -19,6 +20,7 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
         return resolve({
           fileName: `output/${fileId}.mp3`,
           fileId: fileId,
+          preProcess: false,
         })
       }
       const audio = await ElevenLabs.generate({
@@ -37,6 +39,7 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
         resolve({
           fileName,
           fileId: fileId,
+          preProcess: true,
         }),
       ) // Resolve with the fileName
       fileStream.on("error", (er) => {

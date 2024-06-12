@@ -1,7 +1,9 @@
 import { PROD_URL } from "@/app/config/constants"
+import { getSortedPostsData } from "@/lib/posts"
 import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest) {
+  const allPosts = getSortedPostsData()
   // Your API logic goes here
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
     <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -9,6 +11,20 @@ export async function GET(req: NextRequest) {
         <loc>${PROD_URL}/</loc>
         <lastmod>${new Date().toISOString()}</lastmod>
       </url>
+
+      <url>
+        <loc>${PROD_URL}/posts</loc>
+        <lastmod>${new Date().toISOString()}</lastmod>
+      </url>
+      ${allPosts
+        .map(
+          (post) =>
+            `<url>
+        <loc>${PROD_URL}/posts/${post.id}</loc>
+        <lastmod>${new Date(post.date).toISOString()}</lastmod>
+      </url>`,
+        )
+        .join("")}
     </sitemapindex>
   `
 

@@ -44,3 +44,58 @@ h5,
 h6 {
   font-family: var(--font-libre_franklin), sans-serif;
 }
+
+#blog-content {
+  hr {
+    border: 0;
+    border-top: 1px solid rgba(var(--foreground-rgb), 0.1);
+    margin: 1.5em 0;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin: 1.5em 0 0.5em;
+    @apply font-semibold;
+    // Apply gradient color to text from green to blue fit text
+    color: linear-gradient(120deg, #34d399, #2563eb);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 1.5em 0;
+    font-size: 0.875em;
+    color: rgba(var(--foreground-rgb), 0.8);
+    border: 1px solid rgba(var(--foreground-rgb), 0.1);
+    border-radius: 0.25em;
+
+    th,
+    td {
+      padding: 0.5em 1em;
+      border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1);
+    }
+
+    th {
+      background: rgba(var(--foreground-rgb), 0.05);
+      text-align: left;
+    }
+
+    tr {
+      &:nth-child(even) {
+        background: rgba(var(--foreground-rgb), 0.05);
+      }
+    }
+
+    a {
+      color: rgba(var(--foreground-rgb), 0.8);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(var(--foreground-rgb), 0.8);
+      transition: border-color 0.2s;
+
+      &:hover {
+        border-color: rgba(var(--foreground-rgb), 0.6);
+      }
+    }
+  }
+}

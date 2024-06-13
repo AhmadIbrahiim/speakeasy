@@ -60,6 +60,17 @@ h6 {
     color: linear-gradient(120deg, #34d399, #2563eb);
   }
 
+  h1 {
+    font-size: 1.6em;
+    @apply font-semibold;
+    margin: 1.5em 0 0.5em;
+  }
+
+  h3 {
+    font-size: 1.25em;
+    margin: 1.5em 0 0.5em;
+    @apply font-semibold text-stone-600;
+  }
   table {
     width: 100%;
     border-collapse: collapse;

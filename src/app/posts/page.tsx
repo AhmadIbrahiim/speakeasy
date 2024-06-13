@@ -4,6 +4,13 @@ import BaseLayout from "@/components/baseLayout"
 import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Awesome Blog",
+  description: "A collection of awesome blog posts",
+}
+
 type BlogProps = {
   title: string
   description: string

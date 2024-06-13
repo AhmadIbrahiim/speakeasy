@@ -2,15 +2,29 @@ import { getPostBySlug, getSortedPostsData } from "@/lib/posts"
 import BaseLayout from "@/components/baseLayout"
 import markdownToHtml from "@/lib/markdownToHtml"
 import Image from "next/image"
+import { Metadata } from "next"
+
+export async function generateMetadata(props: any): Promise<Metadata> {
+  const slug = props.params.slug
+  const pagePost = getPostBySlug(slug, ["title", "description", "image"])
+
+  return {
+    title: pagePost.title,
+    description: pagePost.description,
+    openGraph: {
+      images: [pagePost.image],
+    },
+  }
+}
 
 async function Home(props: any) {
   const slug = props.params.slug
   const pagePost = getPostBySlug(slug, ["title", "content", "image"])
   const content = await markdownToHtml(pagePost?.content)
+
   return (
     <BaseLayout hideHero>
       {/* Keep the existing code here */}
-
       <section className="gap-6 px-4 w-full max-w-[1200px]  " id="blog-content">
         {/* Add this <section> tag below the existing <section> tag */}
         <div className="px-4 py-6 ">

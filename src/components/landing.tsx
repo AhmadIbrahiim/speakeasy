@@ -26,7 +26,12 @@ To read more about using these font, please visit the Next.js documentation:
 import Link from "next/link"
 import React from "react"
 import BaseLayout from "./baseLayout"
+import { Metadata } from "next"
 
+export const metadata: Metadata = {
+  title: "Perfect Greet",
+  description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
+}
 export function Landing({ children }: { children: React.ReactElement }) {
   return (
     <BaseLayout>

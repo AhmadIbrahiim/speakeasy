@@ -10,12 +10,17 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Perfect Greet | Free Pro Voicemail Greeting - No Credit Card Needed",
+  title: {
+    template: "%s | Perfect Greet",
+    default: "Free Pro Voicemail Greeting - No Credit Card Needed | Perfect Greet",
+  },
+  applicationName: "Perfect Greet",
+
   description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
   keywords: "free voicemail greeting, voicemail, no credit card required, free audio file, custom voicemail",
   robots: "index, follow",
   openGraph: {
-    title: "Perfect Greet | Free Pro Voicemail Greeting - No Credit Card Needed",
+    title: "Free Pro Voicemail Greeting - No Credit Card Needed | Perfect Greet",
     description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
     type: "website",
     locale: "en_US",

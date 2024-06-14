@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
+import { GoogleTagManager } from "@next/third-parties/google"
 import "./globals.scss"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -35,6 +36,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="GTM-NWHBPJB6" />
+
       <body className={inter.className}>{children}</body>
     </html>
   )

@@ -35,7 +35,7 @@ async function Home(props: any) {
             </div>
 
             {/* Image hero in blog post */}
-            <Image src={pagePost.image} alt="Blog Post Image" width={1250} height={340} className="aspect-video object-contain" />
+            <Image src={pagePost.image} alt="Blog Post Image" width={650} height={340} className="aspect-video object-contain" />
 
             <div dangerouslySetInnerHTML={{ __html: content }} />
           </article>

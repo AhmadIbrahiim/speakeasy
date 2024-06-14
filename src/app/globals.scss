@@ -46,6 +46,18 @@ h6 {
 }
 
 #blog-content {
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5em auto;
+    // Fit image to container
+    @apply object-cover;
+    max-height: 460px; /* round image */
+    @apply rounded-lg;
+    /* Add hover effect to image to rotate  10deg */
+    @apply hover:drop-shadow-md border border-gray-200 rounded-lg;
+  }
   hr {
     border: 0;
     border-top: 1px solid rgba(var(--foreground-rgb), 0.1);

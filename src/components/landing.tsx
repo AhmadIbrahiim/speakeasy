@@ -32,9 +32,10 @@ export const metadata: Metadata = {
   title: "Perfect Greet",
   description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
 }
-export function Landing({ children }: { children: React.ReactElement }) {
+
+export function Landing({ children, title }: { children: React.ReactElement; title?: string }) {
   return (
-    <BaseLayout>
+    <BaseLayout title={title}>
       <section className="w-full max-w-[1200px] mx-auto  " id="app">
         {children}
       </section>

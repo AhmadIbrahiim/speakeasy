@@ -1,8 +1,9 @@
 import { VoicemailIcon } from "lucide-react"
 import Link from "next/link"
 import React from "react"
+import NavMenu from "./ui/NavigationMenu"
 
-export function BaseLayout({ children, hideHero = false }: { children: React.ReactElement | React.ReactElement[]; hideHero?: boolean }) {
+export function BaseLayout({ children, hideHero = false, title = "Voicemail Greeting" }: { children: React.ReactElement | React.ReactElement[]; hideHero?: boolean; title?: string }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 max-md:p-8 pb-0 ">
       <div className="flex flex-col min-h-[100dvh]">
@@ -12,15 +13,7 @@ export function BaseLayout({ children, hideHero = false }: { children: React.Rea
             <span className="sr-only">Voicemail Greetings</span>
           </Link>
           <nav className="ml-auto flex gap-4 sm:gap-6">
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="/posts">
-              Blog
-            </Link>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="#feature">
-              Features
-            </Link>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="#contact">
-              Contact
-            </Link>
+            <NavMenu />
           </nav>
         </header>
 
@@ -29,9 +22,10 @@ export function BaseLayout({ children, hideHero = false }: { children: React.Rea
             <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-8">
               <div className="space-y-4 text-left">
                 <div className="space-y-6">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">100% Free Pro Voicemail Greeting</h1>
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">100% Free Pro {title}</h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl  ">
-                    Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.
+                    Create professional and personalized {String(title).toLocaleLowerCase()} for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting
+                    impression.
                   </p>
                 </div>
                 <Link

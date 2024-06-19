@@ -13,9 +13,10 @@ export async function POST(req: Request, res: NextResponse) {
       id,
       bgId,
     })
+    const finalText = `.<break time="2.5s" /> ${text} <break time="1.5s" />`
     // Your API logic goes here
     const { fileId, fileName, preProcess } = await generateVoices({
-      text: `"<break time="2.0s" />" ${text} "<break time="2.0s" />"`,
+      text: finalText?.replaceAll("⌛", `<break time="0.5s" />"`),
       id,
       bg: bgId,
     })

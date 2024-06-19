@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import { Voice, VoiceResponse } from "@/types"
 
-export const MainForm = () => {
+export enum PageTarget {
+  HOLD = "hold",
+  MAIN = "main",
+}
+export const MainForm = ({ target = PageTarget.MAIN }) => {
   const { data: voices = [], isLoading } = useQuery({
     queryKey: ["voices"],
     queryFn: async () => {
@@ -28,7 +32,7 @@ export const MainForm = () => {
     }) => accent,
   ) as unknown as Voice[]
 
-  return <VoicemailGreetingComponent voices={voicesGroupedByAccent} allVoices={voices as unknown as VoiceResponse[]} />
+  return <VoicemailGreetingComponent target={target} voices={voicesGroupedByAccent} allVoices={voices as unknown as VoiceResponse[]} />
 }
 
 export default MainForm

@@ -1,5 +1,5 @@
 ---
-title: Why Perfect Greet Wins the Comparison Against Narakeet
+title: Why Perfect Greet Wins Against Narakeet
 date: "2024-06-13"
 image: "/posts/why-perfect-greet-wins.png"
 description: A comparison of Perfect Greet and Narakeet, two services for creating professional voicemail greetings.

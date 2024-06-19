@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Perfect Greet",
   },
+  alternates: {
+    canonical: `https://www.perfectgreet.site/`,
+  },
 }
 
 export default function RootLayout({

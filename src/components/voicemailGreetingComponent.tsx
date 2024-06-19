@@ -17,16 +17,25 @@ import _, { set } from "lodash"
 import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
 import CONSTANTS from "@/app/config/constants"
 import { PlayButton } from "./ui/playButton"
+import { PageTarget } from "./server/mainForm"
 
 type Props = {
   voices: Voice[]
   allVoices: VoiceResponse[]
+  target: PageTarget
 }
 
-export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
+export function VoicemailGreetingComponent({ voices, allVoices, target }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [text, setText] = useState(
-    "Thank you for calling. I apologize for missing your call. I'm busy right now, but if you leave your name, number, and message, I will return your call as soon as possible.",
+    target === PageTarget.MAIN
+      ? "Thank you for calling. I apologize for missing your call. I'm busy right now, but if you leave your name, number, and message, I will return your call as soon as possible."
+      : `Thank you for calling. We appreciate your patience as we try to answer each call as quickly as possible.
+⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛
+Thank you for holding, all our lines are currently busy. We apologize for the delay and will be with you shortly.
+⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛
+Thank you for your patience, please stay on the line while we direct your call to the next available representative.
+⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛`,
   )
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
@@ -87,7 +96,13 @@ export function VoicemailGreetingComponent({ voices, allVoices }: Props) {
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
       <div className="mb-6">
-        <Textarea className="w-full h-32 resize-none" onChange={(e) => setText(e.target.value)} value={text} />
+        <Textarea
+          className={`w-full ${
+            target === PageTarget.MAIN ? "h-44" : "h-64"
+          }  text-ellipsis leading-6 text-base  resize-none  p-4 rounded-lg  border-gray-500 focus:border-gray-300 focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 border-2`}
+          onChange={(e) => setText(e.target.value)}
+          value={text}
+        />
         <div className="flex justify-end mt-4">
           <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
         </div>

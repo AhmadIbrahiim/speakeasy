@@ -14,6 +14,10 @@ export async function generateMetadata(props: any): Promise<Metadata> {
     openGraph: {
       images: [pagePost.image],
     },
+
+    alternates: {
+      canonical: `https://www.perfectgreet.site/posts/${slug}`,
+    },
   }
 }
 

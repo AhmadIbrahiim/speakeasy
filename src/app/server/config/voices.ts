@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto"
+import { createHash } from "crypto"
 import ElevenLabs from "../lib/ElevenLabs"
 import { createWriteStream, promises as fs } from "fs"
 import _ from "lodash"
@@ -12,7 +12,9 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
   }>(async (resolve, reject) => {
     try {
       // Create a slug for the file name from the text and the voice id
-      const fileId = `${_.kebabCase(text)}-${id}-${bg}`
+      const fileId = createHash("md5")
+        .update(`${_.kebabCase(text)}-${id}-${bg}`)
+        .digest("hex")
 
       // Check if the file already exists
       if (await fs.stat(`output/${fileId}-bg.mp3`).catch(() => false)) {

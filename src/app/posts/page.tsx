@@ -9,6 +9,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Awesome Blog",
   description: "A collection of awesome blog posts",
+  alternates: {
+    canonical: `https://www.perfectgreet.site/posts/`,
+  },
 }
 
 type BlogProps = {

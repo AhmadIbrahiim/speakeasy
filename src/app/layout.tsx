@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Perfect Greet",
+    template: "%s",
     default: "Free Pro Voicemail Greeting - No Credit Card Needed | Perfect Greet",
   },
   applicationName: "Perfect Greet",

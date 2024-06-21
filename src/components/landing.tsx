@@ -235,13 +235,3 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
     </BaseLayout>
   )
 }
-
-function VoicemailIcon(props: any) {
-  return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="6" cy="12" r="4" />
-      <circle cx="18" cy="12" r="4" />
-      <line x1="6" x2="18" y1="16" y2="16" />
-    </svg>
-  )
-}

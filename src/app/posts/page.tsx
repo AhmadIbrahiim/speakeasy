@@ -7,7 +7,7 @@ import { ArrowRightIcon } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Awesome Blog",
+  title: "Awesome Blog Posts | Perfect Greet",
   description: "A collection of awesome blog posts",
   alternates: {
     canonical: `https://www.perfectgreet.site/posts/`,
@@ -31,7 +31,10 @@ const Blog = ({ title, description, image, slug }: BlogProps) => (
           {title}
         </Link>
       </h3>
-      <p className="text-gray-500 dark:text-gray-400 mb-4">{description}</p>
+      <p className="text-gray-500 dark:text-gray-400 mb-4">
+        {/* Ellipsis if description is too long */}
+        {description.length > 100 ? `${description.slice(0, 100)}...` : description}
+      </p>
       <Link href={`/posts/${slug}`} className="inline-flex items-center font-medium text-primary hover:underline" prefetch={false}>
         Read More
         <ArrowRightIcon className="ml-1 w-4 h-4" />

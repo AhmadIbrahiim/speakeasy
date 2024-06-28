@@ -3,7 +3,7 @@ title: 30 Professional Voicemail Greeting Examples to Elevate Your Business Comm
 date: "2024-06-21"
 image: "/posts/30-professional-voicemail-greeting-examples.png"
 description: Discover 30 professional voicemail greeting examples that can elevate your business communication. Learn what to include in a voicemail greeting, explore industry-specific examples, and find out how to create custom greetings with Perfect Greet.
-slug: "30-professional-voicemail-greeting-examples"
+keywords: [voicemail greeting, professional voicemail greeting, business communication, voicemail greeting examples]
 ---
 
 ---

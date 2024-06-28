@@ -3,6 +3,7 @@ title: Mixavox vs Perfect Greet - A Comparison
 date: "2024-06-12"
 image: "/posts/mixavox-vs-perfect-greet.png"
 description: A comparison of Mixavox and Perfect Greet, two services for creating professional voicemail greetings.
+keywords: [voicemail greeting, professional voicemail, voicemail greeting service, voicemail greeting comparison, Mixavox, Perfect Greet]
 ---
 
 ---

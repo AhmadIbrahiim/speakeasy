@@ -4,6 +4,7 @@ date: "2024-06-14"
 image: "/posts/common-mistakes-to-avoid-in-voicemail-greetings.png"
 description: Discover the most common mistakes people make in their voicemail greetings and learn how to avoid them. Enhance your professional...
 slug: "common-mistakes-to-avoid-in-voicemail-greetings"
+keywords: [voicemail greeting, professional voicemail, voicemail greeting mistakes, voicemail greeting tips, voicemail greeting best practices]
 ---
 
 ---

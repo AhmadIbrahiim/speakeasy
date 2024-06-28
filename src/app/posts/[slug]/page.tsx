@@ -6,7 +6,7 @@ import { Metadata } from "next"
 
 export async function generateMetadata(props: any): Promise<Metadata> {
   const slug = props.params.slug
-  const pagePost = getPostBySlug(slug, ["title", "description", "image"])
+  const pagePost = getPostBySlug(slug, ["title", "description", "image", "keywords"])
 
   return {
     title: pagePost.title,
@@ -14,7 +14,7 @@ export async function generateMetadata(props: any): Promise<Metadata> {
     openGraph: {
       images: [pagePost.image],
     },
-
+    keywords: pagePost.keywords,
     alternates: {
       canonical: `https://www.perfectgreet.site/posts/${slug}`,
     },

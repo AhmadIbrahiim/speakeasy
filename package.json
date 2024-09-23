@@ -9,7 +9,7 @@
     "lint": "next lint",
     "pm2:start": " pm2 start npm --name voicemail-greeting -- start",
     "pm2:stop": "pm2 stop voicemail-greeting",
-    "prod": "next build && pm2 kill  &&  npm run pm2:start"
+    "prod": "next build  &&  npm run pm2:start"
   },
   "dependencies": {
     "@next/third-parties": "^14.2.4",

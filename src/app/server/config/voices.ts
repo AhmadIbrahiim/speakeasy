@@ -30,8 +30,8 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
 
       // Define the API endpoint, headers, and payload
       const apiEndpoint = "https://api.cartesia.ai/tts/bytes"
-      const headers = {
-        "X-API-Key": process.env.ELEVENLABS_API_KEY,
+      const headers: Record<string, string> = {
+        "X-API-Key": process.env.ELEVENLABS_API_KEY || "",
         "Cartesia-Version": "2024-06-10",
         "Content-Type": "application/json",
       }

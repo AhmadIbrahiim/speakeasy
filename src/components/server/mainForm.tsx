@@ -15,22 +15,13 @@ export const MainForm = ({ target = PageTarget.MAIN }) => {
     queryFn: async () => {
       const response = await fetch("/api/voices")
       const data = await response.json()
-      return data?.voices?.voices
+      return data?.voices
     },
   })
 
   if (isLoading) return <div>Loading...</div>
 
-  const voicesGroupedByAccent = _.groupBy(
-    voices,
-    ({
-      labels: { accent },
-    }: {
-      labels: {
-        accent: string
-      }
-    }) => accent,
-  ) as unknown as Voice[]
+  const voicesGroupedByAccent = _.groupBy(voices, ({ language }: { language: string }) => language) as unknown as Voice[]
 
   return <VoicemailGreetingComponent target={target} voices={voicesGroupedByAccent} allVoices={voices as unknown as VoiceResponse[]} />
 }

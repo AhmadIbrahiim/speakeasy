@@ -13,10 +13,11 @@ export async function POST(req: Request, res: NextResponse) {
       id,
       bgId,
     })
-    const finalText = `.<break time="2.5s" /> ${text} <break time="1.5s" />`
+
+    const finalText = `<break time="1s"/> ${text} <break time="1s"/>`
     // Your API logic goes here
     const { fileId, fileName, preProcess } = await generateVoices({
-      text: finalText?.replaceAll("⌛", `<break time="0.5s" />"`),
+      text: finalText?.replaceAll("⌛", `<break time="1s"/>"`),
       id,
       bg: bgId,
     })
@@ -26,7 +27,7 @@ export async function POST(req: Request, res: NextResponse) {
     }
     let usersPath = path.join("output/", `${fileId}-bg.mp3`)
     let wavePath = path.join("output/", `${fileId}-bg.wav`)
-    let originalPath = path.join("output/", `${fileId}.mp3`)
+    let originalPath = path.join("output/", `${fileId}.wav`)
     let audioInMp3Buffer = fs.readFileSync(usersPath)
 
     // Remove the file after reading it

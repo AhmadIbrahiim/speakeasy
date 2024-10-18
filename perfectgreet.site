@@ -4,15 +4,6 @@ server {
     server_name 67.205.164.83;
     return 301 https://www.perfectgreet.site$request_uri;
 }
-server {
-        server_name admin.3lagnb.com;
-        location / {
-        allow 156.205.106.212;
-            proxy_pass       http://127.0.0.1:3030;
-        }
- }
-
-
 
 server {
         server_name www.perfectgreet.site

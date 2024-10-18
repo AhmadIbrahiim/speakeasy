@@ -25,6 +25,39 @@ type Props = {
   target: PageTarget
 }
 
+const accentMatch: Record<string, string> = {
+  en: "american",
+  de: "german",
+  es: "spanish",
+  fr: "french",
+  it: "italian",
+  ja: "japanese",
+  ko: "korean",
+  nl: "dutch",
+  pl: "polish",
+  pt: "portuguese",
+  ru: "russian",
+  zh: "chinese",
+  "zh-cn": "chinese",
+  "zh-tw": "chinese",
+  "zh-hk": "chinese",
+}
+
+const accentToLanguage = {
+  american: "en",
+  german: "de",
+  spanish: "es",
+  french: "fr",
+  italian: "it",
+  japanese: "ja",
+  korean: "ko",
+  dutch: "nl",
+  polish: "pl",
+  portuguese: "pt",
+  russian: "ru",
+  chinese: "zh",
+}
+
 export function VoicemailGreetingComponent({ voices, allVoices, target }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [text, setText] = useState(
@@ -39,9 +72,10 @@ Thank you for your patience, please stay on the line while we direct your call t
   )
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
-  const [accent, setAccent] = useState<string>("american")
-  const [selectedVoice, setVoice] = useState<string>("Rachel")
-  const mutation = useCreateAudioBuffer(text, selectedVoice, music)
+  const [accent, setAccent] = useState<string>("en")
+  const [selectedVoice, setVoice] = useState<string>("Sweet Lady")
+  const selectedVoiceId = allVoices.find((v) => v.name === selectedVoice)?.id
+  const mutation = useCreateAudioBuffer(text, selectedVoiceId || "", music)
 
   const handlePlay = () => {
     if (isPlaying) {
@@ -82,10 +116,10 @@ Thank you for your patience, please stay on the line while we direct your call t
     })
   }
 
-  const filteredVoices = allVoices.filter((voice) => voice.labels.accent === accent)
+  const filteredVoices = allVoices.filter((voice) => voice.language === accent)
 
   const onPlay = () => {
-    const previewUrl = allVoices.find((voice) => voice.voice_id === selectedVoice)?.preview_url
+    const previewUrl = allVoices.find((voice) => voice.name === selectedVoice)?.preview_url
     console.log(previewUrl)
     if (!previewUrl) return
     const audio = new Audio(previewUrl)
@@ -110,7 +144,12 @@ Thank you for your patience, please stay on the line while we direct your call t
       <div className="grid grid-cols-2 gap-4 border-t border-b py-4">
         <div>
           <Label htmlFor="accent">Accent</Label>
-          <Select value={accent} onValueChange={setAccent}>
+          <Select
+            value={accent}
+            onValueChange={(accent) => {
+              setAccent(accent)
+              setVoice(allVoices.find((v) => v.language === accent)?.name || "")
+            }}>
             <SelectTrigger>
               <SelectValue placeholder="USA" />
             </SelectTrigger>
@@ -118,7 +157,7 @@ Thank you for your patience, please stay on the line while we direct your call t
               {Object.entries(voices).map(([accent, voices]) => (
                 <SelectItem key={accent} value={accent}>
                   {/* Remove - and capitalize first letter */}
-                  {accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+                  {accentMatch[accent]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -132,9 +171,9 @@ Thank you for your patience, please stay on the line while we direct your call t
             </SelectTrigger>
             <SelectContent>
               {allVoices
-                .filter((voice) => voice?.labels?.accent === accent)
+                .filter((voice) => voice?.language === accent)
                 .map((voice, i) => (
-                  <SelectItem key={voice.voice_id} value={voice.name}>
+                  <SelectItem key={voice.id} value={voice.name}>
                     {voice.name}
                   </SelectItem>
                 ))}

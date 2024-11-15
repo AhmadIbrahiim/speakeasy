@@ -1,3 +1,4 @@
+import { ELEVENLABS_API_KEY } from "@/config"
 import { randomUUID } from "crypto"
 import { ElevenLabsClient } from "elevenlabs"
 import { createWriteStream } from "fs"
@@ -13,7 +14,7 @@ class ELabs {
   public static getInstance(): ElevenLabsClient {
     if (!ELabs.instance) {
       this.instance = new ElevenLabsClient({
-        apiKey: process.env.ELEVENLABS_API_KEY,
+        apiKey: ELEVENLABS_API_KEY,
       })
     }
     return ELabs.instance

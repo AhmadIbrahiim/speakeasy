@@ -29,7 +29,7 @@ export const MainForm = ({ target = PageTarget.MAIN }) => {
       labels: {
         accent: string
       }
-    }) => accent,
+    }) => _.startCase(accent),
   ) as unknown as Voice[]
 
   return <VoicemailGreetingComponent target={target} voices={voicesGroupedByAccent} allVoices={voices as unknown as VoiceResponse[]} />

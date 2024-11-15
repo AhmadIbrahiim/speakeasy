@@ -11,9 +11,8 @@ import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@
 import Link from "next/link"
 import { Download, PlayIcon } from "lucide-react"
 import { useState } from "react"
-import getAllVoices from "@/app/server/get-voices"
 import { Voice, VoiceResponse } from "@/types"
-import _, { set } from "lodash"
+import _ from "lodash"
 import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
 import CONSTANTS from "@/app/config/constants"
 import { PlayButton } from "./ui/playButton"
@@ -26,6 +25,7 @@ type Props = {
 }
 
 export function VoicemailGreetingComponent({ voices, allVoices, target }: Props) {
+  console.log(voices)
   const [isPlaying, setIsPlaying] = useState(false)
   const [text, setText] = useState(
     target === PageTarget.MAIN
@@ -39,8 +39,8 @@ Thank you for your patience, please stay on the line while we direct your call t
   )
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
-  const [accent, setAccent] = useState<string>("american")
-  const [selectedVoice, setVoice] = useState<string>("Rachel")
+  const [accent, setAccent] = useState<string>("American")
+  const [selectedVoice, setVoice] = useState<string>("Aria")
   const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
   const handlePlay = () => {

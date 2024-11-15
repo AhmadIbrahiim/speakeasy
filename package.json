@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pm2:start": " pm2 start npm --name voicemail-greeting -- start",
+    "pm2:start": "pm2 start npm --name voicemail-greeting -- start  -- --port 3030",
     "pm2:stop": "pm2 stop voicemail-greeting",
     "prod": "next build && pm2 kill  &&  npm run pm2:start"
   },

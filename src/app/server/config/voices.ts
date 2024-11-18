@@ -27,7 +27,7 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
       }
       const audio = await ElevenLabs.generate({
         voice: id,
-        model_id: "eleven_turbo_v2_5",
+        model_id: "eleven_turbo_v2",
         output_format: "mp3_44100_128",
         text,
       })

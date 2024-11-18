@@ -32,8 +32,8 @@ export async function POST(req: Request, res: NextResponse) {
     // Remove the file after reading it
     // fs.unlinkSync(usersPath)
     try {
-      // fs.unlinkSync(wavePath)
-      // fs.unlinkSync(originalPath)
+      fs.unlinkSync(wavePath)
+      fs.unlinkSync(originalPath)
     } catch (error) {
       console.log("Error deleting file", error)
     }

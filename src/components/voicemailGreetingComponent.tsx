@@ -56,7 +56,7 @@ Thank you for your patience, please stay on the line while we direct your call t
 
     window.dataLayer.push({
       event: "play_voicemail_greeting",
-      event_category: "engagement",
+      event_category: "user_engagement",
       event_label: selectedVoice,
       value: text,
     })

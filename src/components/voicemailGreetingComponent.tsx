@@ -30,11 +30,11 @@ export function VoicemailGreetingComponent({ voices, allVoices, target }: Props)
   const [text, setText] = useState(
     target === PageTarget.MAIN
       ? "Thank you for calling. I apologize for missing your call. I'm busy right now, but if you leave your name, number, and message, I will return your call as soon as possible."
-      : `Thank you for calling. We appreciate your patience as we try to answer each call as quickly as possible.
+      : `Thank you for calling. We appreciate your patience as we try to answer each call as quickly as possible
 ⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛
 Thank you for holding, all our lines are currently busy. We apologize for the delay and will be with you shortly.
 ⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛
-Thank you for your patience, please stay on the line while we direct your call to the next available representative.
+Thank you for your patience, please stay on the line while we direct your call to the next available representative
 ⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛⌛`,
   )
   const [audio, setAudio] = useState<HTMLAudioElement>()

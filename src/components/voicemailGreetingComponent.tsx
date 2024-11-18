@@ -51,8 +51,11 @@ Thank you for your patience, please stay on the line while we direct your call t
       return
     }
 
+    window.dataLayer = window.dataLayer || []
     // Publish to GA Event with the selected voice & text and text
-    window?.gtag("event", "play_voicemail_greeting", {
+
+    window.dataLayer.push({
+      event: "play_voicemail_greeting",
       event_category: "engagement",
       event_label: selectedVoice,
       value: text,

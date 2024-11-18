@@ -56,9 +56,14 @@ Thank you for your patience, please stay on the line while we direct your call t
 
     window.dataLayer.push({
       event: "play_voicemail_greeting",
-      event_category: "user_engagement",
-      event_label: selectedVoice,
-      value: text,
+      event_category: "search",
+      search_term: text,
+    })
+
+    window.dataLayer.push({
+      event: "select_content",
+      content_type: "voice",
+      item_id: selectedVoice,
     })
 
     mutation.mutation.mutateAsync().then(async (d) => {

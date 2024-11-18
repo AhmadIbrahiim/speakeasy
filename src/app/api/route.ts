@@ -13,7 +13,7 @@ export async function POST(req: Request, res: NextResponse) {
       id,
       bgId,
     })
-    const finalText = `... ${text} <break time="1.0s" /> `
+    const finalText = text
     // Your API logic goes here
     const { fileId, fileName, preProcess } = await generateVoices({
       text: finalText?.replaceAll("⌛", `<break time="0.5s" />"`),
@@ -32,8 +32,8 @@ export async function POST(req: Request, res: NextResponse) {
     // Remove the file after reading it
     // fs.unlinkSync(usersPath)
     try {
-      fs.unlinkSync(wavePath)
-      fs.unlinkSync(originalPath)
+      // fs.unlinkSync(wavePath)
+      // fs.unlinkSync(originalPath)
     } catch (error) {
       console.log("Error deleting file", error)
     }

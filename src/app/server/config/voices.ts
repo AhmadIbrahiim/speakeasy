@@ -2,6 +2,7 @@ import { createHash } from "crypto"
 import ElevenLabs from "../lib/ElevenLabs"
 import { createWriteStream, promises as fs } from "fs"
 import _ from "lodash"
+import { ElevenLabsError } from "elevenlabs"
 const FFmpeg = require("fluent-ffmpeg")
 
 async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; id: string; bg: string }) {
@@ -25,12 +26,16 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
           preProcess: false,
         })
       }
+
+      console.log({ voice: id, model_id: "eleven_turbo_v2", output_format: "mp3_44100_128", text })
+
       const audio = await ElevenLabs.generate({
         voice: id,
-        model_id: "eleven_turbo_v2_5",
-        output_format: "mp3_44100_192",
+        model_id: "eleven_turbo_v2",
+        output_format: "mp3_44100_128",
         text,
       })
+
       const fileName = `output/${fileId}.mp3`
 
       const fileStream = createWriteStream(fileName)
@@ -49,7 +54,7 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
         reject(er)
       })
     } catch (error) {
-      console.info("Elabs error " + JSON.stringify(error, null, 10))
+      console.info(error)
       reject(error)
     }
   })

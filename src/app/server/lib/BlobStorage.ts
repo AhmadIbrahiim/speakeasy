@@ -17,19 +17,28 @@ class BlobStorageService {
     const contentType = "audio/mpeg"
 
     try {
-      // Convert Buffer to Blob which is a valid PutBody type
+      console.log(`Uploading file ${fileName} with size: ${audioBuffer.byteLength} bytes`)
+
+      // Create a Blob from the Buffer which is compatible with the put function
+      // The Blob constructor is available in Node.js environments through the global object
       const blob = new Blob([audioBuffer], { type: contentType })
 
+      // The put function from @vercel/blob handles the upload
       const { url } = await put(`audio/${fileName}`, blob, {
         access: "public",
-        contentType,
+        contentType: contentType,
         addRandomSuffix: false,
       })
 
-      console.log(`Uploaded file to ${url}`)
+      console.log(`Successfully uploaded file to ${url}`)
       return url
     } catch (error) {
       console.error("Error uploading to Vercel Blob:", error)
+      // Log more details about the error
+      if (error instanceof Error) {
+        console.error("Error details:", error.message)
+        console.error("Error stack:", error.stack)
+      }
       throw error
     }
   }
@@ -41,12 +50,13 @@ class BlobStorageService {
    */
   public static async downloadAudio(url: string): Promise<Buffer> {
     try {
-      // Use custom headers to ensure content-length is included
+      // Use explicit headers to ensure proper fetch
       const headers = new Headers({
         Accept: "audio/mpeg",
-        "x-content-length": "1", // Adding a dummy content-length to solve the header issue
+        "x-content-length": "1", // This dummy header is needed for Vercel Blob
       })
 
+      console.log(`Downloading file from ${url}`)
       const response = await fetch(url, {
         method: "GET",
         headers,
@@ -57,9 +67,13 @@ class BlobStorageService {
       }
 
       const arrayBuffer = await response.arrayBuffer()
+      console.log(`Successfully downloaded file, size: ${arrayBuffer.byteLength} bytes`)
       return Buffer.from(arrayBuffer)
     } catch (error) {
       console.error("Error downloading from Vercel Blob:", error)
+      if (error instanceof Error) {
+        console.error("Error details:", error.message)
+      }
       throw error
     }
   }
@@ -85,7 +99,7 @@ class BlobStorageService {
   public static async listAudioFiles(): Promise<string[]> {
     try {
       const { blobs } = await list({ prefix: "audio/" })
-      return blobs.map((blob) => blob.url)
+      return blobs.map((blob: any) => blob.url)
     } catch (error) {
       console.error("Error listing files from Vercel Blob:", error)
       throw error

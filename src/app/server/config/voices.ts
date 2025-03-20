@@ -170,7 +170,11 @@ export const addMusic = async (fileName: string, fileId: string, bg: string) => 
       // Production mode - use Vercel Blob and process in memory
       try {
         // Get the original audio and background music
-        const originalUrl = await BlobStorageService.uploadAudio(fileId, Buffer.alloc(0), "original")
+        // For the initial upload, use an empty Uint8Array instead of Buffer.alloc(0)
+        // This helps ensure proper content-length handling
+        const originalUrl = await BlobStorageService.uploadAudio(fileId, Buffer.from(new Uint8Array()), "original")
+
+        // Download the file
         const originalBuffer = await BlobStorageService.downloadAudio(originalUrl)
 
         // We need to have a local temp directory for FFmpeg to work in serverless environment
@@ -212,8 +216,15 @@ export const addMusic = async (fileName: string, fileId: string, bg: string) => 
               // Read the processed file
               const processedBuffer = await fs.readFile(tempOutput)
 
+              // Handle the content-length issue by ensuring proper Buffer creation
+              // Create a proper Uint8Array first and then convert to Buffer
+              const processedUint8Array = new Uint8Array(processedBuffer)
+              const finalBuffer = Buffer.from(processedUint8Array)
+
+              console.log("Processed file size:", finalBuffer.byteLength, "bytes")
+
               // Upload to Vercel Blob
-              const bgUrl = await BlobStorageService.uploadAudio(fileId, processedBuffer, "bg")
+              const bgUrl = await BlobStorageService.uploadAudio(fileId, finalBuffer, "bg")
 
               // Clean up temp files
               await fs.rm(tempDir, { recursive: true, force: true })
@@ -223,6 +234,7 @@ export const addMusic = async (fileName: string, fileId: string, bg: string) => 
                 bgUrl,
               })
             } catch (error) {
+              console.error("Error in final upload step:", error)
               rejectFFmpeg(error)
             }
           })

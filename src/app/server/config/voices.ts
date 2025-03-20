@@ -68,7 +68,8 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
       if (isDevelopment) {
         // Development mode - write to local file
         const fileName = `output/${fileId}.mp3`
-        await fs.writeFile(fileName, audioBuffer)
+        // Convert buffer to Uint8Array for fs.writeFile
+        await fs.writeFile(fileName, new Uint8Array(audioBuffer))
 
         resolve({
           fileName,
@@ -183,8 +184,8 @@ export const addMusic = async (fileName: string, fileId: string, bg: string) => 
         // Save background music to temp file
         const bgMusicPath = path.join(process.cwd(), `src/app/assets/${bg}.mp3`)
 
-        // Write the audio buffer to temp files
-        await fs.writeFile(tempSource, originalBuffer)
+        // Write the audio buffer to temp files - convert to Uint8Array
+        await fs.writeFile(tempSource, new Uint8Array(originalBuffer))
 
         // Process with FFmpeg
         const compressLogic = ["[0:a]volume=2[a0]", "[1:a]volume=0.1[a1]", "[a0][a1]amix=inputs=2:duration=first"]

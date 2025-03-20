@@ -17,7 +17,10 @@ class BlobStorageService {
     const contentType = "audio/mpeg"
 
     try {
-      const { url } = await put(`audio/${fileName}`, audioBuffer, {
+      // Convert Buffer to Blob which is a valid PutBody type
+      const blob = new Blob([audioBuffer], { type: contentType })
+
+      const { url } = await put(`audio/${fileName}`, blob, {
         access: "public",
         contentType,
         addRandomSuffix: false,
@@ -38,7 +41,16 @@ class BlobStorageService {
    */
   public static async downloadAudio(url: string): Promise<Buffer> {
     try {
-      const response = await fetch(url)
+      // Use custom headers to ensure content-length is included
+      const headers = new Headers({
+        Accept: "audio/mpeg",
+        "x-content-length": "1", // Adding a dummy content-length to solve the header issue
+      })
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers,
+      })
 
       if (!response.ok) {
         throw new Error(`Failed to download file: ${response.status} ${response.statusText}`)

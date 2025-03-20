@@ -67,17 +67,25 @@ export async function POST(req: Request, res: NextResponse) {
       }
     }
 
+    // Create headers with proper content-type and content-length
+    const headers = new Headers({
+      "Content-Type": "audio/mpeg",
+      "Content-Length": audioBuffer.byteLength.toString(),
+      "Cache-Control": "public, max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+    })
+
     return new Response(audioBuffer, {
       status: 200,
-      headers: {
-        "Content-Type": "audio/mpeg",
-        "Content-Length": audioBuffer.byteLength.toString(),
-      },
+      headers,
     })
   } catch (error) {
     console.log(JSON.stringify(error, null, 10))
     return new Response(JSON.stringify(error, null, 10), {
       status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
   }
 }

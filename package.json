@@ -12,6 +12,7 @@
     "prod": "next build && pm2 delete voicemail-greeting  &&  npm run pm2:start"
   },
   "dependencies": {
+    "@cartesia/cartesia-js": "^2.1.10",
     "@next/third-parties": "^14.2.4",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-dropdown-menu": "^2.0.6",

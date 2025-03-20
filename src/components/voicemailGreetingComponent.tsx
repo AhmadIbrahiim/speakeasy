@@ -19,7 +19,7 @@ import { PlayButton } from "./ui/playButton"
 import { PageTarget } from "./server/mainForm"
 
 type Props = {
-  voices: Voice[]
+  voices: Voice
   allVoices: VoiceResponse[]
   target: PageTarget
 }
@@ -40,7 +40,16 @@ Thank you for your patience, please stay on the line while we direct your call t
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
   const [accent, setAccent] = useState<string>("American")
-  const [selectedVoice, setVoice] = useState<string>("Aria")
+
+  // Default to first available voice in case "Professional Woman" is not available
+  const defaultVoice = allVoices.find((v) => v.labels.accent === "American")?.voice_id || (allVoices.length > 0 ? allVoices[0].voice_id : "")
+
+  // Use voice_id instead of name for Cartesia
+  const [selectedVoice, setVoice] = useState<string>(defaultVoice)
+
+  // Set a proper name for display
+  const selectedVoiceName = allVoices.find((v) => v.voice_id === selectedVoice)?.name || ""
+
   const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
   const handlePlay = () => {
@@ -97,6 +106,10 @@ Thank you for your patience, please stay on the line while we direct your call t
     })
   }
 
+  // Get unique accents from allVoices
+  const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
+
+  // Filter voices by selected accent
   const filteredVoices = allVoices.filter((voice) => voice.labels.accent === accent)
 
   return (
@@ -116,15 +129,23 @@ Thank you for your patience, please stay on the line while we direct your call t
       <div className="grid grid-cols-2 gap-4 border-t border-b py-4">
         <div>
           <Label htmlFor="accent">Accent</Label>
-          <Select value={accent} onValueChange={setAccent}>
+          <Select
+            value={accent}
+            onValueChange={(value) => {
+              setAccent(value)
+              // When accent changes, set voice to first voice with that accent
+              const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
+              if (firstVoiceWithAccent) {
+                setVoice(firstVoiceWithAccent.voice_id)
+              }
+            }}>
             <SelectTrigger>
               <SelectValue placeholder="USA" />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(voices).map(([accent, voices]) => (
-                <SelectItem key={accent} value={accent}>
-                  {/* Remove - and capitalize first letter */}
-                  {accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+              {availableAccents.map((accentOption) => (
+                <SelectItem key={accentOption} value={accentOption}>
+                  {accentOption.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -137,13 +158,11 @@ Thank you for your patience, please stay on the line while we direct your call t
               <SelectValue placeholder={filteredVoices.length > 0 ? filteredVoices[0].name : ""} />
             </SelectTrigger>
             <SelectContent>
-              {allVoices
-                .filter((voice) => voice?.labels?.accent === accent)
-                .map((voice, i) => (
-                  <SelectItem key={voice.voice_id} value={voice.name}>
-                    {voice.name}
-                  </SelectItem>
-                ))}
+              {filteredVoices.map((voice) => (
+                <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                  {voice.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

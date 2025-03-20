@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import generateVoices, { addMusic } from "../server/config/voices"
-import ElevenLabs from "../server/lib/ElevenLabs"
+import CartesiaService from "../server/lib/Cartesia"
 import fs from "fs"
 import path from "path"
 

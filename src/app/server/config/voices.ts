@@ -1,11 +1,10 @@
 import { createHash } from "crypto"
-import ElevenLabs from "../lib/ElevenLabs"
+import CartesiaService from "../lib/Cartesia"
 import { createWriteStream, promises as fs } from "fs"
 import _ from "lodash"
-import { ElevenLabsError } from "elevenlabs"
 const FFmpeg = require("fluent-ffmpeg")
 
-async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; id: string; bg: string }) {
+async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238", bg = "" }: { text: string; id: string; bg: string }) {
   return new Promise<{
     fileName: string
     fileId: string
@@ -27,31 +26,25 @@ async function generateVoices({ text, id = "Rachel", bg = "" }: { text: string; 
         })
       }
 
-      console.log({ voice: id, model_id: "eleven_turbo_v2", output_format: "mp3_44100_128", text })
+      console.log({ voice: id, model_id: "sonic-2", output_format: "mp3_44100_128", text })
 
-      const audio = await ElevenLabs.generate({
-        voice: id,
-        model_id: "eleven_turbo_v2",
+      // Passing voice ID directly to Cartesia
+      const audio = await CartesiaService.generate({
+        voice: id, // This is now the voice_id
+        model_id: "sonic-2",
         output_format: "mp3_44100_128",
         text,
       })
 
       const fileName = `output/${fileId}.mp3`
 
-      const fileStream = createWriteStream(fileName)
+      // Write the audio buffer to a file
+      await fs.writeFile(fileName, new Uint8Array(audio))
 
-      // waveFile.fromMuLaw(audio)
-      audio.pipe(fileStream)
-      fileStream.on("finish", () =>
-        resolve({
-          fileName,
-          fileId: fileId,
-          preProcess: true,
-        }),
-      ) // Resolve with the fileName
-      fileStream.on("error", (er) => {
-        console.error("Elabs error " + JSON.stringify(er, null, 10))
-        reject(er)
+      resolve({
+        fileName,
+        fileId: fileId,
+        preProcess: true,
       })
     } catch (error) {
       console.info(error)

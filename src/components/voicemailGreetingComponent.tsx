@@ -53,7 +53,7 @@ Thank you for your patience, please stay on the line while we direct your call t
 
   const [accent, setAccent] = useState<string>(initialAccent)
   const [voiceVolume, setVoiceVolume] = useState<number>(100)
-  const [bgVolume, setBgVolume] = useState<number>(30)
+  const [bgVolume, setBgVolume] = useState<number>(15)
 
   // Default to first available voice with the selected accent, or any voice if none match
   const getDefaultVoice = () => {

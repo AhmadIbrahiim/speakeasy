@@ -20,7 +20,7 @@ export async function POST(req: Request, res: NextResponse) {
     const isDevelopment = process.env.NODE_ENV === "development"
 
     const { fileName, fileId, preProcess, fileUrl, backgroundUrl } = await generateVoices({
-      text,
+      text: `<break time="1.5s"/> ${text} <break time="1s"/>`,
       id,
       bg: bgId,
     })

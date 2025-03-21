@@ -29,8 +29,14 @@ export async function mixAudioClientSide(voiceBuffer: ArrayBuffer, backgroundUrl
       const backgroundBuffer = await backgroundResponse.arrayBuffer()
       const backgroundAudioBuffer = await audioContext.decodeAudioData(backgroundBuffer.slice(0))
 
-      // Create a new buffer with the same characteristics as the voice buffer
-      const outputBuffer = audioContext.createBuffer(voiceAudioBuffer.numberOfChannels, voiceAudioBuffer.length, voiceAudioBuffer.sampleRate)
+      // Add 100ms of padding at the start to ensure background starts immediately
+      // This helps with any potential delay in processing or browser audio handling
+      const paddingMs = 100
+      const paddingSamples = Math.floor((paddingMs / 1000) * voiceAudioBuffer.sampleRate)
+      const totalLength = voiceAudioBuffer.length + paddingSamples
+
+      // Create a new buffer with the padding included
+      const outputBuffer = audioContext.createBuffer(voiceAudioBuffer.numberOfChannels, totalLength, voiceAudioBuffer.sampleRate)
 
       // Mix the audio samples with volume control
       for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
@@ -38,30 +44,56 @@ export async function mixAudioClientSide(voiceBuffer: ArrayBuffer, backgroundUrl
         const bgData = backgroundAudioBuffer.getChannelData(channel)
         const outputData = outputBuffer.getChannelData(channel)
 
-        // Mix the audio samples channel by channel
-        for (let i = 0; i < outputBuffer.length; i++) {
+        // For the padding section, only include background music
+        for (let i = 0; i < paddingSamples; i++) {
+          if (i < backgroundAudioBuffer.length) {
+            outputData[i] = bgData[i] * bgVolume
+          }
+        }
+
+        // Mix the audio samples channel by channel with the voice starting after the padding
+        for (let i = 0; i < voiceAudioBuffer.length; i++) {
+          const outputIndex = i + paddingSamples
+
           // Add voice data with volume control
-          outputData[i] = voiceData[i] * voiceVolume
+          outputData[outputIndex] = voiceData[i] * voiceVolume
 
           // Add background music if available at this position
-          if (i < backgroundAudioBuffer.length) {
-            outputData[i] += bgData[i] * bgVolume
+          const bgIndex = outputIndex
+          if (bgIndex < backgroundAudioBuffer.length) {
+            outputData[outputIndex] += bgData[bgIndex] * bgVolume
           }
         }
 
         // Apply a fade-out effect to the background music
         const fadeOutDuration = 0.5 // 0.5 seconds fade-out
         const fadeOutSamples = voiceAudioBuffer.sampleRate * fadeOutDuration
-        if (voiceAudioBuffer.length > fadeOutSamples) {
-          const fadeStartIndex = voiceAudioBuffer.length - fadeOutSamples
-          for (let i = fadeStartIndex; i < voiceAudioBuffer.length; i++) {
+        if (totalLength > fadeOutSamples) {
+          const fadeStartIndex = totalLength - fadeOutSamples
+          for (let i = fadeStartIndex; i < totalLength; i++) {
             const fadeRatio = 1 - (i - fadeStartIndex) / fadeOutSamples
 
-            // Recalculate the sample with the fade effect
+            // Only apply fade to the background portion of the mix
             if (i < backgroundAudioBuffer.length) {
-              outputData[i] = voiceData[i] * voiceVolume + bgData[i] * bgVolume * fadeRatio
+              // Get the voice component if it exists at this position
+              const voiceIndex = i - paddingSamples
+              const voiceComponent = voiceIndex >= 0 && voiceIndex < voiceAudioBuffer.length ? voiceData[voiceIndex] * voiceVolume : 0
+
+              // Apply the fade only to the background component
+              outputData[i] = voiceComponent + bgData[i] * bgVolume * fadeRatio
             }
           }
+        }
+      }
+
+      // Add a fade-in at the very beginning for a smoother start
+      const fadeInDuration = 0.05 // 50ms fade-in
+      const fadeInSamples = Math.floor(voiceAudioBuffer.sampleRate * fadeInDuration)
+      for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
+        const outputData = outputBuffer.getChannelData(channel)
+        for (let i = 0; i < fadeInSamples && i < outputBuffer.length; i++) {
+          const fadeRatio = i / fadeInSamples
+          outputData[i] *= fadeRatio
         }
       }
 

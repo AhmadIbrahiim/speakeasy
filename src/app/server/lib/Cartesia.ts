@@ -1,5 +1,6 @@
 import { CARTESIA_API_KEY } from "@/config"
 import { CartesiaClient } from "@cartesia/cartesia-js"
+import { CartesiaVoiceResponse } from "@/types"
 
 class CartesiaService {
   private static instance: CartesiaClient
@@ -15,6 +16,28 @@ class CartesiaService {
       })
     }
     return CartesiaService.instance
+  }
+
+  // Method to list available voices
+  public static async listVoices(): Promise<CartesiaVoiceResponse[]> {
+    try {
+      const response = await fetch("https://api.cartesia.ai/voices/", {
+        headers: {
+          "Cartesia-Version": "2024-11-13",
+          "X-API-Key": CARTESIA_API_KEY || "",
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`)
+      }
+
+      const data = await response.json()
+      return data.data // Return the array of voice data
+    } catch (error) {
+      console.error("Error listing voices:", error)
+      return [] // Return empty array on error
+    }
   }
 
   // Utility method for text-to-speech generation

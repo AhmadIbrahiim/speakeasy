@@ -1,17 +1,33 @@
 import { CARTESIA_API_KEY } from "@/config"
-import { CartesiaClient } from "@cartesia/cartesia-js"
 import { NextRequest, NextResponse } from "next/server"
+import CartesiaService from "@/app/server/lib/Cartesia"
+import { CartesiaVoiceResponse } from "@/types"
 
 export async function GET(req: NextRequest) {
-  // Initialize Cartesia client
-  const cartesia = new CartesiaClient({
-    apiKey: CARTESIA_API_KEY,
-  })
-
   try {
-    // Fetch voices from Cartesia API
-    // The client will need to be updated when Cartesia provides a method to list voices
-    // For now, we're using a more comprehensive list of sample voices
+    // Fetch voices directly from Cartesia API using our service
+    const voicesData = await CartesiaService.listVoices()
+
+    // Transform the Cartesia API response to match our application's expected format
+    const transformedVoices = voicesData.map((voice: CartesiaVoiceResponse) => ({
+      voice_id: voice.id,
+      name: voice.name,
+      description: voice.description || "",
+      labels: {
+        // We need to determine accent from somewhere - for now using language as a fallback
+        accent: voice.language === "en" ? "American" : voice.language,
+        gender: "unknown", // The API doesn't provide gender info in the response
+        age: "adult", // The API doesn't provide age info in the response
+      },
+    }))
+
+    return NextResponse.json({
+      voices: transformedVoices,
+    })
+  } catch (error) {
+    console.error("Error fetching voices:", error)
+
+    // Fallback to sample voices if API fails
     const sampleVoices = [
       {
         voice_id: "694f9389-aac1-45b6-b726-9d9369183238",
@@ -43,46 +59,13 @@ export async function GET(req: NextRequest) {
           age: "adult",
         },
       },
-      {
-        voice_id: "d39f8b5e-c12a-4d85-8640-5d36f82c32f8",
-        name: "Corporate Presenter",
-        description: "Clear, authoritative voice for corporate presentations.",
-        labels: {
-          accent: "American",
-          gender: "female",
-          age: "middle-aged",
-        },
-      },
-      {
-        voice_id: "e7b2bf1f-9f5a-4e93-a25d-9823bd4d1a14",
-        name: "British Businesswoman",
-        description: "Professional female British accent.",
-        labels: {
-          accent: "British",
-          gender: "female",
-          age: "adult",
-        },
-      },
-      {
-        voice_id: "f63a5e3c-0a77-4c9f-b32b-d729eb93ebde",
-        name: "Australian Presenter",
-        description: "Warm Australian male voice.",
-        labels: {
-          accent: "Australian",
-          gender: "male",
-          age: "young-adult",
-        },
-      },
     ]
 
-    // When the Cartesia API supports listing voices, replace with:
-    // const voices = await cartesia.voices.getAll()
-
-    return NextResponse.json({
-      voices: sampleVoices,
-    })
-  } catch (error) {
-    console.error("Error fetching voices:", error)
-    return NextResponse.json({ error: "Failed to fetch voices" }, { status: 500 })
+    return NextResponse.json(
+      {
+        voices: sampleVoices,
+      },
+      { status: 200 },
+    ) // Return 200 with fallback data instead of 500
   }
 }

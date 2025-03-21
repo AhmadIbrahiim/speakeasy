@@ -26,7 +26,12 @@ type Props = {
 }
 
 export function VoicemailGreetingComponent({ voices, allVoices, target }: Props) {
-  console.log(voices)
+  console.log("VoicemailGreetingComponent initialized with data:", {
+    voicesCount: Object.keys(voices).length,
+    allVoicesCount: allVoices.length,
+    availableAccents: allVoices.map((v) => v.labels.accent),
+    availableVoices: allVoices.map((v) => ({ id: v.voice_id, name: v.name })),
+  })
   const [isPlaying, setIsPlaying] = useState(false)
   const [text, setText] = useState(
     target === PageTarget.MAIN
@@ -40,18 +45,32 @@ Thank you for your patience, please stay on the line while we direct your call t
   )
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
-  const [accent, setAccent] = useState<string>("American")
+
+  // Check if we have any American accent, otherwise use the first available accent
+  const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
+  const initialAccent = availableAccents.includes("American") ? "American" : availableAccents.length > 0 ? availableAccents[0] : "American"
+
+  const [accent, setAccent] = useState<string>(initialAccent)
   const [voiceVolume, setVoiceVolume] = useState<number>(100)
   const [bgVolume, setBgVolume] = useState<number>(30)
 
-  // Default to first available voice in case "Professional Woman" is not available
-  const defaultVoice = allVoices.find((v) => v.labels.accent === "American")?.voice_id || (allVoices.length > 0 ? allVoices[0].voice_id : "")
+  // Default to first available voice with the selected accent, or any voice if none match
+  const getDefaultVoice = () => {
+    const voiceWithAccent = allVoices.find((v) => v.labels.accent === accent)
+    return voiceWithAccent?.voice_id || (allVoices.length > 0 ? allVoices[0].voice_id : "")
+  }
 
-  // Use voice_id instead of name for Cartesia
-  const [selectedVoice, setVoice] = useState<string>(defaultVoice)
+  // Use voice_id instead of name
+  const [selectedVoice, setVoice] = useState<string>(getDefaultVoice())
 
-  // Set a proper name for display
-  const selectedVoiceName = allVoices.find((v) => v.voice_id === selectedVoice)?.name || ""
+  // Set a proper name for display, with a fallback if the voice isn't found
+  const selectedVoiceName = allVoices.find((v) => v.voice_id === selectedVoice)?.name || "Select Voice"
+
+  // Filter voices by selected accent
+  const filteredVoices = allVoices.filter((voice) => voice.labels.accent === accent)
+
+  // If no voices match the selected accent, show all voices
+  const displayedVoices = filteredVoices.length > 0 ? filteredVoices : allVoices
 
   const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
@@ -122,12 +141,6 @@ Thank you for your patience, please stay on the line while we direct your call t
       })
   }
 
-  // Get unique accents from allVoices
-  const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
-
-  // Filter voices by selected accent
-  const filteredVoices = allVoices.filter((voice) => voice.labels.accent === accent)
-
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
       <div className="mb-6">
@@ -152,11 +165,12 @@ Thank you for your patience, please stay on the line while we direct your call t
               // When accent changes, set voice to first voice with that accent
               const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
               if (firstVoiceWithAccent) {
+                console.log("Changing to first voice of new accent:", firstVoiceWithAccent.name, firstVoiceWithAccent.voice_id)
                 setVoice(firstVoiceWithAccent.voice_id)
               }
             }}>
             <SelectTrigger>
-              <SelectValue placeholder="USA" />
+              <SelectValue>{accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {availableAccents.map((accentOption) => (
@@ -171,10 +185,10 @@ Thank you for your patience, please stay on the line while we direct your call t
           <Label htmlFor="voice">Voice</Label>
           <Select value={selectedVoice} onValueChange={setVoice}>
             <SelectTrigger>
-              <SelectValue placeholder={filteredVoices.length > 0 ? filteredVoices[0].name : ""} />
+              <SelectValue>{selectedVoiceName}</SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {filteredVoices.map((voice) => (
+              {displayedVoices.map((voice) => (
                 <SelectItem key={voice.voice_id} value={voice.voice_id}>
                   {voice.name}
                 </SelectItem>

@@ -1,69 +1,43 @@
 import { NextResponse } from "next/server"
-import generateVoices, { addMusic } from "../server/config/voices"
-import CartesiaService from "../server/lib/Cartesia"
-import BlobStorageService from "../server/lib/BlobStorage"
+import { promises as fsPromises } from "fs"
 import fs from "fs"
 import path from "path"
+import generateVoices from "../server/config/voices"
+import BlobStorageService from "../server/lib/BlobStorage"
 
 export async function POST(req: Request, res: NextResponse) {
   try {
-    const { text, id, bgId = "background" } = await req.json()
+    const { text, id, bgId } = await req.json()
 
-    console.log({
+    if (!id) {
+      return NextResponse.json({ message: "ID is required" }, { status: 400 })
+    }
+
+    if (!text) {
+      return NextResponse.json({ message: "Text is required" }, { status: 400 })
+    }
+
+    const isDevelopment = process.env.NODE_ENV === "development"
+
+    const { fileName, fileId, preProcess, fileUrl, backgroundUrl } = await generateVoices({
       text,
-      id,
-      bgId,
-    })
-    const finalText = `<break time="2s" /> ${text} <break time="1s" />`
-    // Generate the voice audio
-    const { fileId, fileName, preProcess, fileUrl } = await generateVoices({
-      text: finalText?.replaceAll("⌛", `<break time="0.5s" />"`),
       id,
       bg: bgId,
     })
 
-    // Process the audio with background music if needed
+    // Get the audio buffer for the voice
     let audioBuffer: Buffer
-    const isDevelopment = process.env.NODE_ENV === "development"
 
-    if (preProcess) {
-      const result = await addMusic(fileName, fileId, bgId)
-
-      if (isDevelopment) {
-        // In development, read from local file
-        let usersPath = path.join("output/", `${fileId}-bg.mp3`)
-        audioBuffer = fs.readFileSync(usersPath)
-
-        // Clean up temporary files in development
-        let wavePath = path.join("output/", `${fileId}-bg.wav`)
-        let originalPath = path.join("output/", `${fileId}.mp3`)
-        try {
-          fs.unlinkSync(wavePath)
-          fs.unlinkSync(originalPath)
-        } catch (error) {
-          console.log("Error deleting file", error)
-        }
-      } else {
-        // In production, get the file from Vercel Blob
-        if (result.bgUrl) {
-          audioBuffer = await BlobStorageService.downloadAudio(result.bgUrl)
-        } else {
-          throw new Error("Failed to get processed audio URL")
-        }
-      }
+    if (isDevelopment) {
+      // In development, read from local file
+      let usersPath = path.join("output/", `${fileId}.mp3`)
+      audioBuffer = fs.readFileSync(usersPath)
     } else {
-      // File already exists, retrieve it
-      if (isDevelopment) {
-        // In development, read from local file
-        let usersPath = path.join("output/", `${fileId}-bg.mp3`)
-        audioBuffer = fs.readFileSync(usersPath)
+      // In production, get the file from Vercel Blob
+      if (fileUrl) {
+        audioBuffer = await BlobStorageService.downloadAudio(fileUrl)
       } else {
-        // In production, get the file from Vercel Blob
-        if (fileUrl) {
-          audioBuffer = await BlobStorageService.downloadAudio(fileUrl)
-        } else {
-          throw new Error("Failed to get existing audio URL")
-        }
+        throw new Error("Failed to get audio URL")
       }
     }
 
@@ -75,13 +49,16 @@ export async function POST(req: Request, res: NextResponse) {
       "X-Content-Type-Options": "nosniff",
     })
 
+    // Return response with audio data and background URL in headers
+    headers.set("X-Background-URL", backgroundUrl || "")
+
     return new Response(audioBuffer, {
       status: 200,
       headers,
     })
   } catch (error) {
-    console.log(JSON.stringify(error, null, 10))
-    return new Response(JSON.stringify(error, null, 10), {
+    console.log(error)
+    return new Response(JSON.stringify({ error: "Error generating audio" }), {
       status: 500,
       headers: {
         "Content-Type": "application/json",

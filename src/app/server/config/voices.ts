@@ -4,7 +4,6 @@ import BlobStorageService from "../lib/BlobStorage"
 import { promises as fs } from "fs"
 import _ from "lodash"
 import path from "path"
-const FFmpeg = require("fluent-ffmpeg")
 
 async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238", bg = "" }: { text: string; id: string; bg: string }) {
   return new Promise<{
@@ -12,6 +11,7 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
     fileId: string
     preProcess?: boolean
     fileUrl?: string
+    backgroundUrl?: string
   }>(async (resolve, reject) => {
     try {
       // Create a slug for the file name from the text and the voice id
@@ -25,27 +25,37 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
       if (isDevelopment) {
         // Development mode - use local files
         // Check if the file already exists
-        if (await fs.stat(`output/${fileId}-bg.mp3`).catch(() => false)) {
+        if (await fs.stat(`output/${fileId}.mp3`).catch(() => false)) {
           console.log("File already exists in local storage")
+
+          // Return paths to both voice and background files for client-side mixing
+          const bgMusicPath = `/api/background?file=${bg}.mp3`
+
           return resolve({
             fileName: `output/${fileId}.mp3`,
             fileId: fileId,
             preProcess: false,
+            backgroundUrl: bgMusicPath,
           })
         }
       } else {
         // Production mode - check Vercel Blob
         try {
           const files = await BlobStorageService.listAudioFiles()
-          const existingFile = files.find((url) => url.includes(`${fileId}-bg.mp3`))
+          const existingFile = files.find((url) => url.includes(`${fileId}.mp3`))
 
           if (existingFile) {
             console.log("File already exists in Blob storage")
+
+            // Get background music URL
+            const bgMusicUrl = `/api/background?file=${bg}.mp3`
+
             return resolve({
               fileName: `${fileId}.mp3`,
               fileId: fileId,
               preProcess: false,
               fileUrl: existingFile,
+              backgroundUrl: bgMusicUrl,
             })
           }
         } catch (error) {
@@ -71,184 +81,33 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
         // Convert buffer to Uint8Array for fs.writeFile
         await fs.writeFile(fileName, new Uint8Array(audioBuffer))
 
+        // Return paths to both voice and background files
+        const bgMusicPath = `/api/background?file=${bg}.mp3`
+
         resolve({
           fileName,
           fileId: fileId,
-          preProcess: true,
+          preProcess: false,
+          backgroundUrl: bgMusicPath,
         })
       } else {
         // Production mode - upload to Vercel Blob
         const fileUrl = await BlobStorageService.uploadAudio(fileId, audioBuffer)
 
+        // Background music URL
+        const bgMusicUrl = `/api/background?file=${bg}.mp3`
+
         resolve({
           fileName: fileId,
           fileId: fileId,
-          preProcess: true,
+          preProcess: false,
           fileUrl,
+          backgroundUrl: bgMusicUrl,
         })
       }
     } catch (error) {
       console.info(error)
       reject(error)
-    }
-  })
-}
-
-export const addMusic = async (fileName: string, fileId: string, bg: string) => {
-  return new Promise<{ originalUrl?: string; bgUrl?: string }>(async (resolve, reject) => {
-    // Check if in development environment to determine storage approach
-    const isDevelopment = process.env.NODE_ENV === "development"
-
-    if (isDevelopment) {
-      // Development mode - use local files for FFmpeg
-      const sourceMp3 = process.cwd() + `/output/${fileId}.mp3`
-      const mp3 = process.cwd() + `/output/${fileId}-bg.mp3`
-      const wav = process.cwd() + `/output/${fileId}-bg.wav`
-      const backgroundMusic = process.cwd() + `/src/app/assets/${bg}.mp3`
-
-      console.log({
-        sourceMp3,
-        mp3,
-        wav,
-        backgroundMusic,
-      })
-
-      const compressLogic = ["[0:a]volume=2[a0]", "[1:a]volume=0.1[a1]", "[a0][a1]amix=inputs=2:duration=first"]
-      const ffmpegMp3 = FFmpeg()
-        .input(sourceMp3)
-        .inputFormat("mp3")
-        .input(backgroundMusic)
-        .inputFormat("mp3")
-        .complexFilter(compressLogic)
-        .audioCodec("libmp3lame")
-        .output(mp3)
-        .outputOptions("-c:v", "copy")
-
-      const ffmpegWav = FFmpeg()
-        .input(sourceMp3)
-        .inputFormat("mp3")
-        .input(backgroundMusic)
-        .inputFormat("mp3")
-        .complexFilter(compressLogic)
-        .audioCodec("pcm_s16le")
-        .outputOptions("-c:v", "copy")
-        .outputOptions("-f", "wav")
-        .output(wav)
-
-      let ffmpegMp3Ended = false
-      let ffmpegWavEnded = false
-
-      ffmpegMp3.on("error", (err: any) => {
-        console.error("An error occurred during mp3 conversion: " + JSON.stringify(err, null, 10))
-        reject()
-      })
-
-      ffmpegMp3.on("end", () => {
-        console.log("MP3 conversion completed")
-        ffmpegMp3Ended = true
-        if (ffmpegWavEnded) {
-          resolve({})
-        }
-      })
-
-      ffmpegWav.on("error", (err: any) => {
-        console.error("An error occurred during wav conversion: " + JSON.stringify(err, null, 10))
-        reject()
-      })
-
-      ffmpegWav.on("end", () => {
-        console.log("WAV conversion completed")
-        ffmpegWavEnded = true
-        if (ffmpegMp3Ended) {
-          resolve({})
-        }
-      })
-
-      ffmpegMp3.run()
-      ffmpegWav.run()
-    } else {
-      // Production mode - use Vercel Blob and process in memory
-      try {
-        // Get the original audio and background music
-        // For the initial upload, use an empty Uint8Array instead of Buffer.alloc(0)
-        // This helps ensure proper content-length handling
-        const originalUrl = await BlobStorageService.uploadAudio(fileId, Buffer.from(new Uint8Array()), "original")
-
-        // Download the file
-        const originalBuffer = await BlobStorageService.downloadAudio(originalUrl)
-
-        // We need to have a local temp directory for FFmpeg to work in serverless environment
-        const tempDir = path.join("/tmp", fileId)
-        await fs.mkdir(tempDir, { recursive: true })
-
-        const tempSource = path.join(tempDir, `${fileId}.mp3`)
-        const tempOutput = path.join(tempDir, `${fileId}-bg.mp3`)
-        const tempWav = path.join(tempDir, `${fileId}-bg.wav`)
-
-        // Save background music to temp file
-        const bgMusicPath = path.join(process.cwd(), `src/app/assets/${bg}.mp3`)
-
-        // Write the audio buffer to temp files - convert to Uint8Array
-        await fs.writeFile(tempSource, new Uint8Array(originalBuffer))
-
-        // Process with FFmpeg
-        const compressLogic = ["[0:a]volume=2[a0]", "[1:a]volume=0.1[a1]", "[a0][a1]amix=inputs=2:duration=first"]
-
-        return new Promise<{ originalUrl: string; bgUrl: string }>((resolveFFmpeg, rejectFFmpeg) => {
-          const ffmpegMp3 = FFmpeg()
-            .input(tempSource)
-            .inputFormat("mp3")
-            .input(bgMusicPath)
-            .inputFormat("mp3")
-            .complexFilter(compressLogic)
-            .audioCodec("libmp3lame")
-            .output(tempOutput)
-            .outputOptions("-c:v", "copy")
-
-          ffmpegMp3.on("error", (err: any) => {
-            console.error("An error occurred during mp3 conversion: " + JSON.stringify(err, null, 10))
-            rejectFFmpeg(err)
-          })
-
-          ffmpegMp3.on("end", async () => {
-            console.log("MP3 conversion completed")
-            try {
-              // Read the processed file
-              const processedBuffer = await fs.readFile(tempOutput)
-
-              // Handle the content-length issue by ensuring proper Buffer creation
-              // Create a proper Uint8Array first and then convert to Buffer
-              const processedUint8Array = new Uint8Array(processedBuffer)
-              const finalBuffer = Buffer.from(processedUint8Array)
-
-              console.log("Processed file size:", finalBuffer.byteLength, "bytes")
-
-              // Upload to Vercel Blob
-              const bgUrl = await BlobStorageService.uploadAudio(fileId, finalBuffer, "bg")
-
-              // Clean up temp files
-              await fs.rm(tempDir, { recursive: true, force: true })
-
-              resolveFFmpeg({
-                originalUrl,
-                bgUrl,
-              })
-            } catch (error) {
-              console.error("Error in final upload step:", error)
-              rejectFFmpeg(error)
-            }
-          })
-
-          ffmpegMp3.run()
-        })
-          .then(({ originalUrl, bgUrl }) => {
-            resolve({ originalUrl, bgUrl })
-          })
-          .catch(reject)
-      } catch (error) {
-        console.error("Error processing audio in serverless environment:", error)
-        reject(error)
-      }
     }
   })
 }

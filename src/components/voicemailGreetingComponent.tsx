@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import Link from "next/link"
-import { Download, PlayIcon } from "lucide-react"
+import { Download, PlayIcon, Volume2, VolumeX } from "lucide-react"
 import { useState } from "react"
 import { Voice, VoiceResponse } from "@/types"
 import _ from "lodash"
@@ -17,6 +17,7 @@ import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
 import CONSTANTS from "@/app/config/constants"
 import { PlayButton } from "./ui/playButton"
 import { PageTarget } from "./server/mainForm"
+import { Slider } from "./ui/slider"
 
 type Props = {
   voices: Voice
@@ -40,6 +41,8 @@ Thank you for your patience, please stay on the line while we direct your call t
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
   const [accent, setAccent] = useState<string>("American")
+  const [voiceVolume, setVoiceVolume] = useState<number>(100)
+  const [bgVolume, setBgVolume] = useState<number>(30)
 
   // Default to first available voice in case "Professional Woman" is not available
   const defaultVoice = allVoices.find((v) => v.labels.accent === "American")?.voice_id || (allVoices.length > 0 ? allVoices[0].voice_id : "")
@@ -75,35 +78,48 @@ Thank you for your patience, please stay on the line while we direct your call t
       item_id: selectedVoice,
     })
 
-    mutation.mutation.mutateAsync().then(async (d) => {
-      const buffer = await d.blob()
-      console.log(buffer)
-      const url = URL.createObjectURL(buffer)
-      const newAudio = new Audio(url)
+    // Pass the voice and background volumes to the mutation
+    mutation.mutation
+      .mutateAsync({
+        voiceVolume: voiceVolume / 100,
+        bgVolume: bgVolume / 100,
+        outputFormat: "wav", // Use WAV for streaming as it's faster to process
+      })
+      .then(async (d) => {
+        const buffer = await d.blob()
+        console.log(buffer)
+        const url = URL.createObjectURL(buffer)
+        const newAudio = new Audio(url)
 
-      setAudio(newAudio)
-      newAudio.onended = () => {
-        setIsPlaying(false)
-      }
-      newAudio.onplay = () => {
-        setIsPlaying(true)
-      }
+        setAudio(newAudio)
+        newAudio.onended = () => {
+          setIsPlaying(false)
+        }
+        newAudio.onplay = () => {
+          setIsPlaying(true)
+        }
 
-      newAudio.onloadedmetadata = () => {
-        newAudio.play()
-      }
-    })
+        newAudio.onloadedmetadata = () => {
+          newAudio.play()
+        }
+      })
   }
 
   const download = () => {
-    mutation.mutation.mutateAsync().then(async (d) => {
-      const buffer = await d.blob()
-      const url = URL.createObjectURL(buffer)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = "VoicemailGreeting.mp3"
-      a.click()
-    })
+    mutation.mutation
+      .mutateAsync({
+        voiceVolume: voiceVolume / 100,
+        bgVolume: bgVolume / 100,
+        outputFormat: "mp3",
+      })
+      .then(async (d) => {
+        const buffer = await d.blob()
+        const url = URL.createObjectURL(buffer)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = "VoicemailGreeting.mp3"
+        a.click()
+      })
   }
 
   // Get unique accents from allVoices
@@ -197,6 +213,31 @@ Thank you for your patience, please stay on the line while we direct your call t
           </Select>
         </div>
       </div>
+
+      {/* Volume Controls */}
+      <div className="border-t border-b py-4">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <Label className="flex items-center">
+              <Volume2 className="w-4 h-4 mr-2" />
+              Voice Volume
+            </Label>
+            <span className="text-sm text-gray-500">{voiceVolume}%</span>
+          </div>
+          <Slider defaultValue={[voiceVolume]} max={100} step={1} onValueChange={(value: number[]) => setVoiceVolume(value[0])} />
+        </div>
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <Label className="flex items-center">
+              <Volume2 className="w-4 h-4 mr-2" />
+              Background Music
+            </Label>
+            <span className="text-sm text-gray-500">{bgVolume}%</span>
+          </div>
+          <Slider defaultValue={[bgVolume]} max={100} step={1} onValueChange={(value: number[]) => setBgVolume(value[0])} />
+        </div>
+      </div>
+
       <div className="flex items-center justify-between py-4">
         <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
 

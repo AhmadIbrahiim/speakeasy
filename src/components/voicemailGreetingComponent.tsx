@@ -18,6 +18,7 @@ import CONSTANTS from "@/app/config/constants"
 import { PlayButton } from "./ui/playButton"
 import { PageTarget } from "./server/mainForm"
 import { Slider } from "./ui/slider"
+import { TemplateSelector } from "./ui/templateSelector"
 
 type Props = {
   voices: Voice
@@ -141,9 +142,17 @@ Thank you for your patience, please stay on the line while we direct your call t
       })
   }
 
+  // Handle selecting a template
+  const handleSelectTemplate = (templateText: string) => {
+    setText(templateText)
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
       <div className="mb-6">
+        <div className="mb-2">
+          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+        </div>
         <Textarea
           className={`w-full ${
             target === PageTarget.MAIN ? "h-44" : "h-64"

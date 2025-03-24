@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { GoogleTagManager } from "@next/third-parties/google"
 import "./globals.scss"
+import { OrganizationJsonLd, ServiceJsonLd } from "@/components/JsonLd"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -39,6 +40,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <OrganizationJsonLd />
+        <ServiceJsonLd
+          name="Perfect Greet Voicemail Greeting Generator"
+          description="Create professional and personalized voicemail greetings for free! No credit card or sign-up required."
+          url="https://www.perfectgreet.site"
+          provider={{
+            name: "Perfect Greet",
+            url: "https://www.perfectgreet.site",
+          }}
+        />
+      </head>
       <GoogleTagManager gtmId="GTM-NWHBPJB6" />
 
       <body className={inter.className}>{children}</body>

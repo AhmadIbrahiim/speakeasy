@@ -24,23 +24,30 @@ const NavigationMenuDemo = () => {
                       <path d="M17 8C19.2091 8 21 6.20914 21 4C21 1.79086 19.2091 0 17 0C14.7909 0 13 1.79086 13 4C13 6.20914 14.7909 8 17 8Z"></path>
                     </svg>
                     <div className="CalloutHeading">Perfect Greet </div>
-                    <p className="CalloutText">Out top and latest features</p>
+                    <p className="CalloutText">Our top and latest features</p>
                   </a>
                 </NavigationMenu.Link>
               </li>
 
-              <ListItem href="/hold" title="On Hold Message">
-                Keep your callers entertained with our hold music.
-              </ListItem>
               <ListItem href="/" title="Voicemail Greeting">
-                Beautiful, thought-out palettes with auto dark mode.
+                Create professional voicemail greetings with custom voices and music.
+              </ListItem>
+              <ListItem href="/hold" title="On Hold Message">
+                Keep your callers entertained with custom hold messages and music.
               </ListItem>
             </ul>
           </NavigationMenu.Content>
         </NavigationMenu.Item>
+
         <NavigationMenu.Item>
-          <NavigationMenu.Link className="NavigationMenuLink" href="/posts/">
+          <NavigationMenu.Link className="NavigationMenuLink" href="/posts">
             Blog
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Link className="NavigationMenuLink" href="/faq">
+            FAQ
           </NavigationMenu.Link>
         </NavigationMenu.Item>
 

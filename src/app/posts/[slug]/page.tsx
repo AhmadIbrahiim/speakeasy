@@ -3,50 +3,80 @@ import BaseLayout from "@/components/baseLayout"
 import markdownToHtml from "@/lib/markdownToHtml"
 import Image from "next/image"
 import { Metadata } from "next"
+import { ArticleJsonLd } from "@/components/JsonLd"
 
-export async function generateMetadata(props: any): Promise<Metadata> {
-  const slug = props.params.slug
-  const pagePost = getPostBySlug(slug, ["title", "description", "image"])
+type Params = {
+  params: {
+    slug: string
+  }
+}
 
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const postData = getPostBySlug(params.slug, ["title", "description", "image"])
   return {
-    title: pagePost.title,
-    description: pagePost.description,
-    openGraph: {
-      images: [pagePost.image],
-    },
-
+    title: postData.title,
+    description: postData.description,
     alternates: {
-      canonical: `https://www.perfectgreet.site/posts/${slug}`,
+      canonical: `https://www.perfectgreet.site/posts/${params.slug}`,
+    },
+    openGraph: {
+      title: postData.title,
+      description: postData.description,
+      type: "article",
+      url: `https://www.perfectgreet.site/posts/${params.slug}`,
+      images: [
+        {
+          url: postData.image,
+          width: 1200,
+          height: 630,
+          alt: postData.title,
+        },
+      ],
     },
   }
 }
 
-async function Home(props: any) {
-  const slug = props.params.slug
-  const pagePost = getPostBySlug(slug, ["title", "content", "image"])
-  const content = await markdownToHtml(pagePost?.content)
+export async function generateStaticParams() {
+  const posts = getSortedPostsData()
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+
+export default async function Post({ params }: Params) {
+  const postData = getPostBySlug(params.slug, ["title", "content", "image", "date", "description"])
+  const contentHtml = await markdownToHtml(postData.content)
 
   return (
     <BaseLayout hideHero>
-      {/* Keep the existing code here */}
-      <section className="gap-6 px-4 w-full max-w-[1200px]  " id="blog-content">
-        {/* Add this <section> tag below the existing <section> tag */}
-        <div className="px-4 py-6 ">
+      <ArticleJsonLd
+        headline={postData.title}
+        description={postData.description}
+        datePublished={postData.date}
+        image={postData.image}
+        url={`https://www.perfectgreet.site/posts/${params.slug}`}
+        author={{
+          name: "Perfect Greet Team",
+        }}
+      />
+      <section className="gap-6 px-4 w-full max-w-[1200px]" id="blog-content">
+        <div className="px-4 py-6">
           <article className="prose prose-gray mx-auto dark:prose-invert">
             <div className="space-y-2 not-prose mb-7">
-              <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl lg:leading-[3.5rem]">{pagePost?.title}</h1>
-              <p className="text-gray-500 dark:text-gray-400">Posted on August 24, 2023</p>
+              <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl lg:leading-[3.5rem]">{postData.title}</h1>
+              <p className="text-gray-500 dark:text-gray-400">Posted on {postData.date ? new Date(postData.date).toLocaleDateString() : ""}</p>
             </div>
 
-            {/* Image hero in blog post */}
-            <Image src={pagePost.image} alt="Blog Post Image" width={650} height={340} className="aspect-video object-contain" />
+            {postData.image && (
+              <div className="mb-6">
+                <Image src={postData.image} alt={postData.title} width={800} height={450} className="rounded-lg" priority />
+              </div>
+            )}
 
-            <div dangerouslySetInnerHTML={{ __html: content }} />
+            <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
           </article>
         </div>
       </section>
     </BaseLayout>
   )
 }
-
-export default Home

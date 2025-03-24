@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     // Sanitize the file parameter to prevent path traversal attacks
     const sanitizedFile = fileParam.replace(/\.\.\//g, "").replace(/\\/g, "")
-    const filePath = path.join(process.cwd(), "src/app/public/assets", sanitizedFile)
+    const filePath = path.join(process.cwd(), "public/assets", sanitizedFile)
 
     // Check if the file exists
     try {

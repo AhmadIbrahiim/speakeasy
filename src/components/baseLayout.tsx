@@ -7,14 +7,27 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 max-md:p-8 pb-0 ">
       <div className="flex flex-col min-h-[100dvh]">
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white  shadow-sm max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-14 flex items-center">
-          <Link className="flex items-center justify-center" href="/">
-            <VoicemailIcon className="h-6 w-6" />
-            <span className="sr-only">Voicemail Greetings</span>
-          </Link>
-          <nav className="ml-auto flex gap-4 sm:gap-6">
-            <NavMenu />
-          </nav>
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+          <div className="max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-16 flex items-center justify-between">
+            <Link className="flex items-center space-x-2 transition-transform hover:scale-105" href="/">
+              <div className="relative">
+                <VoicemailIcon className="h-7 w-7 text-gray-900" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              </div>
+              <span className="font-semibold text-lg text-gray-900 hidden sm:block">Perfect Greet</span>
+            </Link>
+
+            <div className="flex items-center">
+              <nav className="flex items-center">
+                <NavMenu />
+              </nav>
+              <Link
+                href="/"
+                className="ml-6 hidden sm:inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-full transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900">
+                Try It Free
+              </Link>
+            </div>
+          </div>
         </header>
 
         {hideHero ? null : (

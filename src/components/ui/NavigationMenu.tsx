@@ -52,8 +52,10 @@ const NavigationMenuDemo = () => {
         </NavigationMenu.Item>
 
         <NavigationMenu.Item>
-          <NavigationMenu.Link className="NavigationMenuLink" href="#contact">
-            Contact
+          <NavigationMenu.Link asChild>
+            <a className="NavigationMenuLink" href="mailto:me@ahmed-ibrahim.com?subject=Perfect%20Greet%20Site%20Inquiry">
+              Contact
+            </a>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
 

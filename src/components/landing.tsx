@@ -87,7 +87,7 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
             <p className="mb-4">
               Our custom voicemail greeting generator enhances your image and professionalism. Personalize your text, choose a voice, add background music, and download in multiple formats.
             </p>
-            <p className="mb-4">Take your phone greeting to the next level with our auto attendant voice generator. Here’s how our features can meet your specific needs:</p>
+            <p className="mb-4">Take your phone greeting to the next level with our auto attendant voice generator. Here&apos;s how our features can meet your specific needs:</p>
             <h2 className="text-xl font-bold mb-2">Stand Out: Personalize Your Text</h2>
             <p className="mb-4">Personalizing your text helps you communicate effectively with callers. Create greeting messages that convey exactly what you want.</p>
             <h3 className="text-lg font-semibold mb-2">Craft Your Message, Your Way</h3>
@@ -97,8 +97,8 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
             </p>
             <p className="mb-4">Welcome callers warmly and encourage them to leave a message. Provide excellent customer service and never miss important messages.</p>
             <p className="mb-4">
-              Offer alternative contact methods, such as email addresses or other phone numbers. Guide callers to the right departments even when you’re unavailable. Show that their needs are your top
-              priority.
+              Offer alternative contact methods, such as email addresses or other phone numbers. Guide callers to the right departments even when you&apos;re unavailable. Show that their needs are
+              your top priority.
             </p>
             <h3 className="text-lg font-semibold mb-2">Adapt to Different Occasions</h3>
             <h4 className="text-md font-medium mb-2">After-Hours Message:</h4>
@@ -107,7 +107,7 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
             </p>
             <h4 className="text-md font-medium mb-2">Out of Office:</h4>
             <p className="mb-4">
-              Inform callers of your return date, offer alternative contact methods, and provide an emergency contact number. Keep your customers satisfied even when you’re not available.
+              Inform callers of your return date, offer alternative contact methods, and provide an emergency contact number. Keep your customers satisfied even when you&apos;re not available.
             </p>
             <h4 className="text-md font-medium mb-2">Special Holiday Greeting:</h4>
             <p className="mb-4">
@@ -124,8 +124,8 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
             </p>
             <h4 className="text-md font-medium mb-2">Technical Difficulties:</h4>
             <p className="mb-4">
-              Address any technical issues affecting communication. Inform callers of alternative contact methods or expected resolution times. Keep communication open and show that you’re working to
-              resolve the issue quickly.
+              Address any technical issues affecting communication. Inform callers of alternative contact methods or expected resolution times. Keep communication open and show that you&apos;re
+              working to resolve the issue quickly.
             </p>
             <h4 className="text-md font-medium mb-2">Frequently Asked Questions:</h4>
             <p className="mb-4">Direct callers to a recorded FAQ section. Provide self-help information and reduce the need for callbacks. Save time for both callers and your team.</p>
@@ -192,12 +192,13 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
               <b>Tip for Getting the Right Pronunciation</b>
               <br />
               {` Ensure your brand name and unique terms are pronounced correctly by spelling them out phonetically in the text box. This helps callers hear and pronounce your brand name correctly,
-                enhancing your business's professionalism.`}
+                enhancing your business&apos;s professionalism.`}
             </p>
             <h2 className="text-xl font-bold mb-2">Get Your Voicemail Greetings in Any Format: Download with Ease</h2>
             <p className="mb-4">After payment, you will be redirected to the download page to get your recordings. Enter your billing address and print your invoice.</p>
             <p className="mb-4">
-              We provide downloads in various formats compatible with most phone systems, including MP3 and WAV. Need a specific format? Let us know, and we’ll convert your recording free of charge.
+              We provide downloads in various formats compatible with most phone systems, including MP3 and WAV. Need a specific format? Let us know, and we&apos;ll convert your recording free of
+              charge.
             </p>
             <p className="mb-4">
               Want to look and sound more professional? Our easy-to-use service helps you create voice message recordings that stand out. Customize everything from the words to the voice to the music.
@@ -212,22 +213,22 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
             <div className="space-y-4">
               <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm ">Contact Us</div>
               <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">Have a Question? Get in Touch.</h2>
-              <Link
-                className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
-                href="#">
+              <a
+                className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                href="mailto:me@ahmed-ibrahim.com?subject=Perfect%20Greet%20Site%20Inquiry">
                 Contact Us
-              </Link>
+              </a>
             </div>
             <div className="flex flex-col items-start space-y-4">
               <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm ">Support</div>
               <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed ">
-                Our team is here to help you create the perfect voicemail greeting for your needs. {"Don't"} hesitate to reach out with any questions or feedback.
+                Our team is here to help you create the perfect voicemail greeting for your needs. Don&apos;t hesitate to reach out with any questions or feedback.
               </p>
-              <Link
-                className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
-                href="#">
+              <a
+                className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                href="mailto:me@ahmed-ibrahim.com?subject=Perfect%20Greet%20Site%20Inquiry">
                 Contact Support
-              </Link>
+              </a>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ type TemplateProps = {
 export function TemplateSelector({ onSelectTemplate }: TemplateProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [open, setOpen] = useState(false)
 
   // Get unique categories from templates
   const categories = ["all", ...Array.from(new Set(CONSTANTS.GREETING_TEMPLATES.map((template) => template.category)))]
@@ -36,7 +37,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateProps) {
   })
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full">
           Browse Template Library
@@ -70,6 +71,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateProps) {
                       className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
                       onClick={() => {
                         onSelectTemplate(template.text)
+                        setOpen(false)
                       }}>
                       <h3 className="font-medium">{template.title}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2 mt-1">{template.text}</p>

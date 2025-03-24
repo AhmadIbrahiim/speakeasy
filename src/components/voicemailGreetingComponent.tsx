@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import Link from "next/link"
-import { Download, PlayIcon, Volume2, VolumeX } from "lucide-react"
-import { useState } from "react"
+import { Download, PlayIcon, Volume2, VolumeX, Mic2, Music4, Settings2 } from "lucide-react"
+import { useState, useRef } from "react"
 import { Voice, VoiceResponse } from "@/types"
 import _ from "lodash"
 import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
@@ -46,6 +46,9 @@ Thank you for your patience, please stay on the line while we direct your call t
   )
   const [audio, setAudio] = useState<HTMLAudioElement>()
   const [music, setMusic] = useState<string>("popular-corporate-upbeat")
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const [isMusicLoading, setIsMusicLoading] = useState(false)
+  const musicAudioRef = useRef<HTMLAudioElement | null>(null)
 
   // Check if we have any American accent, otherwise use the first available accent
   const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
@@ -147,134 +150,211 @@ Thank you for your patience, please stay on the line while we direct your call t
     setText(templateText)
   }
 
+  const handleMusicPreview = async () => {
+    try {
+      if (isMusicPlaying && musicAudioRef.current) {
+        musicAudioRef.current.pause()
+        setIsMusicPlaying(false)
+        return
+      }
+
+      setIsMusicLoading(true)
+
+      // Stop any currently playing audio
+      if (musicAudioRef.current) {
+        musicAudioRef.current.pause()
+      }
+
+      console.log(`/assets/${music}.mp3`)
+      // Create new audio element with the correct assets path
+      const audio = new Audio(`/assets/${music}.mp3`)
+      musicAudioRef.current = audio
+
+      // Set up event listeners
+      audio.addEventListener("ended", () => {
+        setIsMusicPlaying(false)
+      })
+
+      await audio.play()
+      setIsMusicPlaying(true)
+      setIsMusicLoading(false)
+    } catch (error) {
+      console.error("Error playing audio:", error)
+      setIsMusicLoading(false)
+      setIsMusicPlaying(false)
+    }
+  }
+
+  // Cleanup music preview audio on unmount
+  const cleanup = () => {
+    if (musicAudioRef.current) {
+      musicAudioRef.current.pause()
+      musicAudioRef.current = null
+    }
+    setIsMusicPlaying(false)
+  }
+
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
-      <div className="mb-6">
-        <div className="mb-2">
-          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
-        </div>
-        <Textarea
-          className={`w-full ${
-            target === PageTarget.MAIN ? "h-44" : "h-64"
-          }  text-ellipsis leading-6 text-base  resize-none  p-4 rounded-lg  border-gray-500 focus:border-gray-300 focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 border-2`}
-          onChange={(e) => setText(e.target.value)}
-          value={text}
-        />
-        <div className="flex justify-end mt-4">
-          <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4 border-t border-b py-4">
-        <div>
-          <Label htmlFor="accent">Accent</Label>
-          <Select
-            value={accent}
-            onValueChange={(value) => {
-              setAccent(value)
-              // When accent changes, set voice to first voice with that accent
-              const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
-              if (firstVoiceWithAccent) {
-                console.log("Changing to first voice of new accent:", firstVoiceWithAccent.name, firstVoiceWithAccent.voice_id)
-                setVoice(firstVoiceWithAccent.voice_id)
-              }
-            }}>
-            <SelectTrigger>
-              <SelectValue>{accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {availableAccents.map((accentOption) => (
-                <SelectItem key={accentOption} value={accentOption}>
-                  {accentOption.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label htmlFor="voice">Voice</Label>
-          <Select value={selectedVoice} onValueChange={setVoice}>
-            <SelectTrigger>
-              <SelectValue>{selectedVoiceName}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {displayedVoices.map((voice) => (
-                <SelectItem key={voice.voice_id} value={voice.voice_id}>
-                  {voice.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4 py-4">
-        <div>
-          <Label htmlFor="category">Category</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Corporate" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Corporate">Corporate</SelectItem>
-              <SelectItem value="Narrative">Narrative</SelectItem>
-              <SelectItem value="Commercial">Commercial</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label htmlFor="music">Music</Label>
-          <Select value={music} onValueChange={setMusic}>
-            <SelectTrigger>
-              <SelectValue placeholder="Popular corporate upbeat" />
-            </SelectTrigger>
-            <SelectContent>
-              {CONSTANTS.BG_MUSIC.map((music) => (
-                <SelectItem key={music.text} value={music.file}>
-                  {music.text}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="max-w-4xl mx-auto p-6 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
+      {/* Header Section */}
+      <div className="mb-8 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Your Perfect Greeting</h2>
+        <p className="text-gray-600">Customize your message, voice, and music to create a professional greeting</p>
       </div>
 
-      {/* Volume Controls */}
-      <div className="border-t border-b py-4">
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <Label className="flex items-center">
-              <Volume2 className="w-4 h-4 mr-2" />
-              Voice Volume
-            </Label>
-            <span className="text-sm text-gray-500">{voiceVolume}%</span>
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-5 gap-6">
+        {/* Left Column - Text Editor */}
+        <div className="lg:col-span-3 space-y-4">
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <Label className="text-lg font-semibold text-gray-900">Your Message</Label>
+              <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+            </div>
+            <Textarea
+              className={`w-full ${
+                target === PageTarget.MAIN ? "h-44" : "h-64"
+              } text-base resize-none p-4 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors`}
+              onChange={(e) => setText(e.target.value)}
+              value={text}
+              placeholder="Enter your greeting message here..."
+            />
           </div>
-          <Slider defaultValue={[voiceVolume]} max={100} step={1} onValueChange={(value: number[]) => setVoiceVolume(value[0])} />
-        </div>
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <Label className="flex items-center">
-              <Volume2 className="w-4 h-4 mr-2" />
-              Background Music
-            </Label>
-            <span className="text-sm text-gray-500">{bgVolume}%</span>
+
+          {/* Voice Controls */}
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-4">
+              <Mic2 className="w-5 h-5 text-gray-700" />
+              <Label className="text-lg font-semibold text-gray-900">Voice Settings</Label>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5">Accent</Label>
+                <Select
+                  value={accent}
+                  onValueChange={(value) => {
+                    setAccent(value)
+                    const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
+                    if (firstVoiceWithAccent) {
+                      setVoice(firstVoiceWithAccent.voice_id)
+                    }
+                  }}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableAccents.map((accentOption) => (
+                      <SelectItem key={accentOption} value={accentOption}>
+                        {accentOption.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600 mb-1.5">Voice</Label>
+                <Select value={selectedVoice} onValueChange={setVoice}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{selectedVoiceName}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {displayedVoices.map((voice) => (
+                      <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                        {voice.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
-          <Slider defaultValue={[bgVolume]} max={100} step={1} onValueChange={(value: number[]) => setBgVolume(value[0])} />
+        </div>
+
+        {/* Right Column - Audio Settings */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Music Selection */}
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-4">
+              <Music4 className="w-5 h-5 text-gray-700" />
+              <Label className="text-lg font-semibold text-gray-900">Background Music</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="flex-grow">
+                <Select value={music} onValueChange={setMusic}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choose background music" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CONSTANTS.BG_MUSIC.map((music) => (
+                      <SelectItem key={music.text} value={music.file}>
+                        {music.text}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <PlayButton isPlaying={isMusicPlaying} isLoading={isMusicLoading} onClick={handleMusicPreview} />
+            </div>
+          </div>
+
+          {/* Volume Controls */}
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-4">
+              <Settings2 className="w-5 h-5 text-gray-700" />
+              <Label className="text-lg font-semibold text-gray-900">Volume Mix</Label>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="flex items-center text-sm text-gray-600">
+                    <Volume2 className="w-4 h-4 mr-2" />
+                    Voice Volume
+                  </Label>
+                  <span className="text-sm font-medium text-gray-900">{voiceVolume}%</span>
+                </div>
+                <Slider defaultValue={[voiceVolume]} max={100} step={1} onValueChange={(value: number[]) => setVoiceVolume(value[0])} className="my-2" />
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="flex items-center text-sm text-gray-600">
+                    <Volume2 className="w-4 h-4 mr-2" />
+                    Music Volume
+                  </Label>
+                  <span className="text-sm font-medium text-gray-900">{bgVolume}%</span>
+                </div>
+                <Slider defaultValue={[bgVolume]} max={100} step={1} onValueChange={(value: number[]) => setBgVolume(value[0])} className="my-2" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between py-4">
-        <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
+      {/* Footer Actions */}
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="flex flex-col space-y-4">
+          {/* Preview Section */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
+              <span className="text-sm text-gray-500">{isPlaying ? "Playing..." : "Preview your greeting"}</span>
+            </div>
+          </div>
 
-        <div className="flex items-center">
-          {/* Download button */}
-          <Button variant="link" onClick={download}>
-            <Download className="mr-2" />
-            Download
-          </Button>
+          {/* Generate and Download Section */}
+          <div className="flex items-center justify-between border-t pt-4">
+            <div className="text-sm text-gray-600">Ready to create your voicemail greeting?</div>
+            <div className="flex items-center gap-4">
+              <Button variant="outline" onClick={download} className="flex items-center gap-2 hover:bg-gray-50" disabled={!mutation.mutation.data}>
+                <Download className="w-4 h-4" />
+                Download MP3
+              </Button>
+              <Button onClick={handlePlay} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white" disabled={mutation.mutation.isPending}>
+                Generate Greeting
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-      <Link className="text-sm text-gray-500 underline" href="#">
-        Edit text
-      </Link>
     </div>
   )
 }

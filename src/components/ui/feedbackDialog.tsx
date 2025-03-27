@@ -17,7 +17,8 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
   const handleSubmit = () => {
     // Send feedback to Google Analytics
     window.dataLayer = window.dataLayer || []
-    window.gtag("event", "voicemail_feedback", {
+    window.dataLayer.push({
+      event: "voicemail_feedback",
       feedback_rating: rating,
       feedback_text: feedback,
     })

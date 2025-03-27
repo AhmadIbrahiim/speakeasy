@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import Link from "next/link"
-import { Download, PlayIcon, Volume2, VolumeX, Mic2, Music4, Settings2 } from "lucide-react"
+import { Download, PlayIcon, Volume2, VolumeX, Mic2, Music4, Settings2, Loader } from "lucide-react"
 import { useState, useRef } from "react"
 import { Voice, VoiceResponse } from "@/types"
 import _ from "lodash"
@@ -207,7 +207,7 @@ Thank you for your patience, please stay on the line while we direct your call t
         {/* Left Column - Text Editor */}
         <div className="lg:col-span-3 space-y-4">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 flex-col gap-4 flex-col-reverse">
               <Label className="text-lg font-semibold text-gray-900">Your Message</Label>
               <TemplateSelector onSelectTemplate={handleSelectTemplate} />
             </div>
@@ -349,6 +349,7 @@ Thank you for your patience, please stay on the line while we direct your call t
                 Download MP3
               </Button>
               <Button onClick={handlePlay} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white" disabled={mutation.mutation.isPending}>
+                {mutation.mutation.isPending && <Loader className="w-4 h-4 animate-spin" />}
                 Generate Greeting
               </Button>
             </div>

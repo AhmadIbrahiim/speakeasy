@@ -19,6 +19,7 @@ import { PlayButton } from "./ui/playButton"
 import { PageTarget } from "./server/mainForm"
 import { Slider } from "./ui/slider"
 import { TemplateSelector } from "./ui/templateSelector"
+import { FeedbackDialog } from "./ui/feedbackDialog"
 
 type Props = {
   voices: Voice
@@ -49,6 +50,7 @@ Thank you for your patience, please stay on the line while we direct your call t
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
   const [isMusicLoading, setIsMusicLoading] = useState(false)
   const musicAudioRef = useRef<HTMLAudioElement | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
 
   // Check if we have any American accent, otherwise use the first available accent
   const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
@@ -142,6 +144,18 @@ Thank you for your patience, please stay on the line while we direct your call t
         a.href = url
         a.download = "VoicemailGreeting.mp3"
         a.click()
+
+        // Show feedback dialog after download
+        setShowFeedback(true)
+
+        // Track download event in GA
+        window.dataLayer = window.dataLayer || []
+        window.dataLayer.push({
+          event: "download_voicemail",
+          voice_id: selectedVoice,
+          voice_name: selectedVoiceName,
+          background_music: music,
+        })
       })
   }
 
@@ -356,6 +370,9 @@ Thank you for your patience, please stay on the line while we direct your call t
           </div>
         </div>
       </div>
+
+      {/* Add FeedbackDialog */}
+      <FeedbackDialog open={showFeedback} onOpenChange={setShowFeedback} />
     </div>
   )
 }

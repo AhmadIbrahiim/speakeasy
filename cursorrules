@@ -1,0 +1,254 @@
+# Voicemail Greeting Generator - Cursor Rules
+
+## Project Information
+
+- Project: Voicemail Greeting Generator
+- Stack: Next.js, React, TypeScript, Tailwind CSS
+- Hosting: Vercel
+- TTS Provider: Cartesia API (formerly used ElevenLabs)
+- Audio Processing: FFmpeg
+- Storage: Vercel Blob Storage
+
+## Development Rules
+
+- Use TypeScript for all new components and functions
+- Follow existing component patterns when adding new features
+- Keep environment variables in .env file (don't commit sensitive keys)
+- Test audio generation locally before deploying
+- Maintain the existing UI design language with Tailwind CSS
+- Use Vercel Blob for file storage instead of local filesystem
+- Never write directly to server disk in production
+
+## API Keys
+
+- Cartesia API: Used for text-to-speech generation
+- Vercel Blob: perfectgreet_READ_WRITE_TOKEN for file storage
+- Never expose API keys in client-side code
+
+## Core Features
+
+- Text-to-speech voicemail/hold message generation
+- Background music integration
+- Voice selection with various accents
+- MP3 download functionality
+- Serverless audio file storage
+
+## Project Structure Notes
+
+- src/app - Next.js 13+ app directory structure
+- src/components - Reusable UI components
+- src/app/api - API routes for voice generation
+- output/ - Only for local development (use Vercel Blob in production)
+
+# Blog Post Generation Guide
+
+## Directory Structure
+
+```
+src/
+├── posts/           # Markdown files for blog posts
+└── public/
+    └── posts/       # Generated thumbnails for blog posts
+```
+
+## Step 1: Create New Blog Post
+
+1. Create a new markdown file in `src/posts/` with the format:
+
+   - Filename: `your-post-title.md`
+   - Use kebab-case for the filename
+   - Example: `how-to-create-professional-voicemail.md`
+
+2. Use this frontmatter template at the top of your markdown file:
+
+```markdown
+---
+title: Your Post Title
+date: "YYYY-MM-DD"
+image: "/posts/your-post-title.png"
+description: A compelling description of your post in one sentence.
+---
+
+---
+
+Your content starts here...
+```
+
+## Step 2: Generate Thumbnail
+
+1. Make sure you have the required environment variable:
+
+   ```bash
+   GEMINI_API_KEY=your_api_key
+   ```
+
+2. Run the thumbnail generator script:
+   ```bash
+   npm run generate-thumbnail "Your Post Title"
+   ```
+   This will:
+   - Generate a thumbnail using Gemini AI
+   - Save it to `/public/posts/` with kebab-case naming
+   - Match the image path in your post's frontmatter
+
+## Step 3: Blog Post Structure
+
+Follow this content structure for consistency:
+
+1. **Introduction**
+
+   - Hook the reader
+   - State the problem/need
+   - Preview the solution
+
+2. **Main Content**
+
+   - Use clear H2 (##) headings for main sections
+   - Use H3 (###) for subsections
+   - Include code blocks with triple backticks for scripts/examples
+   - Use bullet points for lists
+   - Include relevant examples
+
+3. **Best Practices Section**
+
+   - Include actionable tips
+   - Use numbered lists for steps
+   - Add implementation advice
+
+4. **Conclusion**
+   - Summarize key points
+   - Include call-to-action to Perfect Greet
+   - Use this template:
+   ```markdown
+   Ready to [benefit statement]? Visit [Perfect Greet](https://perfectgreet.site) to create free, high-quality voicemail greetings that [value proposition].
+   ```
+
+## Style Guide
+
+1. **Formatting**
+
+   - Use markdown for all formatting
+   - Double space between sections
+   - Single space between paragraphs
+   - Use bold (\*\*) for emphasis
+   - Use backticks (`) for technical terms
+
+2. **Code Blocks**
+
+   - Use triple backticks for voicemail scripts
+   - Indent lists properly
+   - Include placeholder text in [brackets]
+
+3. **Lists**
+   - Use hyphen (-) for unordered lists
+   - Use numbers (1.) for ordered lists
+   - Indent sublists with 2 spaces
+
+## Common Post Types and Templates
+
+1. **How-To Guide**
+
+   ```markdown
+   ## Problem Statement
+
+   ## Solution Overview
+
+   ## Step-by-Step Guide
+
+   ## Best Practices
+
+   ## Common Mistakes to Avoid
+
+   ## Conclusion
+   ```
+
+2. **Comparison Post**
+
+   ```markdown
+   ## Introduction
+
+   ## Product/Service A
+
+   ## Product/Service B
+
+   ## Feature Comparison
+
+   ## Use Cases
+
+   ## Recommendation
+
+   ## Conclusion
+   ```
+
+3. **Tips & Best Practices**
+
+   ```markdown
+   ## Introduction
+
+   ## Why It Matters
+
+   ## X Essential Tips
+
+   ## Implementation Guide
+
+   ## Common Mistakes
+
+   ## Measuring Success
+
+   ## Conclusion
+   ```
+
+## Quality Checklist
+
+Before publishing, ensure:
+
+- [ ] Frontmatter is complete
+- [ ] Thumbnail is generated and properly named
+- [ ] All links work
+- [ ] Code blocks are properly formatted
+- [ ] No spelling errors
+- [ ] Consistent formatting
+- [ ] Call-to-action is included
+- [ ] SEO-friendly headings
+- [ ] Mobile-friendly formatting
+
+## Commands Reference
+
+1. Generate thumbnail:
+
+```bash
+npm run generate-thumbnail "Your Post Title"
+```
+
+2. Test blog locally:
+
+```bash
+npm run dev
+```
+
+3. Build for production:
+
+```bash
+npm run build
+```
+
+## Troubleshooting
+
+1. If thumbnail generation fails:
+
+   - Check GEMINI_API_KEY is set
+   - Ensure title is in quotes
+   - Check network connection
+
+2. If markdown isn't rendering:
+   - Verify frontmatter format
+   - Check for syntax errors
+   - Ensure proper spacing
+
+## Need Help?
+
+Refer to existing posts in `src/posts/` for examples:
+
+- mixavox-vs-perfect-greet.md
+- holiday-voicemail-greetings-a-complete-guide-for-2024.md
+- how-your-voicemail-greeting-shapes-your-personal-brand.md

@@ -22,10 +22,11 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
       feedback_rating: rating,
       feedback_text: feedback,
     })
-    window?.clarity?.("event", "voicemail_feedback", {
-      feedback_rating: rating,
-      feedback_text: feedback,
-    })
+
+    // Set Clarity custom tags for feedback data
+    window?.clarity?.("set", "feedback_rating", rating.toString())
+    window?.clarity?.("set", "feedback_text", feedback)
+    window?.clarity?.("event", "voicemail_feedback")
 
     // Close the dialog
     onOpenChange(false)

@@ -96,9 +96,16 @@ Thank you for your patience, please stay on the line while we direct your call t
       event_category: "search",
       search_term: text,
     })
+    window?.clarity?.("event", "play_voicemail_greeting", {
+      search_term: text,
+    })
 
     window.dataLayer.push({
       event: "select_content",
+      content_type: "voice",
+      item_id: selectedVoice,
+    })
+    window?.clarity?.("event", "select_content", {
       content_type: "voice",
       item_id: selectedVoice,
     })
@@ -152,6 +159,11 @@ Thank you for your patience, please stay on the line while we direct your call t
         window.dataLayer = window.dataLayer || []
         window.dataLayer.push({
           event: "download_voicemail",
+          voice_id: selectedVoice,
+          voice_name: selectedVoiceName,
+          background_music: music,
+        })
+        window?.clarity?.("event", "download_voicemail", {
           voice_id: selectedVoice,
           voice_name: selectedVoiceName,
           background_music: music,

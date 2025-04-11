@@ -22,6 +22,10 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
       feedback_rating: rating,
       feedback_text: feedback,
     })
+    window?.clarity?.("event", "voicemail_feedback", {
+      feedback_rating: rating,
+      feedback_text: feedback,
+    })
 
     // Close the dialog
     onOpenChange(false)

@@ -443,17 +443,48 @@ Thank you for your patience, please stay on the line while we direct your call t
       <FeedbackDialog open={showFeedback} onOpenChange={setShowFeedback} />
 
       <Dialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog}>
-        <DialogContent className="sm:max-w-[425px] bg-white">
+        <DialogContent className="sm:max-w-[600px] bg-white p-8">
           <DialogHeader>
             <DialogTitle>Enter your Cartesia.ai API Key</DialogTitle>
             <DialogDescription>
-              To generate audio, you need a free Cartesia.ai API key. We never see or store your key on our servers.
-              <br />
-              <span className="font-semibold">Cartesia gives you 1,000 free credits (about 20 minutes of audio).</span>
-              <br />
+              <div className="mb-6">
+                <div className="flex items-start gap-3 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-5 rounded-md shadow-sm">
+                  <svg className="w-7 h-7 text-yellow-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0Z" />
+                  </svg>
+                  <div className="flex flex-col gap-2">
+                    <div className="text-xl font-semibold">Why We Need Your Help</div>
+                    <div className="text-base font-normal leading-relaxed space-y-2">
+                      <div>
+                        We use <b>Cartesia.ai</b> to generate the voice for your greeting, then merge it with your chosen music.
+                      </div>
+                      <div>
+                        We used to pay for this ourselves (about <b>$200/month</b>), but we simply can&apos;t afford to keep doing that for a free project.
+                      </div>
+                      <div>
+                        As a workaround, Cartesia gives every new user <span className="font-bold text-orange-700">1,000 free credits</span> (about 20 minutes of audio) if you sign up on their site.
+                        You can use these credits directly in our app.
+                      </div>
+                      <div>
+                        <b>Cartesia is not affiliated with us</b>—we&apos;re just using their public API as a way to keep this project alive and free for everyone.
+                      </div>
+                      <div className="mt-3">
+                        <b>Thank you for understanding and for helping keep this project running!</b>
+                      </div>
+                      <div className="mt-2 text-sm text-gray-600 italic">
+                        Note: Your Cartesia API key is only sent to our server for generating your audio, and is <b>never</b> saved or logged. It is not stored anywhere except your own browser.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-base text-gray-800 mb-4">
+                <b>Why do we ask?</b> Cartesia.ai powers our audio generation, but to keep things sustainable and fair, they ask each user to use their own key. <br />
+                <span className="font-semibold">We never see or store your key, and you only need to do this once.</span>
+              </div>
               <div className="mt-4 mb-2 text-left">
                 <span className="font-semibold">How to get your Cartesia API key:</span>
-                <ol className="list-decimal list-inside mt-2 space-y-1 text-sm text-gray-700">
+                <ol className="list-decimal list-inside mt-2 space-y-1 text-base text-gray-700">
                   <li>
                     <a href="https://cartesia.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
                       Go to Cartesia.ai
@@ -481,13 +512,15 @@ Thank you for your patience, please stay on the line while we direct your call t
                   </li>
                 </ol>
               </div>
-              <a href="https://docs.cartesia.ai/docs/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                Docs
-              </a>{" "}
-              &nbsp;|&nbsp;
-              <a href="https://cartesia.ai/blog/how-to-create-api-key" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                How to create an API key
-              </a>
+              <div className="mt-4">
+                <a href="https://docs.cartesia.ai/docs/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                  Docs
+                </a>{" "}
+                &nbsp;|&nbsp;
+                <a href="https://cartesia.ai/blog/how-to-create-api-key" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                  How to create an API key
+                </a>
+              </div>
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

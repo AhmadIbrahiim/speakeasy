@@ -41,8 +41,20 @@ class CartesiaService {
   }
 
   // Utility method for text-to-speech generation
-  public static async generate({ text, voice, model_id = "sonic-2", output_format = "mp3_44100_128" }: { text: string; voice: string; model_id?: string; output_format?: string }) {
-    const client = CartesiaService.getInstance()
+  public static async generate({
+    text,
+    voice,
+    model_id = "sonic-2",
+    output_format = "mp3_44100_128",
+    cartesiaApiKey,
+  }: {
+    text: string
+    voice: string
+    model_id?: string
+    output_format?: string
+    cartesiaApiKey?: string
+  }) {
+    const client = cartesiaApiKey ? new CartesiaClient({ apiKey: cartesiaApiKey }) : CartesiaService.getInstance()
 
     // Parse the output format
     let outputFormatObj

@@ -5,15 +5,16 @@ type MixingOptions = {
   voiceVolume?: number
   bgVolume?: number
   outputFormat?: "wav" | "mp3"
+  cartesiaApiKey?: string
 }
 
-const request = async (text: string, id: string, bgId: string) => {
+const request = async (text: string, id: string, bgId: string, options?: MixingOptions) => {
   const response = await fetch("/api", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ text, id, bgId }),
+    body: JSON.stringify({ text, id, bgId, cartesiaApiKey: options?.cartesiaApiKey }),
   })
 
   // Get the background URL from the response header
@@ -31,7 +32,7 @@ export const useCreateAudioBuffer = (text: string, id: string, bg: string) => {
     mutationFn: async (options?: MixingOptions) => {
       try {
         // Get the voice audio and background URL
-        const { voiceBuffer, backgroundUrl } = await request(text, id, bg)
+        const { voiceBuffer, backgroundUrl } = await request(text, id, bg, options)
 
         // If we have both voice and background, mix them client-side
         if (voiceBuffer && backgroundUrl) {

@@ -1,6 +1,7 @@
 {
   "name": "voicemail-greeting",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Voicemail greeting generator with content pipeline",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +11,8 @@
     "pm2:start": "pm2 start npm --name voicemail-greeting -- start  -- --port 3030",
     "pm2:stop": "pm2 stop voicemail-greeting",
     "prod": "next build && pm2 delete voicemail-greeting  &&  npm run pm2:start",
-    "generate-thumbnail": "npx tsx scripts/generate-thumbnail.ts"
+    "generate-thumbnail": "node scripts/generate-thumbnail.js",
+    "pipeline": "ts-node scripts/content-pipeline.ts"
   },
   "dependencies": {
     "@cartesia/cartesia-js": "^2.1.10",
@@ -29,7 +31,7 @@
     "@radix-ui/react-tabs": "^1.1.3",
     "@streampot/client": "^0.0.15",
     "@tanstack/react-query": "^5.40.1",
-    "@types/node": "^20",
+    "@types/node": "^20.11.16",
     "@vercel/blob": "^0.21.0",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
@@ -51,18 +53,21 @@
     "sass": "^1.77.4",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "wavefile": "^11.0.0"
+    "wavefile": "^11.0.0",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.1"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.35.6",
     "@types/lodash": "^4.17.4",
-    "@types/node": "^20",
+    "@types/node": "^20.11.16",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2"
   }
 }

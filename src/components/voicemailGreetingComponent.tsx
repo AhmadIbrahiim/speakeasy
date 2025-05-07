@@ -20,6 +20,8 @@ import { PageTarget } from "./server/mainForm"
 import { Slider } from "./ui/slider"
 import { TemplateSelector } from "./ui/templateSelector"
 import { FeedbackDialog } from "./ui/feedbackDialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 type Props = {
   voices: Voice
@@ -51,6 +53,9 @@ Thank you for your patience, please stay on the line while we direct your call t
   const [isMusicLoading, setIsMusicLoading] = useState(false)
   const musicAudioRef = useRef<HTMLAudioElement | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [showApiKeyDialog, setShowApiKeyDialog] = useState(false)
+  const [apiKeyInput, setApiKeyInput] = useState("")
+  const [apiKeyError, setApiKeyError] = useState("")
 
   // Check if we have any American accent, otherwise use the first available accent
   const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
@@ -80,13 +85,53 @@ Thank you for your patience, please stay on the line while we direct your call t
 
   const mutation = useCreateAudioBuffer(text, selectedVoice, music)
 
-  const handlePlay = () => {
+  // Check for API key in localStorage
+  const getStoredApiKey = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("cartesia_api_key") || ""
+    }
+    return ""
+  }
+
+  const [cartesiaApiKey, setCartesiaApiKey] = useState(getStoredApiKey())
+
+  // Show dialog if no API key when trying to generate audio
+  const ensureApiKey = async () => {
+    if (!cartesiaApiKey) {
+      setShowApiKeyDialog(true)
+      return false
+    }
+    return true
+  }
+
+  // Save API key to localStorage
+  const handleSaveApiKey = () => {
+    if (!apiKeyInput.trim()) {
+      setApiKeyError("API key is required.")
+      return
+    }
+    localStorage.setItem("cartesia_api_key", apiKeyInput.trim())
+    setCartesiaApiKey(apiKeyInput.trim())
+    setShowApiKeyDialog(false)
+    setApiKeyError("")
+  }
+
+  // Clear API key on error
+  const handleApiKeyError = (msg: string) => {
+    setApiKeyError(msg)
+    setCartesiaApiKey("")
+    localStorage.removeItem("cartesia_api_key")
+    setShowApiKeyDialog(true)
+  }
+
+  const handlePlay = async () => {
     if (isPlaying) {
       console.log(audio)
       audio?.pause()
       setIsPlaying(false)
       return
     }
+    if (!(await ensureApiKey())) return
 
     window.dataLayer = window.dataLayer || []
     // Publish to GA Event with the selected voice & text and text
@@ -112,8 +157,13 @@ Thank you for your patience, please stay on the line while we direct your call t
         voiceVolume: voiceVolume / 100,
         bgVolume: bgVolume / 100,
         outputFormat: "wav", // Use WAV for streaming as it's faster to process
+        cartesiaApiKey,
       })
-      .then(async (d) => {
+      .then(async (d: any) => {
+        if (d.error) {
+          handleApiKeyError(d.error)
+          return
+        }
         const buffer = await d.blob()
         console.log(buffer)
         const url = URL.createObjectURL(buffer)
@@ -131,16 +181,25 @@ Thank you for your patience, please stay on the line while we direct your call t
           newAudio.play()
         }
       })
+      .catch((err: any) => {
+        handleApiKeyError("Invalid or expired API key. Please try again.")
+      })
   }
 
-  const download = () => {
+  const download = async () => {
+    if (!(await ensureApiKey())) return
     mutation.mutation
       .mutateAsync({
         voiceVolume: voiceVolume / 100,
         bgVolume: bgVolume / 100,
         outputFormat: "mp3",
+        cartesiaApiKey,
       })
-      .then(async (d) => {
+      .then(async (d: any) => {
+        if (d.error) {
+          handleApiKeyError(d.error)
+          return
+        }
         const buffer = await d.blob()
         const url = URL.createObjectURL(buffer)
         const a = document.createElement("a")
@@ -160,6 +219,9 @@ Thank you for your patience, please stay on the line while we direct your call t
           background_music: music,
         })
         window?.clarity?.("event", "download_voicemail")
+      })
+      .catch((err: any) => {
+        handleApiKeyError("Invalid or expired API key. Please try again.")
       })
   }
 
@@ -213,163 +275,165 @@ Thank you for your patience, please stay on the line while we direct your call t
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
-      {/* Header Section */}
-      <div className="mb-8 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Your Perfect Greeting</h2>
-        <p className="text-gray-600">Customize your message, voice, and music to create a professional greeting</p>
-      </div>
+    <>
+      <div className="max-w-4xl mx-auto p-6 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
+        {/* Header Section */}
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Your Perfect Greeting</h2>
+          <p className="text-gray-600">Customize your message, voice, and music to create a professional greeting</p>
+        </div>
 
-      {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-5 gap-6">
-        {/* Left Column - Text Editor */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-4 flex-col gap-4 flex-col-reverse">
-              <Label className="text-lg font-semibold text-gray-900">Your Message</Label>
-              <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-5 gap-6">
+          {/* Left Column - Text Editor */}
+          <div className="lg:col-span-3 space-y-4">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4 flex-col gap-4 flex-col-reverse">
+                <Label className="text-lg font-semibold text-gray-900">Your Message</Label>
+                <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+              </div>
+              <Textarea
+                className={`w-full ${
+                  target === PageTarget.MAIN ? "h-44" : "h-64"
+                } text-base resize-none p-4 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors`}
+                onChange={(e) => setText(e.target.value)}
+                value={text}
+                placeholder="Enter your greeting message here..."
+              />
             </div>
-            <Textarea
-              className={`w-full ${
-                target === PageTarget.MAIN ? "h-44" : "h-64"
-              } text-base resize-none p-4 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors`}
-              onChange={(e) => setText(e.target.value)}
-              value={text}
-              placeholder="Enter your greeting message here..."
-            />
+
+            {/* Voice Controls */}
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-4">
+                <Mic2 className="w-5 h-5 text-gray-700" />
+                <Label className="text-lg font-semibold text-gray-900">Voice Settings</Label>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm text-gray-600 mb-1.5">Accent</Label>
+                  <Select
+                    value={accent}
+                    onValueChange={(value) => {
+                      setAccent(value)
+                      const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
+                      if (firstVoiceWithAccent) {
+                        setVoice(firstVoiceWithAccent.voice_id)
+                      }
+                    }}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue>{accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableAccents.map((accentOption) => (
+                        <SelectItem key={accentOption} value={accentOption}>
+                          {accentOption.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm text-gray-600 mb-1.5">Voice</Label>
+                  <Select value={selectedVoice} onValueChange={setVoice}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue>{selectedVoiceName}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {displayedVoices.map((voice) => (
+                        <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                          {voice.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Voice Controls */}
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center gap-2 mb-4">
-              <Mic2 className="w-5 h-5 text-gray-700" />
-              <Label className="text-lg font-semibold text-gray-900">Voice Settings</Label>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5">Accent</Label>
-                <Select
-                  value={accent}
-                  onValueChange={(value) => {
-                    setAccent(value)
-                    const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
-                    if (firstVoiceWithAccent) {
-                      setVoice(firstVoiceWithAccent.voice_id)
-                    }
-                  }}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue>{accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableAccents.map((accentOption) => (
-                      <SelectItem key={accentOption} value={accentOption}>
-                        {accentOption.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          {/* Right Column - Audio Settings */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Music Selection */}
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-4">
+                <Music4 className="w-5 h-5 text-gray-700" />
+                <Label className="text-lg font-semibold text-gray-900">Background Music</Label>
               </div>
-              <div>
-                <Label className="text-sm text-gray-600 mb-1.5">Voice</Label>
-                <Select value={selectedVoice} onValueChange={setVoice}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue>{selectedVoiceName}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {displayedVoices.map((voice) => (
-                      <SelectItem key={voice.voice_id} value={voice.voice_id}>
-                        {voice.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center gap-2">
+                <div className="flex-grow">
+                  <Select value={music} onValueChange={setMusic}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Choose background music" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CONSTANTS.BG_MUSIC.map((music) => (
+                        <SelectItem key={music.text} value={music.file}>
+                          {music.text}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <PlayButton isPlaying={isMusicPlaying} isLoading={isMusicLoading} onClick={handleMusicPreview} />
+              </div>
+            </div>
+
+            {/* Volume Controls */}
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-4">
+                <Settings2 className="w-5 h-5 text-gray-700" />
+                <Label className="text-lg font-semibold text-gray-900">Volume Mix</Label>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label className="flex items-center text-sm text-gray-600">
+                      <Volume2 className="w-4 h-4 mr-2" />
+                      Voice Volume
+                    </Label>
+                    <span className="text-sm font-medium text-gray-900">{voiceVolume}%</span>
+                  </div>
+                  <Slider defaultValue={[voiceVolume]} max={100} step={1} onValueChange={(value: number[]) => setVoiceVolume(value[0])} className="my-2" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label className="flex items-center text-sm text-gray-600">
+                      <Volume2 className="w-4 h-4 mr-2" />
+                      Music Volume
+                    </Label>
+                    <span className="text-sm font-medium text-gray-900">{bgVolume}%</span>
+                  </div>
+                  <Slider defaultValue={[bgVolume]} max={100} step={1} onValueChange={(value: number[]) => setBgVolume(value[0])} className="my-2" />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column - Audio Settings */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* Music Selection */}
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center gap-2 mb-4">
-              <Music4 className="w-5 h-5 text-gray-700" />
-              <Label className="text-lg font-semibold text-gray-900">Background Music</Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex-grow">
-                <Select value={music} onValueChange={setMusic}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Choose background music" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CONSTANTS.BG_MUSIC.map((music) => (
-                      <SelectItem key={music.text} value={music.file}>
-                        {music.text}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <PlayButton isPlaying={isMusicPlaying} isLoading={isMusicLoading} onClick={handleMusicPreview} />
-            </div>
-          </div>
-
-          {/* Volume Controls */}
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center gap-2 mb-4">
-              <Settings2 className="w-5 h-5 text-gray-700" />
-              <Label className="text-lg font-semibold text-gray-900">Volume Mix</Label>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="flex items-center text-sm text-gray-600">
-                    <Volume2 className="w-4 h-4 mr-2" />
-                    Voice Volume
-                  </Label>
-                  <span className="text-sm font-medium text-gray-900">{voiceVolume}%</span>
-                </div>
-                <Slider defaultValue={[voiceVolume]} max={100} step={1} onValueChange={(value: number[]) => setVoiceVolume(value[0])} className="my-2" />
-              </div>
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="flex items-center text-sm text-gray-600">
-                    <Volume2 className="w-4 h-4 mr-2" />
-                    Music Volume
-                  </Label>
-                  <span className="text-sm font-medium text-gray-900">{bgVolume}%</span>
-                </div>
-                <Slider defaultValue={[bgVolume]} max={100} step={1} onValueChange={(value: number[]) => setBgVolume(value[0])} className="my-2" />
+        {/* Footer Actions */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="flex flex-col space-y-4">
+            {/* Preview Section */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
+                <span className="text-sm text-gray-500">{isPlaying ? "Playing..." : "Preview your greeting"}</span>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Footer Actions */}
-      <div className="mt-8 pt-6 border-t border-gray-200">
-        <div className="flex flex-col space-y-4">
-          {/* Preview Section */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
-              <span className="text-sm text-gray-500">{isPlaying ? "Playing..." : "Preview your greeting"}</span>
-            </div>
-          </div>
-
-          {/* Generate and Download Section */}
-          <div className="flex items-center justify-between border-t pt-4">
-            <div className="text-sm text-gray-600">Ready to create your voicemail greeting?</div>
-            <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={download} className="flex items-center gap-2 hover:bg-gray-50" disabled={!mutation.mutation.data}>
-                <Download className="w-4 h-4" />
-                Download MP3
-              </Button>
-              <Button onClick={handlePlay} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white" disabled={mutation.mutation.isPending}>
-                {mutation.mutation.isPending && <Loader className="w-4 h-4 animate-spin" />}
-                Generate Greeting
-              </Button>
+            {/* Generate and Download Section */}
+            <div className="flex items-center justify-between border-t pt-4">
+              <div className="text-sm text-gray-600">Ready to create your voicemail greeting?</div>
+              <div className="flex items-center gap-4">
+                <Button variant="outline" onClick={download} className="flex items-center gap-2 hover:bg-gray-50" disabled={!mutation.mutation.data}>
+                  <Download className="w-4 h-4" />
+                  Download MP3
+                </Button>
+                <Button onClick={handlePlay} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white" disabled={mutation.mutation.isPending}>
+                  {mutation.mutation.isPending && <Loader className="w-4 h-4 animate-spin" />}
+                  Generate Greeting
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -377,7 +441,64 @@ Thank you for your patience, please stay on the line while we direct your call t
 
       {/* Add FeedbackDialog */}
       <FeedbackDialog open={showFeedback} onOpenChange={setShowFeedback} />
-    </div>
+
+      <Dialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog}>
+        <DialogContent className="sm:max-w-[425px] bg-white">
+          <DialogHeader>
+            <DialogTitle>Enter your Cartesia.ai API Key</DialogTitle>
+            <DialogDescription>
+              To generate audio, you need a free Cartesia.ai API key. We never see or store your key on our servers.
+              <br />
+              <span className="font-semibold">Cartesia gives you 1,000 free credits (about 20 minutes of audio).</span>
+              <br />
+              <div className="mt-4 mb-2 text-left">
+                <span className="font-semibold">How to get your Cartesia API key:</span>
+                <ol className="list-decimal list-inside mt-2 space-y-1 text-sm text-gray-700">
+                  <li>
+                    <a href="https://cartesia.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                      Go to Cartesia.ai
+                    </a>
+                  </li>
+                  <li>
+                    <span>Sign up for a free account (no credit card required).</span>
+                  </li>
+                  <li>
+                    <span>
+                      After signing in, go to your{" "}
+                      <a href="https://cartesia.ai/dashboard/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                        API Keys Dashboard
+                      </a>
+                      .
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      Click <b>&quot;Create API Key&quot;</b> and give it a name (e.g., &quot;PerfectGreet&quot;).
+                    </span>
+                  </li>
+                  <li>
+                    <span>Copy your new API key and paste it below.</span>
+                  </li>
+                </ol>
+              </div>
+              <a href="https://docs.cartesia.ai/docs/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                Docs
+              </a>{" "}
+              &nbsp;|&nbsp;
+              <a href="https://cartesia.ai/blog/how-to-create-api-key" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                How to create an API key
+              </a>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <Label htmlFor="cartesia-api-key">Cartesia API Key</Label>
+            <Input id="cartesia-api-key" value={apiKeyInput} onChange={(e) => setApiKeyInput(e.target.value)} placeholder="Paste your Cartesia API key here" className="w-full" />
+            {apiKeyError && <div className="text-red-500 text-sm">{apiKeyError}</div>}
+            <Button onClick={handleSaveApiKey}>Save API Key</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

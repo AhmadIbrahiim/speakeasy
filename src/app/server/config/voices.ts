@@ -5,7 +5,7 @@ import { promises as fs } from "fs"
 import _ from "lodash"
 import path from "path"
 
-async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238", bg = "" }: { text: string; id: string; bg: string }) {
+async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238", bg = "", cartesiaApiKey }: { text: string; id: string; bg: string; cartesiaApiKey: string }) {
   return new Promise<{
     fileName: string
     fileId: string
@@ -71,6 +71,7 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
         model_id: "sonic-2",
         output_format: "mp3_44100_128",
         text,
+        cartesiaApiKey,
       })
 
       const audioBuffer = Buffer.from(audio)

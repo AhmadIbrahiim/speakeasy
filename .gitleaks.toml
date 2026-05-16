@@ -1,0 +1,72 @@
+# gitleaks configuration for voicemail-greeting
+#
+# Extends the default gitleaks ruleset (downloaded by gitleaks at runtime) with
+# custom rules targeting the providers this project integrates with. See
+# https://github.com/gitleaks/gitleaks for the full schema.
+
+title = "voicemail-greeting gitleaks config"
+
+# Pull in the upstream default rules (AWS, GCP, GitHub, Stripe, etc.) so we
+# don't have to redefine them locally.
+[extend]
+useDefault = true
+
+# -----------------------------------------------------------------------------
+# Custom rules
+# -----------------------------------------------------------------------------
+
+[[rules]]
+id = "cartesia-api-key"
+description = "Cartesia API key assigned to CARTESIA_API_KEY env variable"
+# Cartesia doesn't publish a canonical key prefix, so we anchor on the env
+# variable name. Anything 20+ chars long assigned to CARTESIA_API_KEY is
+# flagged (the .env.example uses an empty value, which is allowlisted below).
+regex = '''(?i)CARTESIA_API_KEY\s*[:=]\s*['"]?([a-zA-Z0-9_\-]{20,})['"]?'''
+secretGroup = 1
+keywords = ["cartesia_api_key", "CARTESIA_API_KEY"]
+
+[[rules]]
+id = "elevenlabs-api-key"
+description = "ElevenLabs API key (sk_ prefix)"
+regex = '''sk_[a-zA-Z0-9]{40,}'''
+keywords = ["sk_", "elevenlabs"]
+
+[[rules]]
+id = "vercel-blob-token"
+description = "Vercel Blob read/write token"
+regex = '''vercel_blob_rw_[A-Za-z0-9_]{20,}'''
+keywords = ["vercel_blob_rw_"]
+
+[[rules]]
+id = "gemini-api-key"
+description = "Google Gemini / Generative Language API key"
+regex = '''AIza[A-Za-z0-9_\-]{35}'''
+keywords = ["AIza"]
+
+# -----------------------------------------------------------------------------
+# Global allowlist
+# -----------------------------------------------------------------------------
+
+[allowlist]
+description = "Allowlist for placeholders, examples, and binary noise"
+
+# Files we never want to scan.
+paths = [
+  '''(^|/)node_modules(/|$)''',
+  '''(^|/)\.next(/|$)''',
+  '''(^|/)output(/|$)''',
+  '''(^|/)public/assets/.*\.mp3$''',
+  '''(^|/)\.env\.example$''',
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)tsconfig\.tsbuildinfo$''',
+]
+
+# Documentation placeholders that look key-shaped but are obviously fake.
+regexes = [
+  '''vercel_blob_rw_xxxxxxxxxx_yyyyyyyyyy''',
+  '''vercel_blob_rw_[xX]{5,}''',
+  '''AIzaSyA[A-Za-z0-9_\-]{0,5}(xxx|XXX|example|EXAMPLE)''',
+  '''sk_(example|test|xxx|XXX)[A-Za-z0-9_]*''',
+  '''YOUR_[A-Z_]+_(API_)?KEY''',
+  '''<your[-_].*[-_]key>''',
+]

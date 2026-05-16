@@ -12,7 +12,9 @@
     "pm2:stop": "pm2 stop voicemail-greeting",
     "prod": "next build && pm2 delete voicemail-greeting  &&  npm run pm2:start",
     "generate-thumbnail": "node scripts/generate-thumbnail.js",
-    "pipeline": "ts-node scripts/content-pipeline.ts"
+    "pipeline": "ts-node scripts/content-pipeline.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@cartesia/cartesia-js": "^3.0.0",
@@ -68,6 +70,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^2.1.9"
   }
 }

@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Perfect Greet
 
-## Getting Started
+Free voicemail and on-hold greetings — bring your own Cartesia key, never pay a SaaS bill.
 
-First, run the development server:
+[![License: MIT](https://img.shields.io/badge/license-MIT-1A1916.svg)](LICENSE)
+[![Made with Next.js](https://img.shields.io/badge/Next.js-14-1A1916.svg)](https://nextjs.org)
+[![Cartesia Sonic 3.5](https://img.shields.io/badge/TTS-Cartesia%20Sonic%203.5-E64A2B.svg)](https://cartesia.ai)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-2D7A3E.svg)](CONTRIBUTING.md)
+
+A self-hostable Next.js app that turns a script and a voice into a finished MP3 — voicemail greetings, hold messages, IVR prompts. No signup, no email gate, no per-minute charges.
+
+## Why this exists
+
+Every "voicemail generator" SaaS charges $10–$20 a month for what is, structurally, a single TTS API call followed by a mix-down. Perfect Greet costs nothing to run for visitors because each visitor brings their own Cartesia API key. Cartesia hands out 1,000 free credits per account — roughly 20 minutes of synthesized audio — which is more than enough for a personal greeting or a small business hold loop. The app's job is to make that experience pleasant, not to put a paywall in front of it.
+
+## What you get
+
+- Cartesia **Sonic 3.5** voices (749 in the catalog as of last sync — every accent, every gender, every English locale Cartesia ships)
+- **56 royalty-free background tracks**, grouped by Corporate, Lofi, Jazz, Piano, Guitar, and Various
+- **10 battle-tested script templates** for voicemail, on-hold, after-hours, and IVR scenarios
+- **Client-side audio mixing** via Crunker + the Web Audio API — the server only renders TTS, the browser handles the mix
+- **MP3 and WAV export**, no watermark, no attribution required
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/AhmadIbrahiim/voicemail-greeting
+cd voicemail-greeting
+cp .env.example .env   # optional — see Environment variables
+npm install
+npm run dev            # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+That's it. The voice catalog populates from Cartesia on first load; the BYO-key dialog opens the first time you click Generate.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Bring your own key (BYO)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The whole flow takes about 30 seconds:
 
-## Learn More
+1. Sign up at [cartesia.ai](https://cartesia.ai/) (free, no card).
+2. Open the [API Keys dashboard](https://play.cartesia.ai/keys).
+3. Click **Create API Key**, give it a name.
+4. Paste the `sk_...` key into the dialog in the app.
 
-To learn more about Next.js, take a look at the following resources:
+**Storage.** Your key is held in `localStorage` on your own browser. (It will move to `sessionStorage` in an upcoming refactor — see TASK-14 in the roadmap — so it clears when you close the tab.)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**We never see your key.** The browser forwards it on each generate request to the local Next.js API route, which proxies the single Cartesia TTS call and discards the key the moment the request completes. There is no database, no logging of the key, and no key persistence on the server side.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Architecture
 
-## Deploy on Vercel
+- **Next.js 14 App Router** with a small mix of server and client components.
+- **Cartesia TTS** via the official `@cartesia/cartesia-js` SDK.
+- **Voice catalog** is cached for 14 days via `src/app/server/lib/VoiceCache.ts` so the picker is instant after the first fetch.
+- **Client-side mixing** with `crunker` — the server never composes the music + voice. It only returns the raw TTS clip.
+- **Vercel Blob** is optional for production: stores rendered audio across container restarts. Without it, files live on the ephemeral container disk.
+- **Rate-limited proxy** on `POST /api` — 10 requests per minute per IP via `src/app/server/lib/rateLimit.ts`.
+- **Strict allowlist** on `GET /api/background` — only known lowercase `.mp3` basenames are served, blocking any path-traversal attempt.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Vercel** (recommended): one-click via the deploy button on the project page. No special config; set `BLOB_READ_WRITE_TOKEN` if you want persistent audio cache.
+- **Render** (Docker): a Blueprint is included at `render.yaml`. The free tier sleeps after ~15 minutes idle and wipes the disk on cold start; supply a Vercel Blob token if that matters to you.
+- **Hugging Face Spaces**: a viable alternative when you need a host that ships with `ffmpeg` available.
+- **Self-host**: `npm run build && npm start`, or use the included multi-stage `Dockerfile` (final image ~230 MB, `node:20-slim` + `ffmpeg` + the Next standalone bundle).
+
+## Environment variables
+
+All four are **optional**. The visitor flow works on a fresh checkout with an empty `.env`.
+
+| Var                      | Required?         | Purpose                                                                                                              |
+| ------------------------ | ----------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `CARTESIA_API_KEY`       | Optional          | Server-side voice catalog fetch only. Audio generation always uses the visitor's BYO key from the request body.       |
+| `BLOB_READ_WRITE_TOKEN`  | Optional          | Vercel Blob token for caching rendered audio across container restarts. Without it, the audio cache is ephemeral.     |
+| `ELEVENLABS_API_KEY`     | Optional / unused | Reserved for a future ElevenLabs tab — currently disabled in the UI.                                                  |
+| `GEMINI_API_KEY`         | Optional          | Only used by `scripts/content-pipeline.ts` to generate blog posts. Not needed for the app itself.                     |
+
+## Security model
+
+- All four secrets above are optional; the visitor flow never requires server-side credentials.
+- The visitor's Cartesia key is never persisted server-side. It lives in the browser's `localStorage` on the client (moving to `sessionStorage` per TASK-14) and is forwarded with each generate request only.
+- `GET /api/background` is hardened against path traversal with a strict allowlist of lowercase mp3 basenames.
+- `POST /api` is rate-limited to 10 requests per minute per IP.
+- The Dockerfile runs as a non-root user and exposes a health check at `/api/health`.
+- To report a vulnerability, see [SECURITY.md](SECURITY.md).
+
+## Contributing
+
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the dev loop, code style, and the review gate before opening a PR.
+
+## License
+
+[MIT](LICENSE). Use it, fork it, ship it — attribution appreciated but not required.
+
+## Acknowledgements
+
+- **[Cartesia](https://cartesia.ai)** — the TTS provider. Not affiliated.
+- **[Crunker](https://github.com/jackedgson/crunker)** — browser audio mixing without server round-trips.
+- **[shadcn/ui](https://ui.shadcn.com)** — the component primitives this UI is built on.
+- **[lucide-react](https://lucide.dev)** — iconography.
+- **[Tailwind CSS](https://tailwindcss.com)**, **[Next.js](https://nextjs.org)**, **[React Query](https://tanstack.com/query)** — the rest of the stack.

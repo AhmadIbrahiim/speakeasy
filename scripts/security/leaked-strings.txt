@@ -1,0 +1,20 @@
+# Patterns redacted from git history. See docs/security/history-rewrite-checklist.md.
+#
+# Format: <regex-or-literal>==><replacement>
+# When prefixed with "regex:" the left side is interpreted as a Python regex by
+# git-filter-repo's --replace-text engine. Patterns intentionally use only the
+# leaked prefixes (first 8 hex chars) so this file itself does not become a
+# secondary leak. The regex tails match the remaining alphanumerics of the
+# original token so the full secret is rewritten in every blob.
+
+# Vercel Blob read/write token leaked in README-UPDATE.md history.
+regex:vercel_blob_rw_WvCflkhH[A-Za-z0-9_]+==><REDACTED_VERCEL_BLOB_TOKEN>
+
+# ElevenLabs API keys leaked from in-source constants.
+regex:sk_114443d7[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
+regex:sk_5f822938[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
+regex:sk_77b2d264[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
+regex:sk_c260e88b[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
+
+# Google Gemini API key leaked in scripts/generate-thumbnail.ts history.
+regex:AIzaSyBU[A-Za-z0-9_-]+==><REDACTED_GEMINI_KEY>

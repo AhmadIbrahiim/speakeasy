@@ -8,6 +8,10 @@ const CARTESIA_VERSION = "2026-03-01"
 const CARTESIA_VOICES_URL = "https://api.cartesia.ai/voices"
 const PAGE_LIMIT = 100
 const MAX_PAGES = 100
+// Upstream timeouts. Voice listing is small JSON, so 30s is generous.
+// Audio generation can take longer (whole MP3 is buffered), so 60s.
+const VOICES_FETCH_TIMEOUT_MS = 30_000
+const GENERATE_TIMEOUT_MS = 60_000
 
 type ListVoicesPage = {
   data: CartesiaVoiceResponse[]
@@ -78,13 +82,30 @@ class CartesiaService {
       url.searchParams.set("limit", String(PAGE_LIMIT))
       if (startingAfter) url.searchParams.set("starting_after", startingAfter)
 
-      const response = await fetch(url.toString(), {
-        headers: {
-          "Cartesia-Version": CARTESIA_VERSION,
-          "X-API-Key": CARTESIA_API_KEY || "",
-        },
-        cache: "no-store",
-      })
+      // Per-request timeout. If Cartesia hangs, we abort and let the upstream
+      // error layer classify the AbortError as a 504-style timeout response.
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), VOICES_FETCH_TIMEOUT_MS)
+
+      let response: Response
+      try {
+        response = await fetch(url.toString(), {
+          headers: {
+            "Cartesia-Version": CARTESIA_VERSION,
+            "X-API-Key": CARTESIA_API_KEY || "",
+          },
+          cache: "no-store",
+          signal: controller.signal,
+        })
+      } catch (err) {
+        if ((err as { name?: string })?.name === "AbortError") {
+          // Tagged so classifyCartesiaError() upstream maps this to a 504.
+          throw new Error(`Cartesia voices/list aborted after ${VOICES_FETCH_TIMEOUT_MS}ms (timeout)`)
+        }
+        throw err
+      } finally {
+        clearTimeout(timer)
+      }
 
       if (!response.ok) {
         throw new Error(`Cartesia voices/list failed: ${response.status} ${response.statusText}`)
@@ -143,20 +164,39 @@ class CartesiaService {
       }
     }
 
-    return client.tts.generate({
-      model_id: model_id,
-      transcript: text,
-      voice: {
-        mode: "id",
-        id: voice,
-      },
-      language: "en",
-      output_format: { ...outputFormatObj } as RawOutputFormat,
-      generation_config: {
-        volume: 1.0,
-        speed: 1.0,
-      },
-    })
+    // The @cartesia/cartesia-js SDK accepts a `signal` in RequestOptions
+    // (see node_modules/@cartesia/cartesia-js/internal/request-options.d.ts).
+    // We pair an AbortController with a 60s timeout so the audio call can't
+    // hang the route handler indefinitely.
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), GENERATE_TIMEOUT_MS)
+
+    try {
+      return await client.tts.generate(
+        {
+          model_id: model_id,
+          transcript: text,
+          voice: {
+            mode: "id",
+            id: voice,
+          },
+          language: "en",
+          output_format: { ...outputFormatObj } as RawOutputFormat,
+          generation_config: {
+            volume: 1.0,
+            speed: 1.0,
+          },
+        },
+        { signal: controller.signal },
+      )
+    } catch (err) {
+      if ((err as { name?: string })?.name === "AbortError") {
+        throw new Error(`Cartesia tts.generate aborted after ${GENERATE_TIMEOUT_MS}ms (timeout)`)
+      }
+      throw err
+    } finally {
+      clearTimeout(timer)
+    }
   }
 }
 

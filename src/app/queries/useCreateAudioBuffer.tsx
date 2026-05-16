@@ -8,55 +8,58 @@ type MixingOptions = {
   cartesiaApiKey?: string
 }
 
+export type ApiErrorCode = "invalid_key" | "rate_limited" | "quota_exceeded" | "server" | "validation" | "voice_not_found" | "network" | "unknown"
+
+export class GenerateAudioError extends Error {
+  code: ApiErrorCode
+  status: number
+  retryAfterSeconds?: number
+  constructor(code: ApiErrorCode, message: string, status: number, retryAfterSeconds?: number) {
+    super(message)
+    this.name = "GenerateAudioError"
+    this.code = code
+    this.status = status
+    this.retryAfterSeconds = retryAfterSeconds
+  }
+}
+
 const request = async (text: string, id: string, bgId: string, options?: MixingOptions) => {
-  const response = await fetch("/api", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ text, id, bgId, cartesiaApiKey: options?.cartesiaApiKey }),
-  })
+  let response: Response
+  try {
+    response = await fetch("/api", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, id, bgId, cartesiaApiKey: options?.cartesiaApiKey }),
+    })
+  } catch {
+    throw new GenerateAudioError("network", "We couldn't reach the server. Check your connection and try again.", 0)
+  }
 
-  // Get the background URL from the response header
+  if (!response.ok) {
+    let parsed: { error?: { code?: ApiErrorCode; message?: string; retry_after_seconds?: number } } = {}
+    try {
+      parsed = await response.json()
+    } catch {}
+    const err = parsed.error
+    throw new GenerateAudioError(err?.code ?? "unknown", err?.message ?? `Request failed (${response.status}).`, response.status, err?.retry_after_seconds)
+  }
+
   const backgroundUrl = response.headers.get("X-Background-URL") || ""
-
-  // Get the voice audio as ArrayBuffer
   const voiceBuffer = await response.arrayBuffer()
-
   return { voiceBuffer, backgroundUrl }
 }
 
-// Define the function to call the mutation
 export const useCreateAudioBuffer = (text: string, id: string, bg: string) => {
   const mutation = useMutation({
     mutationFn: async (options?: MixingOptions) => {
-      try {
-        // Get the voice audio and background URL
-        const { voiceBuffer, backgroundUrl } = await request(text, id, bg, options)
+      const { voiceBuffer, backgroundUrl } = await request(text, id, bg, options)
 
-        // If we have both voice and background, mix them client-side
-        if (voiceBuffer && backgroundUrl) {
-          // The background URL is relative, so we need to make it absolute
-          const absoluteBackgroundUrl = backgroundUrl.startsWith("/") ? `${window.location.origin}${backgroundUrl}` : backgroundUrl
-
-          // Mix the audio with client-side Web Audio API
-          const mixedBlob = await mixAudioClientSide(
-            voiceBuffer,
-            absoluteBackgroundUrl,
-            options?.voiceVolume || 1.0, // voice volume
-            options?.bgVolume || 0.3, // background volume
-            options?.outputFormat || "wav", // output format
-          )
-
-          return new Response(mixedBlob)
-        } else {
-          // If we don't have a background URL, just return the voice
-          return new Response(voiceBuffer)
-        }
-      } catch (error) {
-        console.error("Error in audio processing:", error)
-        throw error
+      if (voiceBuffer && backgroundUrl) {
+        const absoluteBackgroundUrl = backgroundUrl.startsWith("/") ? `${window.location.origin}${backgroundUrl}` : backgroundUrl
+        const mixedBlob = await mixAudioClientSide(voiceBuffer, absoluteBackgroundUrl, options?.voiceVolume ?? 1.0, options?.bgVolume ?? 0.3, options?.outputFormat ?? "wav")
+        return new Response(mixedBlob)
       }
+      return new Response(voiceBuffer)
     },
   })
 

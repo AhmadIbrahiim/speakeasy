@@ -3,46 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-rgb: 26, 25, 22;
+  --cream-bg: #f5efe3;
+  --cream-bg-soft: #fbf7ee;
 }
 
 body {
-  // Gradinate color of amirca flag
-  background: linear-gradient(120deg, rgba(var(--background-start-rgb), 1) 0%, rgba(var(--background-start-rgb), 1) 15%, rgba(var(--background-end-rgb), 1) 10%, rgba(var(--background-end-rgb), 1) 10%)
-    opacity(50%);
-
-  background-size: 45px 45px;
+  background:
+    radial-gradient(800px 400px at 90% 0%, rgba(230, 74, 43, 0.06), transparent 60%),
+    radial-gradient(700px 500px at 0% 30%, rgba(245, 166, 35, 0.05), transparent 60%),
+    var(--cream-bg);
   color: rgb(var(--foreground-rgb));
-  font-family: var(--font-libre_franklin), sans-serif;
-  font-size: 1.125rem;
-  line-height: 1.75;
+  font-size: 1rem;
+  line-height: 1.6;
   margin: 0;
   min-height: 100vh;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-libre_franklin), sans-serif;
+  .scribble-underline {
+    background: linear-gradient(to bottom, transparent 60%, #f5a62380 60%, #f5a62380 90%, transparent 90%);
+    padding: 0 4px;
+  }
 }
 
 #blog-content {

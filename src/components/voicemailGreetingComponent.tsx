@@ -7,13 +7,15 @@
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
-import Link from "next/link"
-import { Download, PlayIcon, Volume2, VolumeX, Mic2, Music4, Settings2, Loader } from "lucide-react"
-import { useState, useRef } from "react"
+import { Combobox } from "@/components/ui/combobox"
+import { Waveform } from "@/components/ui/waveform"
+import { cn } from "@/lib/utils"
+import { Download, Volume2, Mic2, Music4, Settings2, Loader } from "lucide-react"
+import { useState, useRef, useLayoutEffect } from "react"
 import { Voice, VoiceResponse } from "@/types"
 import _ from "lodash"
-import { useCreateAudioBuffer } from "@/app/queries/useCreateAudioBuffer"
+import { useCreateAudioBuffer, GenerateAudioError } from "@/app/queries/useCreateAudioBuffer"
+import { ErrorBanner, type ErrorBannerData } from "./ui/errorBanner"
 import CONSTANTS from "@/app/config/constants"
 import { PlayButton } from "./ui/playButton"
 import { PageTarget } from "./server/mainForm"
@@ -53,9 +55,17 @@ Thank you for your patience, please stay on the line while we direct your call t
   const musicAudioRef = useRef<HTMLAudioElement | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [showApiKeyDialog, setShowApiKeyDialog] = useState(false)
-  const [apiKeyInput, setApiKeyInput] = useState("")
   const [apiKeyError, setApiKeyError] = useState("")
-  const [apiTab, setApiTab] = useState("cartesia")
+  const [errorBanner, setErrorBanner] = useState<ErrorBannerData | null>(null)
+  const scriptRef = useRef<HTMLTextAreaElement>(null)
+
+  // Auto-grow the script textarea so it acts like a real writing surface.
+  useLayoutEffect(() => {
+    const el = scriptRef.current
+    if (!el) return
+    el.style.height = "auto"
+    el.style.height = `${el.scrollHeight}px`
+  }, [text])
 
   // Check if we have any American accent, otherwise use the first available accent
   const availableAccents = Array.from(new Set(allVoices.map((voice) => voice.labels.accent)))
@@ -105,23 +115,29 @@ Thank you for your patience, please stay on the line while we direct your call t
   }
 
   // Save API key to localStorage
-  const handleSaveApiKey = () => {
-    if (!apiKeyInput.trim()) {
-      setApiKeyError("API key is required.")
-      return
-    }
-    localStorage.setItem("cartesia_api_key", apiKeyInput.trim())
-    setCartesiaApiKey(apiKeyInput.trim())
+  const handleSaveApiKey = (apiKey: string) => {
+    localStorage.setItem("cartesia_api_key", apiKey)
+    setCartesiaApiKey(apiKey)
     setShowApiKeyDialog(false)
     setApiKeyError("")
   }
 
-  // Clear API key on error
-  const handleApiKeyError = (msg: string) => {
-    setApiKeyError(msg)
-    setCartesiaApiKey("")
-    localStorage.removeItem("cartesia_api_key")
-    setShowApiKeyDialog(true)
+  // Route errors from the generate API. Auth issues open the key dialog;
+  // everything else shows an inline banner so the user knows what happened.
+  const handleApiError = (err: unknown) => {
+    const apiErr = err instanceof GenerateAudioError ? err : null
+    const code = apiErr?.code ?? "unknown"
+    const message = apiErr?.message ?? (err instanceof Error ? err.message : "Couldn't generate audio.")
+
+    if (code === "invalid_key") {
+      setApiKeyError(message)
+      setCartesiaApiKey("")
+      localStorage.removeItem("cartesia_api_key")
+      setShowApiKeyDialog(true)
+      return
+    }
+
+    setErrorBanner({ code, message, retryAfterSeconds: apiErr?.retryAfterSeconds })
   }
 
   const handlePlay = async () => {
@@ -151,43 +167,30 @@ Thank you for your patience, please stay on the line while we direct your call t
     })
     window?.clarity?.("event", "select_content")
 
-    // Pass the voice and background volumes to the mutation
+    setErrorBanner(null)
     mutation.mutation
       .mutateAsync({
         voiceVolume: voiceVolume / 100,
         bgVolume: bgVolume / 100,
-        outputFormat: "wav", // Use WAV for streaming as it's faster to process
+        outputFormat: "wav",
         cartesiaApiKey,
       })
-      .then(async (d: any) => {
-        if (d.error) {
-          handleApiKeyError(d.error)
-          return
-        }
+      .then(async (d: Response) => {
         const buffer = await d.blob()
-        console.log(buffer)
         const url = URL.createObjectURL(buffer)
         const newAudio = new Audio(url)
 
         setAudio(newAudio)
-        newAudio.onended = () => {
-          setIsPlaying(false)
-        }
-        newAudio.onplay = () => {
-          setIsPlaying(true)
-        }
-
-        newAudio.onloadedmetadata = () => {
-          newAudio.play()
-        }
+        newAudio.onended = () => setIsPlaying(false)
+        newAudio.onplay = () => setIsPlaying(true)
+        newAudio.onloadedmetadata = () => newAudio.play()
       })
-      .catch((err: any) => {
-        handleApiKeyError("Invalid or expired API key. Please try again.")
-      })
+      .catch(handleApiError)
   }
 
   const download = async () => {
     if (!(await ensureApiKey())) return
+    setErrorBanner(null)
     mutation.mutation
       .mutateAsync({
         voiceVolume: voiceVolume / 100,
@@ -195,11 +198,7 @@ Thank you for your patience, please stay on the line while we direct your call t
         outputFormat: "mp3",
         cartesiaApiKey,
       })
-      .then(async (d: any) => {
-        if (d.error) {
-          handleApiKeyError(d.error)
-          return
-        }
+      .then(async (d: Response) => {
         const buffer = await d.blob()
         const url = URL.createObjectURL(buffer)
         const a = document.createElement("a")
@@ -207,10 +206,8 @@ Thank you for your patience, please stay on the line while we direct your call t
         a.download = "VoicemailGreeting.mp3"
         a.click()
 
-        // Show feedback dialog after download
         setShowFeedback(true)
 
-        // Track download event in GA
         window.dataLayer = window.dataLayer || []
         window.dataLayer.push({
           event: "download_voicemail",
@@ -220,9 +217,7 @@ Thank you for your patience, please stay on the line while we direct your call t
         })
         window?.clarity?.("event", "download_voicemail")
       })
-      .catch((err: any) => {
-        handleApiKeyError("Invalid or expired API key. Please try again.")
-      })
+      .catch(handleApiError)
   }
 
   // Handle selecting a template
@@ -276,164 +271,195 @@ Thank you for your patience, please stay on the line while we direct your call t
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
+      <div className="w-full p-4 sm:p-6 bg-white rounded-2xl">
         {/* Header Section */}
-        <div className="mb-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Your Perfect Greeting</h2>
-          <p className="text-gray-600">Customize your message, voice, and music to create a professional greeting</p>
+        <div className="mb-6 text-left">
+          <h2 className="font-serif text-2xl sm:text-[28px] font-semibold tracking-[-0.02em] text-ink mb-1">Write. Pick. Mix. Generate.</h2>
+          <p className="text-stone-600 text-[14.5px]">Each change re-renders in under a second.</p>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-5 gap-6">
-          {/* Left Column - Text Editor */}
+        <div className="grid lg:grid-cols-5 gap-4">
+          {/* Left Column - Text Editor + Voice */}
           <div className="lg:col-span-3 space-y-4">
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-4 flex-col gap-4 flex-col-reverse">
-                <Label className="text-lg font-semibold text-gray-900">Your Message</Label>
+            <div className="bg-cream-50 p-5 rounded-2xl border-2 border-ink">
+              <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
+                <Label className="flex items-center gap-2 text-[13px] font-semibold text-stone-600 uppercase tracking-wider">
+                  <span className="font-serif italic text-accent text-base normal-case font-bold tracking-normal">i.</span>
+                  Your script
+                </Label>
                 <TemplateSelector onSelectTemplate={handleSelectTemplate} />
               </div>
               <Textarea
-                className={`w-full ${
-                  target === PageTarget.MAIN ? "h-44" : "h-64"
-                } text-base resize-none p-4 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors`}
+                ref={scriptRef}
+                className="w-full min-h-[260px] text-[15.5px] leading-[1.65] resize-none p-4 sm:p-5 rounded-xl border-2 border-ink bg-white focus:bg-white focus-visible:outline-none focus-visible:ring-0 focus-visible:border-accent transition-colors overflow-hidden"
                 onChange={(e) => setText(e.target.value)}
                 value={text}
-                placeholder="Enter your greeting message here..."
+                placeholder="Write your greeting…"
+                rows={1}
               />
+              <ScriptMeter text={text} />
             </div>
 
             {/* Voice Controls */}
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-4">
-                <Mic2 className="w-5 h-5 text-gray-700" />
-                <Label className="text-lg font-semibold text-gray-900">Voice Settings</Label>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <div className="bg-cream-50 p-5 rounded-2xl border-2 border-ink">
+              <Label className="flex items-center gap-2 text-[13px] font-semibold text-stone-600 uppercase tracking-wider mb-4">
+                <span className="font-serif italic text-accent text-base normal-case font-bold tracking-normal">ii.</span>
+                <Mic2 className="w-4 h-4 text-ink" strokeWidth={2} />
+                Voice &amp; accent
+              </Label>
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-sm text-gray-600 mb-1.5">Accent</Label>
-                  <Select
+                  <Label className="text-[12px] text-stone-500 mb-1.5 block">Accent</Label>
+                  <Combobox
                     value={accent}
                     onValueChange={(value) => {
                       setAccent(value)
                       const firstVoiceWithAccent = allVoices.find((v) => v.labels.accent === value)
-                      if (firstVoiceWithAccent) {
-                        setVoice(firstVoiceWithAccent.voice_id)
-                      }
-                    }}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue>{accent.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableAccents.map((accentOption) => (
-                        <SelectItem key={accentOption} value={accentOption}>
-                          {accentOption.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      if (firstVoiceWithAccent) setVoice(firstVoiceWithAccent.voice_id)
+                    }}
+                    options={availableAccents.map((a) => ({
+                      value: a,
+                      label: a.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+                    }))}
+                    placeholder="Pick an accent"
+                    searchPlaceholder="Search accents…"
+                    ariaLabel="Accent"
+                  />
                 </div>
                 <div>
-                  <Label className="text-sm text-gray-600 mb-1.5">Voice</Label>
-                  <Select value={selectedVoice} onValueChange={setVoice}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue>{selectedVoiceName}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {displayedVoices.map((voice) => (
-                        <SelectItem key={voice.voice_id} value={voice.voice_id}>
-                          {voice.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label className="text-[12px] text-stone-500 mb-1.5 block">Voice</Label>
+                  <Combobox
+                    value={selectedVoice}
+                    onValueChange={setVoice}
+                    options={displayedVoices.map((v) => ({
+                      value: v.voice_id,
+                      label: v.name,
+                      description: v.description,
+                      group: v.labels.accent?.replace(/\b\w/g, (c) => c.toUpperCase()),
+                    }))}
+                    placeholder="Pick a voice"
+                    searchPlaceholder={`Search ${displayedVoices.length} voices…`}
+                    emptyMessage="No voice matches"
+                    ariaLabel="Voice"
+                    renderItem={(o, sel) => (
+                      <div className="flex flex-col min-w-0">
+                        <span className={cn("truncate text-[14px]", sel && "font-semibold")}>{o.label}</span>
+                        {o.description && <span className="truncate text-[11.5px] text-stone-500 mt-0.5">{o.description}</span>}
+                      </div>
+                    )}
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column - Audio Settings */}
+          {/* Right Column - Music + Mix */}
           <div className="lg:col-span-2 space-y-4">
             {/* Music Selection */}
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-4">
-                <Music4 className="w-5 h-5 text-gray-700" />
-                <Label className="text-lg font-semibold text-gray-900">Background Music</Label>
-              </div>
+            <div className="bg-cream-50 p-5 rounded-2xl border-2 border-ink">
+              <Label className="flex items-center gap-2 text-[13px] font-semibold text-stone-600 uppercase tracking-wider mb-3">
+                <span className="font-serif italic text-accent text-base normal-case font-bold tracking-normal">iii.</span>
+                <Music4 className="w-4 h-4 text-ink" strokeWidth={2} />
+                Background music
+              </Label>
               <div className="flex items-center gap-2">
-                <div className="flex-grow">
-                  <Select value={music} onValueChange={setMusic}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Choose background music" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CONSTANTS.BG_MUSIC.map((music) => (
-                        <SelectItem key={music.text} value={music.file}>
-                          {music.text}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="flex-grow min-w-0">
+                  <Combobox
+                    value={music}
+                    onValueChange={setMusic}
+                    options={CONSTANTS.BG_MUSIC.map((m) => ({
+                      value: m.file,
+                      label: m.text,
+                      group: m.categories[0],
+                    }))}
+                    placeholder="Choose music"
+                    searchPlaceholder={`Search ${CONSTANTS.BG_MUSIC.length} tracks…`}
+                    emptyMessage="No tracks match"
+                    ariaLabel="Background music"
+                  />
                 </div>
                 <PlayButton isPlaying={isMusicPlaying} isLoading={isMusicLoading} onClick={handleMusicPreview} />
               </div>
             </div>
 
             {/* Volume Controls */}
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-4">
-                <Settings2 className="w-5 h-5 text-gray-700" />
-                <Label className="text-lg font-semibold text-gray-900">Volume Mix</Label>
-              </div>
+            <div className="bg-cream-50 p-5 rounded-2xl border-2 border-ink">
+              <Label className="flex items-center gap-2 text-[13px] font-semibold text-stone-600 uppercase tracking-wider mb-4">
+                <span className="font-serif italic text-accent text-base normal-case font-bold tracking-normal">iv.</span>
+                <Settings2 className="w-4 h-4 text-ink" strokeWidth={2} />
+                Mix the levels
+              </Label>
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <Label className="flex items-center text-sm text-gray-600">
-                      <Volume2 className="w-4 h-4 mr-2" />
-                      Voice Volume
+                    <Label className="flex items-center text-[13px] text-ink font-medium">
+                      <Volume2 className="w-3.5 h-3.5 mr-1.5" />
+                      Voice
                     </Label>
-                    <span className="text-sm font-medium text-gray-900">{voiceVolume}%</span>
+                    <span className="font-mono text-[12px] font-medium text-stone-600">{voiceVolume}%</span>
                   </div>
                   <Slider defaultValue={[voiceVolume]} max={100} step={1} onValueChange={(value: number[]) => setVoiceVolume(value[0])} className="my-2" />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <Label className="flex items-center text-sm text-gray-600">
-                      <Volume2 className="w-4 h-4 mr-2" />
-                      Music Volume
+                    <Label className="flex items-center text-[13px] text-ink font-medium">
+                      <Volume2 className="w-3.5 h-3.5 mr-1.5" />
+                      Music
                     </Label>
-                    <span className="text-sm font-medium text-gray-900">{bgVolume}%</span>
+                    <span className="font-mono text-[12px] font-medium text-stone-600">{bgVolume}%</span>
                   </div>
                   <Slider defaultValue={[bgVolume]} max={100} step={1} onValueChange={(value: number[]) => setBgVolume(value[0])} className="my-2" />
                 </div>
               </div>
+              <p className="font-serif italic text-[12.5px] text-stone-500 mt-3 pt-3 border-t border-dashed border-ink/20">Keep music under 25% so the voice cuts through.</p>
             </div>
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <div className="flex flex-col space-y-4">
-            {/* Preview Section */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
-                <span className="text-sm text-gray-500">{isPlaying ? "Playing..." : "Preview your greeting"}</span>
-              </div>
-            </div>
+        {/* Error banner */}
+        <div className="mt-6">
+          <ErrorBanner
+            error={errorBanner}
+            onDismiss={() => setErrorBanner(null)}
+            onAction={errorBanner?.code === "voice_not_found" ? () => document.getElementById("workspace")?.scrollIntoView({ behavior: "smooth" }) : undefined}
+            actionLabel={errorBanner?.code === "voice_not_found" ? "Pick another voice" : undefined}
+          />
+        </div>
 
-            {/* Generate and Download Section */}
-            <div className="flex items-center justify-between border-t pt-4">
-              <div className="text-sm text-gray-600">Ready to create your voicemail greeting?</div>
-              <div className="flex items-center gap-4">
-                <Button variant="outline" onClick={download} className="flex items-center gap-2 hover:bg-gray-50" disabled={!mutation.mutation.data}>
-                  <Download className="w-4 h-4" />
-                  Download MP3
-                </Button>
-                <Button onClick={handlePlay} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white" disabled={mutation.mutation.isPending}>
-                  {mutation.mutation.isPending && <Loader className="w-4 h-4 animate-spin" />}
-                  Generate Greeting
-                </Button>
-              </div>
+        {/* Footer — player */}
+        <div className="rounded-2xl bg-cream-100 border-2 border-ink overflow-hidden">
+          <div className="px-5 pt-4 pb-3 flex items-center gap-3 sm:gap-4">
+            <PlayButton isPlaying={isPlaying} isLoading={mutation.mutation.isPending} onClick={handlePlay} />
+            <Waveform audio={audio} isPlaying={isPlaying} className="flex-1 min-w-0" emptyMessage="Generate to see the waveform" />
+          </div>
+          <div className="px-5 pb-4 pt-2 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t-2 border-ink/10 bg-cream-50/40">
+            <div className="font-mono text-[11px] text-stone-500">
+              <span className="inline-flex items-center gap-1.5">
+                <span className={cn("w-1.5 h-1.5 rounded-full", isPlaying ? "bg-accent animate-pulse" : audio ? "bg-accent-forest" : "bg-stone-400")} />
+                {isPlaying ? "playing" : audio ? "ready" : "no preview yet"}
+              </span>
+              <span className="mx-2 text-stone-300">·</span>
+              <span>sonic-3.5</span>
+              <span className="mx-2 text-stone-300">·</span>
+              <span>wav · 44.1kHz</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <Button
+                variant="outline"
+                onClick={download}
+                disabled={!mutation.mutation.data}
+                className="h-11 rounded-full border-2 border-ink bg-white text-ink font-medium hover:bg-cream-50 disabled:opacity-40 disabled:cursor-not-allowed gap-2">
+                <Download className="w-4 h-4" />
+                Download
+              </Button>
+              <Button
+                onClick={handlePlay}
+                disabled={mutation.mutation.isPending}
+                className="h-11 rounded-full border-2 border-ink bg-accent hover:bg-accent text-white font-semibold shadow-ink hover:shadow-ink-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all disabled:opacity-60 gap-2">
+                {mutation.mutation.isPending && <Loader className="w-4 h-4 animate-spin" />}
+                Generate greeting
+              </Button>
             </div>
           </div>
         </div>
@@ -442,17 +468,24 @@ Thank you for your patience, please stay on the line while we direct your call t
       {/* Add FeedbackDialog */}
       <FeedbackDialog open={showFeedback} onOpenChange={setShowFeedback} />
 
-      <ApiKeyDialog
-        open={showApiKeyDialog}
-        onOpenChange={setShowApiKeyDialog}
-        apiKeyInput={apiKeyInput}
-        setApiKeyInput={setApiKeyInput}
-        apiKeyError={apiKeyError}
-        handleSaveApiKey={handleSaveApiKey}
-        apiTab={apiTab}
-        setApiTab={setApiTab}
-      />
+      <ApiKeyDialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog} onSave={handleSaveApiKey} error={apiKeyError} />
     </>
+  )
+}
+
+function ScriptMeter({ text }: { text: string }) {
+  const words = text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0
+  const chars = text.length
+  // Sonic 3.5 averages ~165 WPM at default speed; round per-second math.
+  const seconds = Math.round((words / 165) * 60)
+  const duration = words === 0 ? "0:00" : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`
+  return (
+    <div className="flex items-center justify-between mt-2 px-1 text-[11.5px] font-mono text-stone-500 tabular-nums">
+      <span>
+        {words} {words === 1 ? "word" : "words"} · {chars} {chars === 1 ? "char" : "chars"}
+      </span>
+      <span>~{duration} spoken</span>
+    </div>
   )
 }
 

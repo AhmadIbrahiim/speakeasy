@@ -5,7 +5,7 @@ import NavMenu from "./ui/NavigationMenu"
 
 export function BaseLayout({ children, hideHero = false, title = "Voicemail Greeting" }: { children: React.ReactElement | React.ReactElement[]; hideHero?: boolean; title?: string }) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 max-md:p-8 pb-0 ">
+    <main className="flex min-h-screen flex-col items-center justify-between pt-16 sm:pt-20 pb-0 px-0">
       <div className="flex flex-col min-h-[100dvh]">
         <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
           <div className="max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-16 flex items-center justify-between">

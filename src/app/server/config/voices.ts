@@ -63,24 +63,22 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
         }
       }
 
-      console.log({ voice: id, model_id: "sonic-2", output_format: "mp3_44100_128", text })
+      console.log({ voice: id, model_id: "sonic-3.5", output_format: "mp3_44100_128", text })
 
       // Passing voice ID directly to Cartesia
-      const audio = await CartesiaService.generate({
+      const audioResponse = await CartesiaService.generate({
         voice: id, // This is now the voice_id
-        model_id: "sonic-2",
+        model_id: "sonic-3.5",
         output_format: "mp3_44100_128",
         text,
         cartesiaApiKey,
       })
 
-      const audioBuffer = Buffer.from(audio)
-
       if (isDevelopment) {
         // Development mode - write to local file
         const fileName = `output/${fileId}.mp3`
         // Convert buffer to Uint8Array for fs.writeFile
-        await fs.writeFile(fileName, new Uint8Array(audioBuffer))
+        await fs.writeFile(fileName, new Uint8Array(await audioResponse.arrayBuffer()))
 
         // Return paths to both voice and background files
         const bgMusicPath = `/api/background?file=${bg}.mp3`
@@ -93,6 +91,7 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
         })
       } else {
         // Production mode - upload to Vercel Blob
+        const audioBuffer = Buffer.from(await audioResponse.arrayBuffer())
         const fileUrl = await BlobStorageService.uploadAudio(fileId, audioBuffer)
 
         // Background music URL

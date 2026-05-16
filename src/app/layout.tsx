@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Fraunces, JetBrains_Mono } from "next/font/google"
 import { GoogleTagManager } from "@next/third-parties/google"
 import "./globals.scss"
 import { OrganizationJsonLd, ServiceJsonLd } from "@/components/JsonLd"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" })
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" })
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -39,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}>
       <head>
         <OrganizationJsonLd />
         <ServiceJsonLd
@@ -54,7 +56,7 @@ export default function RootLayout({
       </head>
       <GoogleTagManager gtmId="GTM-NWHBPJB6" />
 
-      <body className={inter.className}>{children}</body>
+      <body className="font-sans">{children}</body>
     </html>
   )
 }

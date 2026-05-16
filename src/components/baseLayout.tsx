@@ -2,6 +2,7 @@ import { VoicemailIcon } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import NavMenu from "./ui/NavigationMenu"
+import { SITE } from "@/config/site"
 
 export function BaseLayout({ children, hideHero = false, title = "Voicemail Greeting" }: { children: React.ReactElement | React.ReactElement[]; hideHero?: boolean; title?: string }) {
   return (
@@ -14,7 +15,7 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
                 <VoicemailIcon className="h-7 w-7 text-gray-900" />
                 <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
               </div>
-              <span className="font-semibold text-lg text-gray-900 hidden sm:block">Perfect Greet</span>
+              <span className="font-semibold text-lg text-gray-900 hidden sm:block">{SITE.name}</span>
             </Link>
 
             <div className="flex items-center">
@@ -58,10 +59,10 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
           <div className="mx-auto max-w-[1200px] p-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-6">
               <div>
-                <h3 className="text-base font-semibold mb-4">Perfect Greet</h3>
+                <h3 className="text-base font-semibold mb-4">{SITE.name}</h3>
                 <p className="text-sm text-gray-500 mb-4">Create professional voicemail greetings for free, no credit card required.</p>
                 <div className="flex space-x-4">
-                  <a href="https://twitter.com/perfectgreet" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                  <a href={SITE.socials.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -76,7 +77,7 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
                       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                     </svg>
                   </a>
-                  <a href="https://facebook.com/perfectgreet" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <a href={SITE.socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -135,7 +136,7 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
               </div>
             </div>
             <div className="border-t pt-6">
-              <p className="text-xs text-gray-500">© {new Date().getFullYear()} PerfectGreet. All rights reserved.</p>
+              <p className="text-xs text-gray-500">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
             </div>
           </div>
         </footer>

@@ -1,16 +1,17 @@
 import { Metadata } from "next"
 import BaseLayout from "@/components/baseLayout"
+import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Perfect Greet",
+  title: `Privacy Policy | ${SITE.name}`,
   description: "Read our privacy policy to understand how we collect, use, and protect your data when you use our free voicemail greeting service.",
   alternates: {
-    canonical: "https://www.perfectgreet.site/privacy-policy",
+    canonical: `${SITE.url}/privacy-policy`,
   },
   openGraph: {
-    title: "Privacy Policy | Perfect Greet",
+    title: `Privacy Policy | ${SITE.name}`,
     description: "Read our privacy policy to understand how we collect, use, and protect your data when you use our free voicemail greeting service.",
-    url: "https://www.perfectgreet.site/privacy-policy",
+    url: `${SITE.url}/privacy-policy`,
   },
 }
 
@@ -81,7 +82,7 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-xl font-semibold mb-3">Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy or our data practices, please contact us at privacy@perfectgreet.site.</p>
+            <p>If you have any questions about this Privacy Policy or our data practices, please contact us at {SITE.supportEmail}.</p>
           </section>
 
           <p className="text-sm text-gray-600 mt-8">Last updated: May 20, 2023</p>

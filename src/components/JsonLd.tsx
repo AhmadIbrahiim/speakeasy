@@ -1,4 +1,5 @@
 import React from "react"
+import { SITE } from "@/config/site"
 
 type ServiceJsonLdProps = {
   name: string
@@ -88,13 +89,11 @@ export const OrganizationJsonLd = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Perfect Greet",
-    url: "https://www.perfectgreet.site",
-    logo: "https://www.perfectgreet.site/logo.png",
+    name: SITE.organization.name,
+    url: SITE.url,
+    logo: SITE.organization.logo,
     description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required.",
-    sameAs: [
-      // Add social media URLs if available
-    ],
+    sameAs: [SITE.socials.twitter, SITE.socials.facebook, SITE.socials.github],
   }
 
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

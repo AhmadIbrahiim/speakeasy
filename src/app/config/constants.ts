@@ -1,3 +1,5 @@
+import { SITE } from "@/config/site"
+
 const CONSTANTS = {
   BG_MUSIC: [
     {
@@ -342,6 +344,7 @@ const CONSTANTS = {
   ],
 }
 
-export const PROD_URL = "https://www.perfectgreet.site"
+/** @deprecated Use `SITE.url` from `@/config/site` instead. */
+export const PROD_URL = SITE.url
 
 export default CONSTANTS

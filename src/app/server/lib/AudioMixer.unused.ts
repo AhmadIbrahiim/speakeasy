@@ -1,3 +1,12 @@
+// UNUSED: kept for reference. The live audio mixing path is client-side via
+// crunker. Delete after 2026-12-01 if still unused.
+//
+// This module was the server-side fallback when audio mixing happened inside a
+// Next.js route. The current API flow performs all mixing in the browser, so
+// this file is dormant. The .unused.ts suffix is intentional — it keeps the
+// implementation searchable while signalling "do not import." See
+// SERVERLESS-AUDIO.md for the historical context.
+
 /**
  * A lightweight audio concatenation utility for serverless environments
  * Provides a simple, reliable alternative to FFmpeg for Vercel deployments

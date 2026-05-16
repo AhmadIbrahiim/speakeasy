@@ -9,14 +9,17 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "pm2:start": "pm2 start npm --name voicemail-greeting -- start  -- --port 3030",
-    "pm2:stop": "pm2 stop voicemail-greeting",
-    "prod": "next build && pm2 delete voicemail-greeting  &&  npm run pm2:start",
-    "generate-thumbnail": "node scripts/generate-thumbnail.js",
+    "generate-thumbnail": "ts-node scripts/generate-thumbnail.ts",
     "pipeline": "ts-node scripts/content-pipeline.ts",
     "test": "vitest run",
     "test:ci": "vitest run --reporter=verbose",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prod:pm2:start": "pm2 start npm --name voicemail-greeting -- start -- --port 3030",
+    "prod:pm2:stop": "pm2 stop voicemail-greeting",
+    "prod:pm2": "next build && pm2 delete voicemail-greeting && npm run prod:pm2:start"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@cartesia/cartesia-js": "^3.0.0",
@@ -33,7 +36,6 @@
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.1.3",
-    "@streampot/client": "^0.0.15",
     "@tanstack/react-query": "^5.40.1",
     "@types/node": "^20.11.16",
     "@vercel/blob": "^0.21.0",
@@ -58,8 +60,7 @@
     "remark-html": "^16.0.1",
     "sass": "^1.77.4",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7",
-    "wavefile": "^11.0.0"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.35.6",

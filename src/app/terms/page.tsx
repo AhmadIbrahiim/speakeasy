@@ -1,16 +1,17 @@
 import { Metadata } from "next"
 import BaseLayout from "@/components/baseLayout"
+import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Perfect Greet",
+  title: `Terms of Service | ${SITE.name}`,
   description: "Read our terms of service to understand the rules and guidelines for using our free voicemail greeting service.",
   alternates: {
-    canonical: "https://www.perfectgreet.site/terms",
+    canonical: `${SITE.url}/terms`,
   },
   openGraph: {
-    title: "Terms of Service | Perfect Greet",
+    title: `Terms of Service | ${SITE.name}`,
     description: "Read our terms of service to understand the rules and guidelines for using our free voicemail greeting service.",
-    url: "https://www.perfectgreet.site/terms",
+    url: `${SITE.url}/terms`,
   },
 }
 

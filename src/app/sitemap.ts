@@ -1,11 +1,12 @@
 import { getSortedPostsData } from "@/lib/posts"
 import { MetadataRoute } from "next"
+import { SITE } from "@/config/site"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getSortedPostsData()
 
   // Base URL
-  const baseUrl = "https://www.perfectgreet.site"
+  const baseUrl = SITE.url
 
   // Generate sitemap entries for blog posts
   const blogPosts = posts.map((post) => ({

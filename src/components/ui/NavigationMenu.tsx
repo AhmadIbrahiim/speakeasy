@@ -4,6 +4,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import classNames from "classnames"
 import { CaretDownIcon } from "@radix-ui/react-icons"
 import "./NavigationMenu.scss"
+import { SITE } from "@/config/site"
 
 const NavigationMenuDemo = () => {
   return (
@@ -53,7 +54,7 @@ const NavigationMenuDemo = () => {
 
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
-            <a className="NavigationMenuLink" href="mailto:me@ahmed-ibrahim.com?subject=Perfect%20Greet%20Site%20Inquiry">
+            <a className="NavigationMenuLink" href={`mailto:${SITE.contactEmail}?subject=${encodeURIComponent(`${SITE.name} Site Inquiry`)}`}>
               Contact
             </a>
           </NavigationMenu.Link>

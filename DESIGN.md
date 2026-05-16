@@ -400,27 +400,21 @@ Notes for future design sessions on this project:
    browsers reparented the block children and broke the layout. Use description
    for one string only. Same rule applies to `<DialogTitle>`.
 
-3. **Two project paths exist on disk.** The canonical source is
-   `/Users/ahmed/Desktop/voicemail-greeting/`. Stale `.next/` caches at
-   `/Users/ahmed/Desktop/knight-livekit/voicemail-greeting/` will confuse
-   shell tools. Always cd to the Desktop root before running `next dev`,
-   `tsc`, etc.
-
-4. **Body background change has site-wide reach.** `globals.scss`' body bg is
+3. **Body background change has site-wide reach.** `globals.scss`' body bg is
    inherited by every page using `BaseLayout` (FAQ, /hold, /posts, /contact).
    Switching to cream worked because all content sections have explicit
    surfaces (`bg-white`, `bg-ink`), but always sanity-check other pages after
    changing global body styles.
 
-5. **Headlines need explicit tracking.** Fraunces at 60px+ with default
+4. **Headlines need explicit tracking.** Fraunces at 60px+ with default
    letter-spacing reads loose. Always pair display sizes with
    `tracking-[-0.025em]` or tighter.
 
-6. **Ink shadow shouldn't move on hover.** The pattern is to translate the
+5. **Ink shadow shouldn't move on hover.** The pattern is to translate the
    card, leave the shadow. If both move together, the card just slides — no
    "lifting off the page" effect.
 
-7. **Templates clicking the textarea relies on a brittle selector.**
+6. **Templates clicking the textarea relies on a brittle selector.**
    `loadTemplate()` in `landing.tsx` uses `document.querySelector("textarea")`
    and dispatches a synthetic `input` event so React picks up the change. If
    the workspace ever gets more than one textarea, give the script field a

@@ -23,7 +23,13 @@ We've implemented a lightweight, pure JavaScript approach for audio processing:
 
 ### Implementation
 
-The core of our implementation is in `src/app/server/lib/AudioMixer.ts`:
+> Status: this server-side mixer is currently dormant. The live audio flow mixes
+> client-side via [crunker](https://www.npmjs.com/package/crunker). The
+> implementation has been preserved at `src/app/server/lib/AudioMixer.unused.ts`
+> so the work isn't lost if we ever need to swap back to server-side mixing.
+> See the top-of-file deletion marker in that module.
+
+The core of the (now-dormant) server-side implementation is in `src/app/server/lib/AudioMixer.unused.ts`:
 
 ```typescript
 export async function mixAudio(voiceBuffer: Buffer | Uint8Array, backgroundBuffer: Buffer | Uint8Array): Promise<Buffer> {

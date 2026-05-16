@@ -5,6 +5,7 @@ import BaseLayout from "./baseLayout"
 import CONSTANTS from "@/app/config/constants"
 import { Mic2, Music4, FileText, ArrowRight, Check, Star } from "lucide-react"
 import { Metadata } from "next"
+import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
   title: "Perfect Greet",
@@ -267,11 +268,11 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
               <Star className="w-3.5 h-3.5" fill="currentColor" />
               <span>
                 Like the project?{" "}
-                <a href="mailto:me@ahmed-ibrahim.com" className="underline hover:text-cream-100">
+                <a href={`mailto:${SITE.contactEmail}`} className="underline hover:text-cream-100">
                   Say hi
                 </a>{" "}
                 or{" "}
-                <a href="https://github.com" className="underline hover:text-cream-100">
+                <a href={SITE.socials.github} className="underline hover:text-cream-100">
                   star it on GitHub
                 </a>
                 .

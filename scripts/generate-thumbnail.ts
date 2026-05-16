@@ -4,12 +4,18 @@ const fs = require("node:fs")
 const path = require("path")
 const mime = require("mime-types")
 
+// This is auxiliary content-authoring tooling, NOT part of the runtime app.
+// See scripts/README.md before running.
 // Get your Gemini API key at https://aistudio.google.com/app/apikey
 const apiKey = process.env.GEMINI_API_KEY
 
 if (!apiKey) {
   console.error(
-    "GEMINI_API_KEY env var is required. Get one at https://aistudio.google.com/app/apikey",
+    "[generate-thumbnail] Missing required env var: GEMINI_API_KEY.\n" +
+      "This script needs a Gemini API key to call the image generation model.\n" +
+      "Get one at https://aistudio.google.com/app/apikey and re-run as:\n" +
+      '  GEMINI_API_KEY=... npm run generate-thumbnail "Your Article Title"\n' +
+      "See scripts/README.md for details.",
   )
   process.exit(1)
 }

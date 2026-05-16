@@ -1,17 +1,18 @@
 import { Metadata } from "next"
 import BaseLayout from "@/components/baseLayout"
 import { FAQJsonLd } from "@/components/JsonLd"
+import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | Perfect Greet",
+  title: `Frequently Asked Questions | ${SITE.name}`,
   description: "Find answers to common questions about voicemail greetings, our service, and how to create the perfect greeting for your needs.",
   alternates: {
-    canonical: "https://www.perfectgreet.site/faq",
+    canonical: `${SITE.url}/faq`,
   },
   openGraph: {
-    title: "FAQ | Perfect Greet",
+    title: `FAQ | ${SITE.name}`,
     description: "Find answers to common questions about voicemail greetings, our service, and how to create the perfect greeting for your needs.",
-    url: "https://www.perfectgreet.site/faq",
+    url: `${SITE.url}/faq`,
   },
 }
 

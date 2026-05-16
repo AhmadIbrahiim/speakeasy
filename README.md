@@ -33,6 +33,8 @@ npm run dev            # http://localhost:3000
 
 That's it. The voice catalog populates from Cartesia on first load; the BYO-key dialog opens the first time you click Generate.
 
+> Anything under [`scripts/`](scripts/README.md) is **optional content-authoring tooling** for regenerating blog posts and thumbnails. You do not need to run any of it to develop or use the app.
+
 ## Bring your own key (BYO)
 
 The whole flow takes about 30 seconds:
@@ -72,7 +74,7 @@ All four are **optional**. The visitor flow works on a fresh checkout with an em
 | `CARTESIA_API_KEY`       | Optional          | Server-side voice catalog fetch only. Audio generation always uses the visitor's BYO key from the request body.       |
 | `BLOB_READ_WRITE_TOKEN`  | Optional          | Vercel Blob token for caching rendered audio across container restarts. Without it, the audio cache is ephemeral.     |
 | `ELEVENLABS_API_KEY`     | Optional / unused | Reserved for a future ElevenLabs tab — currently disabled in the UI.                                                  |
-| `GEMINI_API_KEY`         | Optional          | Only used by `scripts/content-pipeline.ts` to generate blog posts. Not needed for the app itself.                     |
+| `GEMINI_API_KEY`         | Optional          | Only used by the auxiliary blog-content tooling under `scripts/` (see [`scripts/README.md`](scripts/README.md)). Not needed for the app itself. |
 
 ## Security model
 

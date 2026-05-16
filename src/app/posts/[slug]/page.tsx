@@ -4,6 +4,7 @@ import markdownToHtml from "@/lib/markdownToHtml"
 import Image from "next/image"
 import { Metadata } from "next"
 import { ArticleJsonLd } from "@/components/JsonLd"
+import { SITE } from "@/config/site"
 
 type Params = {
   params: {
@@ -17,13 +18,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: postData.title,
     description: postData.description,
     alternates: {
-      canonical: `https://www.perfectgreet.site/posts/${params.slug}`,
+      canonical: `${SITE.url}/posts/${params.slug}`,
     },
     openGraph: {
       title: postData.title,
       description: postData.description,
       type: "article",
-      url: `https://www.perfectgreet.site/posts/${params.slug}`,
+      url: `${SITE.url}/posts/${params.slug}`,
       images: [
         {
           url: postData.image,
@@ -54,9 +55,9 @@ export default async function Post({ params }: Params) {
         description={postData.description}
         datePublished={postData.date}
         image={postData.image}
-        url={`https://www.perfectgreet.site/posts/${params.slug}`}
+        url={`${SITE.url}/posts/${params.slug}`}
         author={{
-          name: "Perfect Greet Team",
+          name: `${SITE.name} Team`,
         }}
       />
       <section className="gap-6 px-4 w-full max-w-[1200px]" id="blog-content">

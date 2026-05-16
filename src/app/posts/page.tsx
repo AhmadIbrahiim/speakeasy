@@ -5,12 +5,13 @@ import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
 import type { Metadata } from "next"
+import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
   title: "Awesome Blog",
   description: "A collection of awesome blog posts",
   alternates: {
-    canonical: `https://www.perfectgreet.site/posts/`,
+    canonical: `${SITE.url}/posts/`,
   },
 }
 

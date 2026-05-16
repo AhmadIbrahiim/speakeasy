@@ -1,4 +1,5 @@
-import axios from "axios"
+// This is auxiliary content-authoring tooling, NOT part of the runtime app.
+// See scripts/README.md before running.
 import * as fs from "fs"
 import * as path from "path"
 import { exec } from "child_process"
@@ -39,25 +40,15 @@ class ContentPipeline {
   }
 
   private async searchTopics(query: string): Promise<Topic[]> {
-    // This would integrate with a real API (e.g., Google Trends, SEMrush, etc.)
-    try {
-      const response = await axios.get(`https://api.example.com/topics`, {
-        params: {
-          q: query,
-          key: this.apiKey,
-        },
-      })
-
-      return response.data.topics.map((topic: any) => ({
-        title: topic.title,
-        relevanceScore: this.calculateRelevanceScore(topic),
-        description: topic.description,
-        keywords: topic.keywords,
-      }))
-    } catch (error) {
-      console.error("Error searching topics:", error)
-      return []
-    }
+    // Placeholder: the original implementation called a fake `api.example.com`
+    // endpoint that never existed. Wire this up to a real topic-discovery API
+    // (Google Trends, SEMrush, etc.) before this pipeline can do useful work.
+    // For now, returning an empty list short-circuits the run() loop safely.
+    console.warn(
+      `[content-pipeline] searchTopics(${JSON.stringify(query)}) is not implemented. ` +
+        "Wire it up to a real topic-discovery API. Skipping topic search.",
+    )
+    return []
   }
 
   private calculateRelevanceScore(topic: any): number {
@@ -211,7 +202,13 @@ ${post.content}`
 // Usage example:
 const API_KEY = process.env.CONTENT_API_KEY
 if (!API_KEY) {
-  console.error("Please set CONTENT_API_KEY environment variable")
+  console.error(
+    "[content-pipeline] Missing required env var: CONTENT_API_KEY.\n" +
+      "This script expects an API key for the topic-discovery service it integrates with.\n" +
+      "Set it and re-run as:\n" +
+      "  CONTENT_API_KEY=... npm run pipeline\n" +
+      "See scripts/README.md for details.",
+  )
   process.exit(1)
 }
 

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { SITE } from "@/config/site"
 
 export async function GET() {
   const robotsTxt = `
@@ -7,10 +8,10 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://www.perfectgreet.site
+Host: ${SITE.url}
 
 # Sitemaps
-Sitemap: https://www.perfectgreet.site/sitemap.xml
+Sitemap: ${SITE.url}/sitemap.xml
 `
 
   return new NextResponse(robotsTxt, {

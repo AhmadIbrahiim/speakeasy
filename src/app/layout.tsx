@@ -3,6 +3,7 @@ import { Inter, Fraunces, JetBrains_Mono } from "next/font/google"
 import { GoogleTagManager } from "@next/third-parties/google"
 import "./globals.scss"
 import { OrganizationJsonLd, ServiceJsonLd } from "@/components/JsonLd"
+import { SITE } from "@/config/site"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" })
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     siteName: "Perfect Greet",
   },
   alternates: {
-    canonical: `https://www.perfectgreet.site/`,
+    canonical: `${SITE.url}/`,
   },
 }
 
@@ -45,12 +46,12 @@ export default function RootLayout({
       <head>
         <OrganizationJsonLd />
         <ServiceJsonLd
-          name="Perfect Greet Voicemail Greeting Generator"
+          name={`${SITE.name} Voicemail Greeting Generator`}
           description="Create professional and personalized voicemail greetings for free! No credit card or sign-up required."
-          url="https://www.perfectgreet.site"
+          url={SITE.url}
           provider={{
-            name: "Perfect Greet",
-            url: "https://www.perfectgreet.site",
+            name: SITE.organization.name,
+            url: SITE.url,
           }}
         />
       </head>

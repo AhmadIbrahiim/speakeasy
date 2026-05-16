@@ -23,13 +23,34 @@ function jsonError(err: ApiError, httpStatus: number) {
   return NextResponse.json({ error: err }, { status: httpStatus })
 }
 
+// Number of trusted reverse-proxy hops between the deployment and the public
+// internet. Set this in env to the number of hops your platform adds
+// (Vercel = 1, Render = 1, Cloudflare-in-front-of-Vercel = 2, etc).
+// We then take XFF[length - 1 - TRUSTED_HOPS], the entry written by your
+// nearest trusted proxy. The DEFAULT (0) takes the rightmost entry — the
+// IP your immediate connecting peer claims, which is the closest thing to
+// a non-spoofable signal when no hop count is configured.
+const TRUSTED_PROXY_HOPS = Math.max(0, Number(process.env.TRUSTED_PROXY_HOPS) || 0)
+
 function getClientIp(req: Request): string {
-  // x-forwarded-for can be a comma-separated chain; the client is the first entry.
+  // x-forwarded-for is appended-to by each hop, so the LEFTMOST entry is
+  // user-controlled (anyone can set it) and the RIGHTMOST is set by your
+  // immediate trusted peer. We index from the right by TRUSTED_PROXY_HOPS.
   const xff = req.headers.get("x-forwarded-for")
   if (xff) {
-    const first = xff.split(",")[0]?.trim()
-    if (first) return first
+    const parts = xff
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean)
+    if (parts.length > 0) {
+      const idx = Math.max(0, parts.length - 1 - TRUSTED_PROXY_HOPS)
+      return parts[idx]
+    }
   }
+  // Platform-specific single-source headers, set by the platform itself
+  // (not appended-to, so safe to trust directly).
+  const platform = req.headers.get("x-vercel-forwarded-for") || req.headers.get("cf-connecting-ip") || req.headers.get("fly-client-ip") || req.headers.get("true-client-ip")
+  if (platform) return platform.trim()
   const real = req.headers.get("x-real-ip")
   if (real) return real.trim()
   return "unknown"
@@ -104,8 +125,10 @@ export async function POST(req: Request) {
     )
   }
 
-  // 2) Reject oversize bodies before parsing. We trust content-length here as
-  // a cheap gate; downstream JSON parsing still applies its own limits.
+  // 2) Reject oversize bodies. We enforce the cap on actual bytes read — not
+  // just content-length — because chunked transfers and missing-header clients
+  // would otherwise bypass a header-only check. Quick header gate first to fail
+  // fast without buffering, then a streaming reader bounded at MAX_BODY_BYTES.
   const contentLengthHeader = req.headers.get("content-length")
   if (contentLengthHeader) {
     const len = Number(contentLengthHeader)
@@ -114,9 +137,42 @@ export async function POST(req: Request) {
     }
   }
 
+  // Read up to MAX_BODY_BYTES+1 bytes; if we get the extra byte, the body
+  // overran the cap regardless of what content-length claimed.
+  let raw: string
+  try {
+    const reader = req.body?.getReader()
+    if (!reader) {
+      // No body stream — fall back to plain text() (small/empty body).
+      raw = await req.text()
+    } else {
+      const chunks: Uint8Array[] = []
+      let total = 0
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        if (value) {
+          total += value.byteLength
+          if (total > MAX_BODY_BYTES) {
+            try {
+              await reader.cancel()
+            } catch {
+              /* noop */
+            }
+            return jsonError({ code: "validation", message: "Request body too large (16KB max)." }, 413)
+          }
+          chunks.push(value)
+        }
+      }
+      raw = new TextDecoder().decode(Buffer.concat(chunks.map((c) => Buffer.from(c))))
+    }
+  } catch {
+    return jsonError({ code: "validation", message: "Could not read request body." }, 400)
+  }
+
   let body: { text?: unknown; id?: unknown; bgId?: unknown; cartesiaApiKey?: unknown }
   try {
-    body = await req.json()
+    body = raw ? JSON.parse(raw) : {}
   } catch {
     return jsonError({ code: "validation", message: "Invalid request body." }, 400)
   }

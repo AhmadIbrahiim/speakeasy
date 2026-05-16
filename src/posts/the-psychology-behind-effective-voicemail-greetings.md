@@ -5,8 +5,6 @@ image: "/posts/psychology-voicemail.png"
 description: Learn how different parts of your voicemail greeting affect your callers' feelings and reactions. Simple tips to make better impressions!
 ---
 
----
-
 # The Psychology Behind Effective Voicemail Greetings
 
 Hey there! 👋 Today, I want to talk about something really interesting - how your voicemail greeting affects people who call you. You know, it's like when you meet someone for the first time, but this time it's through a voice message. Let's make it simple and understand how to make people feel good when they hear your greeting!

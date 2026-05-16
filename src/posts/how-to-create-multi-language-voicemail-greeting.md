@@ -5,8 +5,6 @@ image: "/posts/multi-language-greeting.png"
 description: Learn how to make professional voicemail greetings in different languages. Perfect for international business!
 ---
 
----
-
 # How to Create a Multi-Language Voicemail Greeting
 
 Hello! 👋 Do you work with people who speak different languages? That's wonderful! Today, I'll show you the easiest way to make voicemail greetings that everyone can understand. Trust me, it's simpler than you think!

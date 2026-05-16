@@ -1,8 +1,27 @@
 import fs from "fs"
 import path from "path"
 import { NextRequest, NextResponse } from "next/server"
+import { checkRateLimit } from "@/app/server/lib/rateLimit"
+import { getClientIp } from "@/app/server/lib/clientIp"
 
 export async function GET(request: NextRequest) {
+  // Rate limit before anything else. Background MP3s are static assets and the
+  // dev/UI hits them often, so the limit is generous.
+  const ip = getClientIp(request)
+  const rl = checkRateLimit(ip, { limit: 120, windowSeconds: 60 })
+  if (!rl.allowed) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "rate_limited",
+          message: "Too many requests. Try again in a few seconds.",
+          retry_after_seconds: rl.retry_after_seconds,
+        },
+      },
+      { status: 429 },
+    )
+  }
+
   try {
     // Get the file parameter from the URL
     const fileParam = request.nextUrl.searchParams.get("file")

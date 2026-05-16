@@ -17,8 +17,6 @@ class BlobStorageService {
     const contentType = "audio/mpeg"
 
     try {
-      console.log(`Uploading file ${fileName} with size: ${audioBuffer.byteLength} bytes`)
-
       // Create a Blob from the Buffer which is compatible with the put function
       // The Blob constructor is available in Node.js environments through the global object
       const blob = new Blob([audioBuffer], { type: contentType })
@@ -30,7 +28,6 @@ class BlobStorageService {
         addRandomSuffix: false,
       })
 
-      console.log(`Successfully uploaded file to ${url}`)
       return url
     } catch (error) {
       console.error("Error uploading to Vercel Blob:", error)
@@ -56,7 +53,6 @@ class BlobStorageService {
         "x-content-length": "1", // This dummy header is needed for Vercel Blob
       })
 
-      console.log(`Downloading file from ${url}`)
       const response = await fetch(url, {
         method: "GET",
         headers,
@@ -67,7 +63,6 @@ class BlobStorageService {
       }
 
       const arrayBuffer = await response.arrayBuffer()
-      console.log(`Successfully downloaded file, size: ${arrayBuffer.byteLength} bytes`)
       return Buffer.from(arrayBuffer)
     } catch (error) {
       console.error("Error downloading from Vercel Blob:", error)
@@ -85,7 +80,6 @@ class BlobStorageService {
   public static async deleteAudio(url: string): Promise<void> {
     try {
       await del(url)
-      console.log(`Deleted file ${url}`)
     } catch (error) {
       console.error("Error deleting from Vercel Blob:", error)
       throw error

@@ -2,8 +2,27 @@ import { CARTESIA_API_KEY } from "@/config"
 import { NextRequest, NextResponse } from "next/server"
 import CartesiaService from "@/app/server/lib/Cartesia"
 import { CartesiaVoiceResponse } from "@/types"
+import { checkRateLimit } from "@/app/server/lib/rateLimit"
+import { getClientIp } from "@/app/server/lib/clientIp"
 
 export async function GET(req: NextRequest) {
+  // Rate limit before anything else (cheapest possible reject). Limit is
+  // generous because the catalog is cached for 14 days — most callers hit cache.
+  const ip = getClientIp(req)
+  const rl = checkRateLimit(ip, { limit: 60, windowSeconds: 60 })
+  if (!rl.allowed) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "rate_limited",
+          message: "Too many requests. Try again in a few seconds.",
+          retry_after_seconds: rl.retry_after_seconds,
+        },
+      },
+      { status: 429 },
+    )
+  }
+
   try {
     // Fetch voices directly from Cartesia API using our service
     const voicesData = await CartesiaService.listVoices()

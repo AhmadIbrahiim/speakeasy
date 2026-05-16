@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils"
 import { Download, Volume2, Mic2, Music4, Settings2, Loader } from "lucide-react"
 import { useState, useRef, useLayoutEffect } from "react"
 import { Voice, VoiceResponse } from "@/types"
-import _ from "lodash"
 import { useCreateAudioBuffer, GenerateAudioError } from "@/app/queries/useCreateAudioBuffer"
 import { ErrorBanner, type ErrorBannerData } from "./ui/errorBanner"
 import CONSTANTS from "@/app/config/constants"
@@ -31,12 +30,6 @@ type Props = {
 }
 
 export function VoicemailGreetingComponent({ voices, allVoices, target }: Props) {
-  console.log("VoicemailGreetingComponent initialized with data:", {
-    voicesCount: Object.keys(voices).length,
-    allVoicesCount: allVoices.length,
-    availableAccents: allVoices.map((v) => v.labels.accent),
-    availableVoices: allVoices.map((v) => ({ id: v.voice_id, name: v.name })),
-  })
   const [isPlaying, setIsPlaying] = useState(false)
   const [text, setText] = useState(
     target === PageTarget.MAIN
@@ -142,7 +135,6 @@ Thank you for your patience, please stay on the line while we direct your call t
 
   const handlePlay = async () => {
     if (isPlaying) {
-      console.log(audio)
       audio?.pause()
       setIsPlaying(false)
       return
@@ -240,7 +232,6 @@ Thank you for your patience, please stay on the line while we direct your call t
         musicAudioRef.current.pause()
       }
 
-      console.log(`/assets/${music}.mp3`)
       // Create new audio element with the correct assets path
       const audio = new Audio(`/assets/${music}.mp3`)
       musicAudioRef.current = audio

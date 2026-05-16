@@ -143,7 +143,7 @@ export function ApiKeyDialog({ open, onOpenChange, onSave, error, defaultProvide
 
                 <div className="flex items-start gap-2.5 text-xs text-gray-500 bg-gray-50/80 border border-gray-100 rounded-xl px-3.5 py-3">
                   <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  <p className="leading-relaxed">Your key lives only in this browser. It's sent to our server to generate audio, never stored or logged. Cartesia isn't affiliated with us.</p>
+                  <p className="leading-relaxed">Your key lives only in this browser. It&apos;s sent to our server to generate audio, never stored or logged. Cartesia isn&apos;t affiliated with us.</p>
                 </div>
 
                 <Button onClick={handleSubmit} className="w-full h-12 text-base font-medium rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-700 hover:to-fuchsia-700 text-white shadow-lg shadow-indigo-500/20">

@@ -34,7 +34,6 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
 }
 
 export function getSortedPostsData() {
-  console.log(postsDirectory)
   // Get file names under /posts
   const fileNames = fs.readdirSync(postsDirectory)
   const allPostsData = fileNames.map((fileName) => {

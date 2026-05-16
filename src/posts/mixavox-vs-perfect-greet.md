@@ -5,8 +5,6 @@ image: "/posts/mixavox-vs-perfect-greet.png"
 description: A comparison of Mixavox and Perfect Greet, two services for creating professional voicemail greetings.
 ---
 
----
-
 In today's fast-paced business environment, having a professional voicemail greeting is essential. It not only reflects the professionalism of your business but also ensures that your clients and customers receive a positive first impression. Two popular services for creating professional voicemail greetings are Mixavox and Perfect Greet. In this article, we will compare these two services to help you decide which one is the best fit for your business needs.
 
 ## Mixavox

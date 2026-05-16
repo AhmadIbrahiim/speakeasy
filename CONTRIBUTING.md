@@ -29,12 +29,12 @@ The dev server runs at http://localhost:3000.
 
 ## Before opening a PR
 
-All of the following must pass locally:
+All of the following must pass locally. These are the same gates GitHub Actions runs on every push to `main` and pull request — see [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
-- `npx tsc --noEmit` — TypeScript type check passes with no errors.
-- `npm test` — All unit tests pass.
-- `npm run lint` — ESLint passes with no warnings or errors.
-- `gitleaks detect --source .` — If `gitleaks` is installed, the scan must report no leaks. (Install via `brew install gitleaks` on macOS.)
+- `npm run typecheck` (or `npx tsc --noEmit`) — TypeScript type check passes with no errors.
+- `npm run lint` — ESLint passes with no errors. (Warnings are tolerated; errors fail CI.)
+- `npm run test:ci` — All unit tests pass under the CI reporter. `npm test` runs the same suite with the default reporter.
+- `gitleaks detect --source .` — If `gitleaks` is installed locally, the scan must report no leaks. (Install via `brew install gitleaks` on macOS.) CI runs the same scan over full git history via the `secret-scan` job.
 
 If you touch anything that changes generated content or runtime behavior, include a brief note in your PR describing how you verified it manually.
 

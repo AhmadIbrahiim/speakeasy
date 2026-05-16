@@ -5,8 +5,6 @@ image: "/posts/perfect-greet-vs-google-voice.png"
 description: Looking for the best voicemail greeting service? Let's compare Perfect Greet and Google Voice to help you choose!
 ---
 
----
-
 # Perfect Greet vs Google Voice - Which One Should You Choose?
 
 Hi friends! 👋 Today, we're going to look at two popular ways to make voicemail greetings: Perfect Greet and Google Voice. I'll make it super easy to understand which one is better for you. Let's check them out!

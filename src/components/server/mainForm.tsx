@@ -1,5 +1,4 @@
 "use client"
-import React, { Suspense } from "react"
 import { VoicemailGreetingComponent } from "../voicemailGreetingComponent"
 import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
@@ -20,7 +19,6 @@ export const MainForm = ({ target = PageTarget.MAIN }) => {
         }
 
         const data = await response.json()
-        console.log("API Voice data:", data)
         return data?.voices || [] // Changed to handle the direct voices array from Cartesia API
       } catch (err) {
         console.error("Error fetching voices:", err)

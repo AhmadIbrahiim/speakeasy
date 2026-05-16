@@ -8,12 +8,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "pm2:start": "pm2 start npm --name voicemail-greeting -- start  -- --port 3030",
     "pm2:stop": "pm2 stop voicemail-greeting",
     "prod": "next build && pm2 delete voicemail-greeting  &&  npm run pm2:start",
     "generate-thumbnail": "node scripts/generate-thumbnail.js",
     "pipeline": "ts-node scripts/content-pipeline.ts",
     "test": "vitest run",
+    "test:ci": "vitest run --reporter=verbose",
     "test:watch": "vitest"
   },
   "dependencies": {

@@ -8,8 +8,6 @@
  * This implementation provides true audio mixing with volume control
  */
 
-import { promises as fs } from "fs"
-import path from "path"
 // @ts-ignore - bypass type declaration issues with node-web-audio-api
 import { AudioContext, AudioBuffer, GainNode, AudioBufferSourceNode, OfflineAudioContext } from "node-web-audio-api"
 
@@ -22,8 +20,6 @@ import { AudioContext, AudioBuffer, GainNode, AudioBufferSourceNode, OfflineAudi
  * @returns Promise resolving to a Buffer containing mixed audio
  */
 export async function mixAudio(voiceBuffer: Buffer, backgroundBuffer: Buffer, voiceVolume: number = 2.0, backgroundVolume: number = 0.1): Promise<Buffer> {
-  console.log("Starting audio mixing with node-web-audio-api...")
-
   try {
     // Create an audio context for processing
     const context = new AudioContext()
@@ -107,8 +103,6 @@ export async function mixAudio(voiceBuffer: Buffer, backgroundBuffer: Buffer, vo
     // Combine header and data
     // @ts-ignore - bypass Buffer type issues
     const wavBuffer = Buffer.concat([Buffer.from(headerView.buffer), Buffer.from(pcmData.buffer)])
-
-    console.log(`Audio mixing completed, size: ${wavBuffer.length} bytes`)
 
     // Close the contexts
     await context.close()

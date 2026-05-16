@@ -6,8 +6,6 @@ description: Discover the most common mistakes people make in their voicemail gr
 slug: "common-mistakes-to-avoid-in-voicemail-greetings"
 ---
 
----
-
 # Common Mistakes to Avoid in Voicemail Greetings
 
 Voicemail greetings are often the first impression someone has of you or your business. A well-crafted voicemail greeting can convey professionalism, reliability, and warmth. However, many people make common mistakes that can leave a negative impression. In this blog post, we'll explore some of these common mistakes and how to avoid them.

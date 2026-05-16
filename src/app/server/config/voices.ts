@@ -3,7 +3,6 @@ import CartesiaService from "../lib/Cartesia"
 import BlobStorageService from "../lib/BlobStorage"
 import { promises as fs } from "fs"
 import _ from "lodash"
-import path from "path"
 
 async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238", bg = "", cartesiaApiKey }: { text: string; id: string; bg: string; cartesiaApiKey: string }) {
   return new Promise<{
@@ -26,8 +25,6 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
         // Development mode - use local files
         // Check if the file already exists
         if (await fs.stat(`output/${fileId}.mp3`).catch(() => false)) {
-          console.log("File already exists in local storage")
-
           // Return paths to both voice and background files for client-side mixing
           const bgMusicPath = `/api/background?file=${bg}.mp3`
 
@@ -45,8 +42,6 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
           const existingFile = files.find((url) => url.includes(`${fileId}.mp3`))
 
           if (existingFile) {
-            console.log("File already exists in Blob storage")
-
             // Get background music URL
             const bgMusicUrl = `/api/background?file=${bg}.mp3`
 
@@ -59,11 +54,9 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
             })
           }
         } catch (error) {
-          console.log("Error checking Blob storage, will generate new file", error)
+          console.warn("[voices] blob storage lookup failed, generating new file", error)
         }
       }
-
-      console.log({ voice: id, model_id: "sonic-3.5", output_format: "mp3_44100_128", text })
 
       // Passing voice ID directly to Cartesia
       const audioResponse = await CartesiaService.generate({
@@ -106,7 +99,7 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
         })
       }
     } catch (error) {
-      console.info(error)
+      console.error("[voices] generate failed:", error)
       reject(error)
     }
   })

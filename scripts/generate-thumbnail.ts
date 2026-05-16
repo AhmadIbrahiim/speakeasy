@@ -4,14 +4,18 @@ const fs = require("node:fs")
 const path = require("path")
 const mime = require("mime-types")
 
-const apiKey = "<REDACTED_GEMINI_KEY>"
-const genAI = new GoogleGenerativeAI(apiKey)
-const fileManager = new GoogleAIFileManager(apiKey)
+// Get your Gemini API key at https://aistudio.google.com/app/apikey
+const apiKey = process.env.GEMINI_API_KEY
 
 if (!apiKey) {
-  console.error("Please set the GEMINI_API_KEY environment variable")
+  console.error(
+    "GEMINI_API_KEY env var is required. Get one at https://aistudio.google.com/app/apikey",
+  )
   process.exit(1)
 }
+
+const genAI = new GoogleGenerativeAI(apiKey)
+const fileManager = new GoogleAIFileManager(apiKey)
 
 if (process.argv.length < 3) {
   console.error("Please provide a title for the thumbnail")

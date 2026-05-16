@@ -12,9 +12,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "File parameter is required" }, { status: 400 })
     }
 
-    // Sanitize the file parameter to prevent path traversal attacks
-    const sanitizedFile = fileParam.replace(/\.\.\//g, "").replace(/\\/g, "")
-    const filePath = path.join(process.cwd(), "public/assets", sanitizedFile)
+    // Strict allowlist: only simple lowercase mp3 basenames are accepted.
+    // This rejects path traversal payloads (../, leading /, backslashes, etc.).
+    if (!/^[a-z0-9-]+\.mp3$/.test(fileParam)) {
+      return NextResponse.json({ error: "Invalid file parameter" }, { status: 400 })
+    }
+
+    const assetsRoot = path.resolve(process.cwd(), "public/assets")
+    const filePath = path.resolve(assetsRoot, fileParam)
+
+    // Defense in depth: ensure the resolved path is still inside the assets directory.
+    if (filePath !== assetsRoot && !filePath.startsWith(assetsRoot + path.sep)) {
+      return NextResponse.json({ error: "Invalid file parameter" }, { status: 400 })
+    }
 
     // Check if the file exists
     try {
@@ -44,10 +54,6 @@ export async function GET(request: NextRequest) {
       "Content-Length": fileBuffer.byteLength.toString(),
       "Cache-Control": "public, max-age=31536000",
       "X-Content-Type-Options": "nosniff",
-      // Add CORS headers to allow client-side access
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
     }
 
     return new Response(fileBuffer, {

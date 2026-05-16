@@ -16,10 +16,12 @@ This update integrates Vercel Blob storage into the Voicemail Greeting Generator
 
 ## Environment Setup
 
+> Note: Never commit a real `vercel_blob_rw_*` token. Use placeholders in docs and pull the real value from your environment at runtime.
+
 To use this update, you need to set up the following environment variables:
 
 ```
-BLOB_READ_WRITE_TOKEN=<REDACTED_VERCEL_BLOB_TOKEN>
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxx_yyyyyyyyyy
 ```
 
 You can add this to your `.env` file locally and to your Vercel project environment variables for production.

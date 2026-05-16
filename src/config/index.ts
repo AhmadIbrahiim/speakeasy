@@ -1,13 +1,4 @@
-import _ from "lodash"
-
-const ELEVEN_LABS_KEYS = [
-  "<REDACTED_ELEVENLABS_KEY>",
-  "<REDACTED_ELEVENLABS_KEY>",
-  "<REDACTED_ELEVENLABS_KEY>",
-  "<REDACTED_ELEVENLABS_KEY>",
-]
-
-const ELEVENLABS_API_KEY = _.sample(ELEVEN_LABS_KEYS)
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY
 
 // Cartesia configuration
 const CARTESIA_API_KEY = process.env.CARTESIA_API_KEY

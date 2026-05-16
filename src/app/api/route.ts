@@ -20,7 +20,9 @@ function jsonError(err: ApiError, httpStatus: number) {
 export async function POST(req: Request) {
   // 1) Rate limit before anything else (cheapest possible reject).
   const ip = getClientIp(req)
-  const rl = checkRateLimit(ip)
+  // Per-route bucket — see rateLimit.ts. Reads on /api/voices and
+  // /api/background must not burn the generate budget.
+  const rl = checkRateLimit(`generate:${ip}`)
   if (!rl.allowed) {
     return jsonError(
       {

@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   // Rate limit before anything else (cheapest possible reject). Limit is
   // generous because the catalog is cached for 14 days — most callers hit cache.
   const ip = getClientIp(req)
-  const rl = checkRateLimit(ip, { limit: 60, windowSeconds: 60 })
+  const rl = checkRateLimit(`voices:${ip}`, { limit: 60, windowSeconds: 60 })
   if (!rl.allowed) {
     return NextResponse.json(
       {

@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   // Rate limit before anything else. Background MP3s are static assets and the
   // dev/UI hits them often, so the limit is generous.
   const ip = getClientIp(request)
-  const rl = checkRateLimit(ip, { limit: 120, windowSeconds: 60 })
+  const rl = checkRateLimit(`background:${ip}`, { limit: 120, windowSeconds: 60 })
   if (!rl.allowed) {
     return NextResponse.json(
       {

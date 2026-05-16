@@ -1,33 +1,13 @@
-# Patterns redacted from git history. See docs/security/history-rewrite-checklist.md.
-#
-# Format: <regex-or-literal>==><replacement>
-# When prefixed with "regex:" the left side is interpreted as a Python regex by
-# git-filter-repo's --replace-text engine. Patterns intentionally use only the
-# leaked prefixes (first 8 hex chars) so this file itself does not become a
-# secondary leak. The regex tails match the remaining alphanumerics of the
-# original token so the full secret is rewritten in every blob.
-
-# Vercel Blob read/write token leaked in README-UPDATE.md history.
 regex:vercel_blob_rw_WvCflkhH[A-Za-z0-9_]+==><REDACTED_VERCEL_BLOB_TOKEN>
-
-# ElevenLabs API keys (sk_ prefix) leaked from src/config/index.ts history.
 regex:sk_114443d7[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
 regex:sk_5f822938[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
 regex:sk_77b2d264[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
 regex:sk_c260e88b[a-z0-9]+==><REDACTED_ELEVENLABS_KEY>
-
-# ElevenLabs raw-hex API keys (older format) leaked in .env history.
-# These only lived in .env (removed by --invert-paths --path .env) but we
-# redact defensively in case any leaked into another tracked file.
 regex:10a05ce8[a-f0-9]{20,}==><REDACTED_ELEVENLABS_KEY>
 regex:cd2fad5a[a-f0-9]{20,}==><REDACTED_ELEVENLABS_KEY>
 regex:c93af54a[a-f0-9]{20,}==><REDACTED_ELEVENLABS_KEY>
 regex:73aa574e[a-f0-9]{20,}==><REDACTED_ELEVENLABS_KEY>
 regex:13983fd2[a-f0-9]{20,}==><REDACTED_ELEVENLABS_KEY>
 regex:<REDACTED_ELEVENLABS_KEY>==><REDACTED_ELEVENLABS_KEY>
-
-# Cartesia API key leaked in .env history.
 regex:sk_car_KrUbEM[A-Za-z0-9_\-]+==><REDACTED_CARTESIA_KEY>
-
-# Google Gemini API key leaked in scripts/generate-thumbnail.ts history.
 regex:AIzaSyBU[A-Za-z0-9_-]+==><REDACTED_GEMINI_KEY>

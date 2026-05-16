@@ -35,8 +35,9 @@ model are still welcome, but we may classify them as "won't fix" if they fall
 into the *out of scope* list below.
 
 - **Visitor's BYO Cartesia API key** is the primary credential surface. It is
-  pasted in a browser dialog, stored in `localStorage`, and forwarded to the
-  server proxy ONLY at request time. The server never persists it.
+  pasted in a browser dialog, stored in `sessionStorage` (cleared when the tab
+  closes), and forwarded to the server proxy ONLY at request time. The server
+  never persists it.
 - **Server-side environment variables** (`CARTESIA_API_KEY`, `BLOB_READ_WRITE_TOKEN`,
   `ELEVENLABS_API_KEY`, `GEMINI_API_KEY`) are all optional. They live only in
   the deploy host's secret store. Compromise of the deploy host compromises them.

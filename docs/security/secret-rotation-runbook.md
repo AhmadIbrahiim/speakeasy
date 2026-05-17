@@ -9,7 +9,7 @@ exposure that block public release:
 1. **In-source secrets.** A hardcoded Gemini API key in
    `scripts/generate-thumbnail.ts`, four hardcoded ElevenLabs `sk_*`
    keys in `src/config/index.ts`, and a real Vercel Blob token in
-   `README-UPDATE.md`. The values were replaced with `process.env.*`
+   `historical docs in git history`. The values were replaced with `process.env.*`
    references in that commit, but the original literals remain in
    git history and must be assumed compromised.
 2. **A leaked `.env` file** containing live values for every
@@ -29,7 +29,7 @@ visitors mid-rotation.
 | --- | --- | --- | --- | --- |
 | Cartesia | `CARTESIA_API_KEY` | <https://play.cartesia.ai/keys> | `sk_c..` | `.env` |
 | ElevenLabs | `ELEVENLABS_API_KEY` | <https://elevenlabs.io/app/settings/api-keys> | `sk_5..`, `sk_7..`, `sk_1..`, `sk_c..` (4 keys total) | `src/config/index.ts` |
-| Vercel Blob | `BLOB_READ_WRITE_TOKEN` | <https://vercel.com/dashboard/stores> | `verc..` (`vercel_blob_rw_WvCflkhH..`) | `.env`, `README-UPDATE.md` |
+| Vercel Blob | `BLOB_READ_WRITE_TOKEN` | <https://vercel.com/dashboard/stores> | `verc..` (`vercel_blob_rw_WvCflkhH..`) | `.env`, `historical docs in git history` |
 | Gemini | `GEMINI_API_KEY` | <https://aistudio.google.com/app/apikey> | `AIza..` | `.env`, `scripts/generate-thumbnail.ts` |
 
 > Full key values are intentionally omitted. If you need the exact
@@ -218,7 +218,7 @@ pass before the repository is made public.
 - [ ] Generate a 1-sentence greeting through the UI end-to-end and confirm playback works.
 - [ ] Vercel Blob round-trip: upload a tiny test object (e.g. `echo hi | npx vercel blob put test.txt`), confirm it appears in the dashboard, then delete it.
 - [ ] `gitleaks detect --source . --no-git` reports no findings against the working tree.
-- [ ] `gitleaks detect --source .` reports the four historical leaks (Gemini, ElevenLabs x4, Vercel Blob, Cartesia) — confirms the scanner is working — and these are the **only** findings. TASK-07 wires this into CI; TASK-08 covers history rewrite to drop the historical hits.
+- [ ] `gitleaks detect --source .` reports zero findings (post-history-rewrite state). The scanner is configured at `.gitleaks.toml` and runs on every push via `.github/workflows/ci.yml`. If you find historical leaks here, see `docs/security/history-rewrite-checklist.md`.
 - [ ] `.env` on every developer machine has been refreshed with the new values; no machine is still running the old keys.
 - [ ] All old keys show as revoked / deleted in their respective provider dashboards.
 

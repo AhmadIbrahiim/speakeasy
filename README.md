@@ -44,7 +44,7 @@ The whole flow takes about 30 seconds:
 3. Click **Create API Key**, give it a name.
 4. Paste the `sk_...` key into the dialog in the app.
 
-**Storage.** Your key is held in `localStorage` on your own browser. (It will move to `sessionStorage` in an upcoming refactor — see TASK-14 in the roadmap — so it clears when you close the tab.)
+**Storage.** Your key is held in `sessionStorage` on your own browser — it clears the moment you close the tab. Paste it again next session.
 
 **We never see your key.** The browser forwards it on each generate request to the local Next.js API route, which proxies the single Cartesia TTS call and discards the key the moment the request completes. There is no database, no logging of the key, and no key persistence on the server side.
 
@@ -79,7 +79,7 @@ All four are **optional**. The visitor flow works on a fresh checkout with an em
 ## Security model
 
 - All four secrets above are optional; the visitor flow never requires server-side credentials.
-- The visitor's Cartesia key is never persisted server-side. It lives in the browser's `localStorage` on the client (moving to `sessionStorage` per TASK-14) and is forwarded with each generate request only.
+- The visitor's Cartesia key is never persisted server-side. It lives in the browser's `sessionStorage` (cleared when the tab closes) and is forwarded with each generate request only.
 - `GET /api/background` is hardened against path traversal with a strict allowlist of lowercase mp3 basenames.
 - `POST /api` is rate-limited to 10 requests per minute per IP.
 - The Dockerfile runs as a non-root user and exposes a health check at `/api/health`.

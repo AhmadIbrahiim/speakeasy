@@ -5,7 +5,7 @@
 // Next.js route. The current API flow performs all mixing in the browser, so
 // this file is dormant. The .unused.ts suffix is intentional — it keeps the
 // implementation searchable while signalling "do not import." See
-// SERVERLESS-AUDIO.md for the historical context.
+// docs/architecture/serverless-audio.md for the historical context.
 
 /**
  * A lightweight audio concatenation utility for serverless environments

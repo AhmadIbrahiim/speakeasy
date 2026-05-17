@@ -2,28 +2,31 @@
 
 ## Project Information
 
-- Project: Voicemail Greeting Generator
-- Stack: Next.js, React, TypeScript, Tailwind CSS
-- Hosting: Vercel
-- TTS Provider: Cartesia API (formerly used ElevenLabs)
-- Audio Processing: FFmpeg
-- Storage: Vercel Blob Storage
+- Project: Perfect Greet (voicemail-greeting)
+- Stack: Next.js 14 App Router, React 18, TypeScript, Tailwind CSS
+- Hosting: Vercel (canonical), Render via Dockerfile, or any Node 20+ container
+- TTS Provider: Cartesia API (`@cartesia/cartesia-js` SDK, model `sonic-3.5`)
+- Audio mixing: client-side via Crunker / Web Audio API (no server-side ffmpeg in the request path)
+- Storage: Vercel Blob (optional, for prod audio cache); local filesystem in dev
+- Design system: see DESIGN.md (Warm direction — cream + ink + Fraunces serif)
 
 ## Development Rules
 
-- Use TypeScript for all new components and functions
-- Follow existing component patterns when adding new features
-- Keep environment variables in .env file (don't commit sensitive keys)
+- Use TypeScript for all new components and functions; `npx tsc --noEmit` must stay clean
+- Follow existing component patterns when adding new features; check `src/components/voicemail/` for the canonical workspace decomposition
+- Keep environment variables in `.env` (gitignored); see `.env.example` for the template
 - Test audio generation locally before deploying
-- Maintain the existing UI design language with Tailwind CSS
-- Use Vercel Blob for file storage instead of local filesystem
+- Maintain the Warm design system in DESIGN.md (cream surfaces, ink borders, offset shadows, serif headlines)
+- Use Vercel Blob for production audio cache; fall back to ephemeral local disk if no token
 - Never write directly to server disk in production
 
 ## API Keys
 
-- Cartesia API: Used for text-to-speech generation
-- Vercel Blob: perfectgreet_READ_WRITE_TOKEN for file storage
-- Never expose API keys in client-side code
+- Cartesia API (`CARTESIA_API_KEY`): server-side voice catalog fetch only. Generation uses the visitor's BYO key from `sessionStorage`.
+- Vercel Blob (`BLOB_READ_WRITE_TOKEN`): production audio cache.
+- ElevenLabs (`ELEVENLABS_API_KEY` + `ELEVENLABS_ENABLED=true`): dormant; gate-flagged off by default.
+- Gemini (`GEMINI_API_KEY`): only used by optional `scripts/` content tooling.
+- Never expose API keys in client-side code or commit them to git. CI runs `gitleaks` on every push.
 
 ## Core Features
 

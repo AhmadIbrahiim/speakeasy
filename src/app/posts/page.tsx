@@ -1,6 +1,7 @@
 import { getSortedPostsData } from "@/lib/posts"
 import BaseLayout from "@/components/baseLayout"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, BookOpen } from "lucide-react"
 
 import type { Metadata } from "next"
@@ -19,17 +20,23 @@ function formatDate(iso: string) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
 
-type CardProps = { title: string; description: string; image: string; slug: string; date: string }
+type CardProps = { title: string; description: string; image: string; slug: string; date: string; priority?: boolean; prefetch?: boolean }
 
-function PostCard({ title, description, image, slug, date }: CardProps) {
+function PostCard({ title, description, image, slug, date, priority = false, prefetch = false }: CardProps) {
   return (
     <Link
       href={`/posts/${slug}`}
-      prefetch={false}
-      className="group block bg-white border-2 border-ink rounded-2xl overflow-hidden shadow-ink hover:shadow-ink-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-      <div className="aspect-[16/10] bg-cream-200 border-b-2 border-ink overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt={`Cover image for ${title}`} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
+      prefetch={prefetch}
+      className="group block bg-white border-2 border-ink rounded-2xl overflow-hidden shadow-ink-lg hover:shadow-ink-xl hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+      <div className="relative aspect-[16/10] bg-cream-200 border-b-2 border-ink overflow-hidden">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+          priority={priority}
+        />
       </div>
       <div className="p-5 sm:p-6">
         <div className="flex items-center gap-2 mb-3 text-[11.5px] font-mono text-stone-500">
@@ -50,8 +57,8 @@ export default function PostsIndex() {
   const posts = getSortedPostsData()
 
   return (
-    <BaseLayout hideHero>
-      <section className="w-full max-w-[1200px] mx-auto px-4 md:px-6 pt-8 md:pt-16 pb-8">
+    <BaseLayout>
+      <section className="w-full max-w-[1200px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-8">
         <div className="max-w-[760px]">
           <span className="inline-flex items-center gap-2 bg-ink text-cream-100 px-3.5 py-1.5 rounded-full text-xs font-medium -rotate-2 mb-5">
             <BookOpen className="w-3.5 h-3.5 text-accent-warm" /> {posts.length} reads
@@ -70,8 +77,17 @@ export default function PostsIndex() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-            {posts.map((post) => (
-              <PostCard key={post.slug} title={post.title} description={post.description} image={post.image} slug={post.slug} date={post.date} />
+            {posts.map((post, i) => (
+              <PostCard
+                key={post.slug}
+                title={post.title}
+                description={post.description}
+                image={post.image}
+                slug={post.slug}
+                date={post.date}
+                priority={i < 3}
+                prefetch={i < 6}
+              />
             ))}
           </div>
         )}

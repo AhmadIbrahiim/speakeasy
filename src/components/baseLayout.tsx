@@ -4,7 +4,7 @@ import React from "react"
 import NavMenu from "./ui/NavigationMenu"
 import { SITE } from "@/config/site"
 
-export function BaseLayout({ children, hideHero = false, title = "Voicemail Greeting" }: { children: React.ReactElement | React.ReactElement[]; hideHero?: boolean; title?: string }) {
+export function BaseLayout({ children }: { children: React.ReactElement | React.ReactElement[] }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between pt-16 sm:pt-20 pb-0 px-0">
       <div className="flex flex-col min-h-[100dvh]">
@@ -51,103 +51,88 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
           </div>
         </header>
 
-        {hideHero ? null : (
-          <section className="w-full max-w-[1200px] mx-auto py-12 ">
-            <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-8">
-              <div className="space-y-4 text-left">
-                <div className="space-y-6">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">100% Free Pro {title}</h1>
-                  <p className="max-w-[600px] text-gray-500 md:text-xl  ">
-                    Create professional and personalized {String(title).toLocaleLowerCase()} for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting
-                    impression.
-                  </p>
-                </div>
-                <Link
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 "
-                  href="/">
-                  Try It Now
-                </Link>
-              </div>
-              <img alt="Voicemail Greetings" className="mx-auto aspect-video overflow-hidden rounded-xl " width={500} src="https://mixavox.com/_nuxt/img/illus-recording.14859e6.svg" />
-            </div>
-          </section>
-        )}
-
         {children}
 
-        <footer className="w-full border-t mt-auto">
-          <div className="mx-auto max-w-[1200px] p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-6">
+        <footer className="w-full border-t-2 border-ink/10 mt-auto">
+          <div className="mx-auto max-w-[1200px] px-4 md:px-6 py-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <div>
-                <h3 className="text-base font-semibold mb-4">{SITE.name}</h3>
-                <p className="text-sm text-gray-500 mb-3">Create professional voicemail greetings for free, no credit card required.</p>
-                <p className="text-xs text-gray-500 mb-4">
-                  Open source under <a href={`${SITE.socials.github}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-900">{SITE.openSource.license}</a>.
-                  Built and maintained in the open.
+                <h3 className="font-serif text-[18px] font-semibold tracking-[-0.015em] text-ink mb-3">{SITE.name}</h3>
+                <p className="text-[13.5px] leading-relaxed text-stone-600 mb-3">Create professional voicemail greetings for free, no credit card required.</p>
+                <p className="text-[12px] leading-relaxed text-stone-500 mb-4">
+                  Open source under{" "}
+                  <a
+                    href={`${SITE.socials.github}/blob/main/LICENSE`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink border-b border-ink/30 hover:border-accent hover:text-accent transition-colors">
+                    {SITE.openSource.license}
+                  </a>
+                  . Built and maintained in the open.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <a
                     href={SITE.socials.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-colors">
+                    className="inline-flex items-center gap-1.5 bg-white text-ink border-2 border-ink rounded-full px-3 py-1.5 text-[12px] font-semibold hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
                     <Github className="w-3.5 h-3.5" />
                     Star on GitHub
-                    <Star className="w-3 h-3 text-amber-500" fill="currentColor" />
+                    <Star className="w-3 h-3 text-accent-warm" fill="currentColor" />
                   </a>
                   <a
                     href={SITE.socials.buyMeACoffee}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-colors">
-                    <Coffee className="w-3.5 h-3.5" />
+                    className="inline-flex items-center gap-1.5 bg-accent-warm text-ink border-2 border-ink rounded-full px-3 py-1.5 text-[12px] font-semibold hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+                    <Coffee className="w-3.5 h-3.5" strokeWidth={2.2} />
                     Buy me a coffee
                   </a>
                 </div>
               </div>
               <div>
-                <h3 className="text-base font-semibold mb-4">Useful Links</h3>
-                <ul className="space-y-2 text-sm">
+                <h3 className="font-serif text-[18px] font-semibold tracking-[-0.015em] text-ink mb-3">Useful links</h3>
+                <ul className="space-y-2 text-[14px]">
                   <li>
-                    <Link href="/" className="text-gray-600 hover:text-gray-900 hover:underline">
+                    <Link href="/" className="text-stone-600 hover:text-accent transition-colors">
                       Home
                     </Link>
                   </li>
                   <li>
-                    <Link href="/hold" className="text-gray-600 hover:text-gray-900 hover:underline">
-                      On-Hold Messages
+                    <Link href="/hold" className="text-stone-600 hover:text-accent transition-colors">
+                      On-hold messages
                     </Link>
                   </li>
                   <li>
-                    <Link href="/posts" className="text-gray-600 hover:text-gray-900 hover:underline">
-                      Blog
+                    <Link href="/posts" className="text-stone-600 hover:text-accent transition-colors">
+                      Notes & guides
                     </Link>
                   </li>
                   <li>
-                    <Link href="/faq" className="text-gray-600 hover:text-gray-900 hover:underline">
+                    <Link href="/faq" className="text-stone-600 hover:text-accent transition-colors">
                       FAQ
                     </Link>
                   </li>
                 </ul>
               </div>
               <div>
-                <h3 className="text-base font-semibold mb-4">Legal</h3>
-                <ul className="space-y-2 text-sm">
+                <h3 className="font-serif text-[18px] font-semibold tracking-[-0.015em] text-ink mb-3">Legal</h3>
+                <ul className="space-y-2 text-[14px]">
                   <li>
-                    <Link href="/privacy-policy" className="text-gray-600 hover:text-gray-900 hover:underline">
-                      Privacy Policy
+                    <Link href="/privacy-policy" className="text-stone-600 hover:text-accent transition-colors">
+                      Privacy policy
                     </Link>
                   </li>
                   <li>
-                    <Link href="/terms" className="text-gray-600 hover:text-gray-900 hover:underline">
-                      Terms of Service
+                    <Link href="/terms" className="text-stone-600 hover:text-accent transition-colors">
+                      Terms of service
                     </Link>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className="border-t pt-6">
-              <p className="text-xs text-gray-500">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
+            <div className="mt-8 pt-6 border-t border-ink/10">
+              <p className="text-[11.5px] font-mono text-stone-500">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
             </div>
           </div>
         </footer>

@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import BaseLayout from "@/components/baseLayout"
 import { FAQJsonLd } from "@/components/JsonLd"
 import { SITE } from "@/config/site"
+import { HelpCircle, Plus } from "lucide-react"
 
 export const metadata: Metadata = {
   title: `Frequently Asked Questions | ${SITE.name}`,
@@ -59,18 +60,28 @@ export default function FAQPage() {
   return (
     <BaseLayout>
       <FAQJsonLd questions={faqData} />
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
 
-        <div className="space-y-6">
+      <section className="w-full max-w-[760px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-8">
+        <span className="inline-flex items-center gap-2 bg-ink text-cream-100 px-3.5 py-1.5 rounded-full text-xs font-medium -rotate-2 mb-5">
+          <HelpCircle className="w-3.5 h-3.5 text-accent-warm" /> {faqData.length} questions
+        </span>
+        <h1 className="font-serif text-[clamp(34px,5vw,52px)] leading-[1.05] tracking-[-0.03em] font-semibold text-ink text-balance mb-4">Frequently asked questions.</h1>
+        <p className="text-[18px] leading-relaxed text-stone-600">Straight answers about the tool: what it costs, what it sounds like, and how to get the file onto your phone.</p>
+      </section>
+
+      <section className="w-full max-w-[760px] mx-auto px-4 md:px-6 pb-16">
+        <div className="space-y-3">
           {faqData.map((faq, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-3">{faq.question}</h2>
-              <p className="text-gray-700">{faq.answer}</p>
-            </div>
+            <details key={index} className="group bg-white border-2 border-ink rounded-2xl shadow-ink-lg overflow-hidden">
+              <summary className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 sm:py-5 cursor-pointer list-none select-none">
+                <h2 className="font-serif text-[17px] sm:text-[19px] font-semibold tracking-[-0.01em] text-ink leading-snug">{faq.question}</h2>
+                <Plus className="w-5 h-5 shrink-0 text-accent transition-transform duration-200 group-open:rotate-45" strokeWidth={2.5} aria-hidden />
+              </summary>
+              <div className="px-5 sm:px-6 pb-5 sm:pb-6 -mt-1 text-[15px] leading-relaxed text-stone-600">{faq.answer}</div>
+            </details>
           ))}
         </div>
-      </div>
+      </section>
     </BaseLayout>
   )
 }

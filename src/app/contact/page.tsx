@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import BaseLayout from "@/components/baseLayout"
 import Link from "next/link"
 import { SITE } from "@/config/site"
+import { Mail, Clock, MessageCircle, ArrowRight, Twitter, Facebook, Github } from "lucide-react"
 
 export const metadata: Metadata = {
   title: `Contact Us | ${SITE.name}`,
@@ -19,82 +20,89 @@ export const metadata: Metadata = {
 export default function Contact() {
   return (
     <BaseLayout>
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8 text-center">Contact Us</h1>
+      <section className="w-full max-w-[760px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-8">
+        <span className="inline-flex items-center gap-2 bg-ink text-cream-100 px-3.5 py-1.5 rounded-full text-xs font-medium -rotate-2 mb-5">
+          <MessageCircle className="w-3.5 h-3.5 text-accent-warm" /> Get in touch
+        </span>
+        <h1 className="font-serif text-[clamp(34px,5vw,52px)] leading-[1.05] tracking-[-0.03em] font-semibold text-ink text-balance mb-4">Say hi.</h1>
+        <p className="text-[18px] leading-relaxed text-stone-600">Questions, bug reports, feature ideas, or just want to say the tool worked? All welcome.</p>
+      </section>
 
-        <div className="space-y-8">
-          <section className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Get in Touch</h2>
-            <p className="mb-6">
-              We&apos;d love to hear from you! Whether you have a question about our voicemail greeting service, need help with using our features, or want to provide feedback, our team is here to
-              help.
-            </p>
-
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-700 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-                <div>
-                  <h3 className="font-medium">Email</h3>
-                  <p className="text-gray-600">{SITE.supportEmail}</p>
-                </div>
+      <section className="w-full max-w-[760px] mx-auto px-4 md:px-6 pb-10">
+        <div className="bg-white border-2 border-ink rounded-2xl shadow-ink-lg p-6 sm:p-8">
+          <div className="space-y-6">
+            <div className="flex items-start gap-4">
+              <span className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-cream-200 border-2 border-ink">
+                <Mail className="w-4 h-4 text-ink" strokeWidth={2.2} />
+              </span>
+              <div>
+                <h2 className="font-serif text-[18px] font-semibold tracking-[-0.01em] text-ink mb-1">Email</h2>
+                <a
+                  href={`mailto:${SITE.supportEmail}`}
+                  className="text-[15px] text-accent border-b border-accent/30 hover:border-accent transition-colors">
+                  {SITE.supportEmail}
+                </a>
               </div>
+            </div>
 
-              <div className="flex items-start">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-700 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div>
-                  <h3 className="font-medium">Support Hours</h3>
-                  <p className="text-gray-600">Monday-Friday: 9AM-5PM EST</p>
-                </div>
+            <div className="flex items-start gap-4">
+              <span className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-cream-200 border-2 border-ink">
+                <Clock className="w-4 h-4 text-ink" strokeWidth={2.2} />
+              </span>
+              <div>
+                <h2 className="font-serif text-[18px] font-semibold tracking-[-0.01em] text-ink mb-1">Reply window</h2>
+                <p className="text-[15px] leading-relaxed text-stone-600">Usually within a business day. This is a side project, so weekends may slip.</p>
               </div>
+            </div>
 
-              <div className="flex items-start">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-700 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div>
-                  <h3 className="font-medium">Social Media</h3>
-                  <div className="flex space-x-3 mt-1">
-                    <a href={SITE.socials.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-gray-600 hover:text-gray-900">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                      </svg>
-                    </a>
-                    <a href={SITE.socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-600 hover:text-gray-900">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                      </svg>
-                    </a>
-                  </div>
+            <div className="flex items-start gap-4">
+              <span className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-cream-200 border-2 border-ink">
+                <Github className="w-4 h-4 text-ink" strokeWidth={2.2} />
+              </span>
+              <div>
+                <h2 className="font-serif text-[18px] font-semibold tracking-[-0.01em] text-ink mb-2">Social</h2>
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href={SITE.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-white text-ink border-2 border-ink rounded-full px-3 py-1.5 text-[12px] font-semibold hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+                    <Github className="w-3.5 h-3.5" /> GitHub
+                  </a>
+                  <a
+                    href={SITE.socials.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-white text-ink border-2 border-ink rounded-full px-3 py-1.5 text-[12px] font-semibold hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+                    <Twitter className="w-3.5 h-3.5" /> Twitter
+                  </a>
+                  <a
+                    href={SITE.socials.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-white text-ink border-2 border-ink rounded-full px-3 py-1.5 text-[12px] font-semibold hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+                    <Facebook className="w-3.5 h-3.5" /> Facebook
+                  </a>
                 </div>
               </div>
             </div>
-          </section>
-
-          <section className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
-            <p className="mb-4">
-              Looking for quick answers? Check out our{" "}
-              <Link href="/faq" className="text-blue-600 hover:underline">
-                FAQ page
-              </Link>{" "}
-              for common questions about our service.
-            </p>
-          </section>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <section className="w-full max-w-[760px] mx-auto px-4 md:px-6 pb-16">
+        <div className="bg-cream-200 border-2 border-ink rounded-2xl px-6 sm:px-8 py-6 sm:py-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="font-serif text-[20px] sm:text-[22px] font-semibold tracking-[-0.015em] text-ink mb-1">Looking for quick answers?</h2>
+            <p className="text-[14px] text-stone-600">The FAQ covers the common stuff: pricing, voice options, file format.</p>
+          </div>
+          <Link
+            href="/faq"
+            className="inline-flex items-center justify-center gap-2 bg-white text-ink px-5 py-2.5 rounded-full text-[14px] font-semibold border-2 border-ink shadow-ink hover:shadow-ink-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all whitespace-nowrap">
+            Read the FAQ <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+          </Link>
+        </div>
+      </section>
     </BaseLayout>
   )
 }

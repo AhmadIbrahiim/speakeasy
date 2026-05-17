@@ -65,7 +65,7 @@ export default async function Post({ params }: Params) {
   const minutes = readingTime(postData.content || "")
 
   return (
-    <BaseLayout hideHero>
+    <BaseLayout>
       <ArticleJsonLd
         headline={postData.title}
         description={postData.description}
@@ -75,11 +75,11 @@ export default async function Post({ params }: Params) {
         author={{ name: `${SITE.name} Team` }}
       />
 
-      <article className="w-full max-w-[760px] mx-auto px-4 md:px-6 pt-6 md:pt-12 pb-16">
+      <article className="w-full max-w-[760px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-16">
         <Link
           href="/posts"
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-stone-600 hover:text-accent transition-colors mb-8 group">
-          <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" strokeWidth={2.5} />
+          className="inline-flex items-center gap-1.5 text-[14px] font-medium text-stone-600 hover:text-accent transition-colors mb-8 group">
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" strokeWidth={2.5} />
           All posts
         </Link>
 

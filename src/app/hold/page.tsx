@@ -8,7 +8,7 @@ const queryClient = new QueryClient()
 export default function Home() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Landing title="On Hold Message ">
+      <Landing>
         <MainForm target={PageTarget.HOLD} />
       </Landing>
     </QueryClientProvider>

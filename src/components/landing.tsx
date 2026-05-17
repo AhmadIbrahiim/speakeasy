@@ -67,9 +67,9 @@ function loadTemplate(text: string) {
   }
 }
 
-export function Landing({ children, title }: { children: React.ReactElement; title?: string }) {
+export function Landing({ children }: { children: React.ReactElement }) {
   return (
-    <BaseLayout title={title} hideHero>
+    <BaseLayout>
       {/* Hero */}
       <section className="w-full max-w-[1200px] mx-auto px-4 md:px-6 pt-12 pb-8 md:pt-20 md:pb-12">
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-start">

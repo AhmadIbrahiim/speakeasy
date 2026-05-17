@@ -32,80 +32,181 @@ body {
   }
 }
 
+// Warm-aligned typography for rendered markdown posts.
+// Targets the #blog-content wrapper used by /posts/[slug]/page.tsx.
 #blog-content {
+  font-size: 17px;
+  line-height: 1.75;
+  color: #292524; // stone-800
+
+  p {
+    margin: 1.25em 0;
+  }
+
+  // Headings — Fraunces serif via the project's CSS variable.
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-fraunces), Georgia, ui-serif, serif;
+    font-weight: 600;
+    color: #1a1916; // ink
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.65em;
+    margin: 2.25em 0 0.7em;
+  }
+
+  h3 {
+    font-size: 1.3em;
+    margin: 1.8em 0 0.5em;
+  }
+
+  h4 {
+    font-size: 1.1em;
+    margin: 1.6em 0 0.4em;
+    @apply font-semibold;
+  }
+
+  // Inline emphasis.
+  strong {
+    color: #1a1916;
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  a {
+    color: #e64a2b; // accent
+    text-decoration: none;
+    border-bottom: 1.5px solid rgba(230, 74, 43, 0.25);
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      border-bottom-color: #e64a2b;
+    }
+  }
+
+  // Lists.
+  ul,
+  ol {
+    margin: 1.25em 0;
+    padding-left: 1.5em;
+  }
+
+  li {
+    margin: 0.4em 0;
+  }
+
+  ul li::marker {
+    color: #e64a2b;
+  }
+
+  ol li::marker {
+    color: #78716c;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  // Block quotes — warm, indented, accent left border.
+  blockquote {
+    margin: 1.5em 0;
+    padding: 0.5em 1.25em;
+    border-left: 3px solid #f5a623;
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-style: italic;
+    color: #57534e; // stone-600
+    font-size: 1.05em;
+  }
+
+  // Code.
+  code {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    font-size: 0.92em;
+    background: #ede6d6; // cream-200
+    border: 1px solid rgba(26, 25, 22, 0.1);
+    padding: 0.12em 0.4em;
+    border-radius: 4px;
+  }
+
+  pre {
+    margin: 1.5em 0;
+    padding: 1.1em 1.25em;
+    background: #fbf7ee; // cream-50
+    border: 2px solid #1a1916;
+    border-radius: 14px;
+    overflow-x: auto;
+    font-size: 0.9em;
+    line-height: 1.55;
+
+    code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 1em;
+    }
+  }
+
+  // Horizontal rule — short, centered, ink.
+  hr {
+    border: 0;
+    margin: 2.5em auto;
+    width: 80px;
+    border-top: 2px solid rgba(26, 25, 22, 0.18);
+  }
+
+  // Images inside posts get the ink-card treatment.
   img {
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 1.5em auto;
-    // Fit image to container
-    @apply object-cover;
-    max-height: 460px; /* round image */
-    @apply rounded-lg;
-    /* Add hover effect to image to rotate  10deg */
-    @apply hover:drop-shadow-md border border-gray-200 rounded-lg;
-  }
-  hr {
-    border: 0;
-    border-top: 1px solid rgba(var(--foreground-rgb), 0.1);
-    margin: 1.5em 0;
+    margin: 1.75em auto;
+    max-height: 520px;
+    @apply object-cover rounded-2xl;
+    border: 2px solid #1a1916;
+    box-shadow: 4px 4px 0 #1a1916;
   }
 
-  h2 {
-    font-size: 1.5em;
-    margin: 1.5em 0 0.5em;
-    @apply font-semibold;
-    // Apply gradient color to text from green to blue fit text
-    color: linear-gradient(120deg, #34d399, #2563eb);
-  }
-
-  h1 {
-    font-size: 1.6em;
-    @apply font-semibold;
-    margin: 1.5em 0 0.5em;
-  }
-
-  h3 {
-    font-size: 1.25em;
-    margin: 1.5em 0 0.5em;
-    @apply font-semibold text-stone-600;
-  }
+  // Tables.
   table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
-    margin: 1.5em 0;
-    font-size: 0.875em;
-    color: rgba(var(--foreground-rgb), 0.8);
-    border: 1px solid rgba(var(--foreground-rgb), 0.1);
-    border-radius: 0.25em;
+    margin: 1.75em 0;
+    font-size: 0.95em;
+    border: 2px solid #1a1916;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 #1a1916;
+    background: #fff;
 
     th,
     td {
-      padding: 0.5em 1em;
-      border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1);
-    }
-
-    th {
-      background: rgba(var(--foreground-rgb), 0.05);
+      padding: 0.7em 1em;
+      border-bottom: 1px solid rgba(26, 25, 22, 0.1);
       text-align: left;
     }
 
-    tr {
-      &:nth-child(even) {
-        background: rgba(var(--foreground-rgb), 0.05);
-      }
+    th {
+      background: #ede6d6;
+      font-weight: 600;
+      color: #1a1916;
+      border-bottom: 2px solid #1a1916;
     }
 
-    a {
-      color: rgba(var(--foreground-rgb), 0.8);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(var(--foreground-rgb), 0.8);
-      transition: border-color 0.2s;
+    tr:last-child td {
+      border-bottom: none;
+    }
 
-      &:hover {
-        border-color: rgba(var(--foreground-rgb), 0.6);
-      }
+    tr:nth-child(even) td {
+      background: rgba(245, 239, 227, 0.4);
     }
   }
 }

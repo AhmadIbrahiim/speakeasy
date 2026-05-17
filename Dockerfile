@@ -1,18 +1,13 @@
 # syntax=docker/dockerfile:1.7
 # Multi-stage build for Next.js on Render (and any Docker host).
-# Final image ≈ 230 MB: node-slim + ffmpeg + Next standalone bundle.
+# Production runtime is pure Node: audio mixing happens client-side in the
+# browser via Crunker; the server only proxies Cartesia TTS + Vercel Blob.
 
 # ────────────────────────────────────────────────────────────────────────────
 # 1. Dependencies — install once, cache aggressively
 # ────────────────────────────────────────────────────────────────────────────
 FROM node:20-slim AS deps
 WORKDIR /app
-
-# Build tools only in case node-web-audio-api needs to compile (most arches
-# have prebuilt binaries, this is the safety net).
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3 make g++ ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json* ./
 RUN npm ci --no-audit --no-fund
@@ -40,10 +35,8 @@ ENV NODE_ENV=production \
     PORT=3000 \
     HOSTNAME=0.0.0.0
 
-# ffmpeg is the whole reason we're not on serverless. Keep the layer slim:
-# install only what's needed, then clean the apt lists.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ffmpeg ca-certificates \
+    && apt-get install -y --no-install-recommends ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Non-root user. Next's standalone server runs fine without root.

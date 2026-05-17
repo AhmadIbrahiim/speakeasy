@@ -52,7 +52,6 @@
     "lucide-react": "^0.383.0",
     "mime-types": "^3.0.1",
     "next": "14.2.3",
-    "node-web-audio-api": "^0.18.0",
     "react": "^18",
     "react-dom": "^18",
     "remark": "^15.0.1",

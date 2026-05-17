@@ -93,4 +93,4 @@ These are namespaced under `prod:pm2:*` so they don't compete visually with the 
 - Node 20+ (see the `engines` field in `package.json`)
 - Port 3030 free (or edit the `prod:pm2:start` script to pick another port)
 
-If you're not specifically committed to PM2, prefer Docker — it bakes in `ffmpeg`, runs as a non-root user, and ships with a health check out of the box.
+If you're not specifically committed to PM2, prefer Docker. It runs as a non-root user and ships with a health check out of the box.

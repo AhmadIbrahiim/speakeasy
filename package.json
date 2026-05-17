@@ -47,7 +47,6 @@
     "dotenv": "^16.4.1",
     "elevenlabs": "^0.18.0",
     "gray-matter": "^4.0.3",
-    "lamejs": "^1.2.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.383.0",
     "mime-types": "^3.0.1",

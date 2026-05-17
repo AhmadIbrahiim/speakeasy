@@ -9,6 +9,8 @@ Free voicemail and on-hold greetings — bring your own Cartesia key, never pay 
 
 A self-hostable Next.js app that turns a script and a voice into a finished MP3 — voicemail greetings, hold messages, IVR prompts. No signup, no email gate, no per-minute charges.
 
+![Perfect Greet demo — pick a template, generate, download](docs/assets/demo.gif)
+
 ## Why this exists
 
 Every "voicemail generator" SaaS charges $10–$20 a month for what is, structurally, a single TTS API call followed by a mix-down. Perfect Greet costs nothing to run for visitors because each visitor brings their own Cartesia API key. Cartesia hands out 1,000 free credits per account — roughly 20 minutes of synthesized audio — which is more than enough for a personal greeting or a small business hold loop. The app's job is to make that experience pleasant, not to put a paywall in front of it.
@@ -20,6 +22,8 @@ Every "voicemail generator" SaaS charges $10–$20 a month for what is, structur
 - **10 battle-tested script templates** for voicemail, on-hold, after-hours, and IVR scenarios
 - **Client-side audio mixing** via Crunker + the Web Audio API — the server only renders TTS, the browser handles the mix
 - **MP3 and WAV export**, no watermark, no attribution required
+
+![Live workspace — script editor, voice picker, music mixer, generate button](docs/assets/02-workspace.png)
 
 ## Quick start
 
@@ -43,6 +47,8 @@ The whole flow takes about 30 seconds:
 2. Open the [API Keys dashboard](https://play.cartesia.ai/keys).
 3. Click **Create API Key**, give it a name.
 4. Paste the `sk_...` key into the dialog in the app.
+
+![BYO Cartesia key dialog — 30-second walkthrough, sessionStorage only](docs/assets/05-apikey-dialog.png)
 
 **Storage.** Your key is held in `sessionStorage` on your own browser — it clears the moment you close the tab. Paste it again next session.
 

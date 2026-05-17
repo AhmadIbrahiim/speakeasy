@@ -1,4 +1,4 @@
-import { VoicemailIcon } from "lucide-react"
+import { VoicemailIcon, Github, Coffee, Star } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import NavMenu from "./ui/NavigationMenu"
@@ -8,25 +8,45 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
   return (
     <main className="flex min-h-screen flex-col items-center justify-between pt-16 sm:pt-20 pb-0 px-0">
       <div className="flex flex-col min-h-[100dvh]">
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-          <div className="max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-16 flex items-center justify-between">
-            <Link className="flex items-center space-x-2 transition-transform hover:scale-105" href="/">
-              <div className="relative">
-                <VoicemailIcon className="h-7 w-7 text-gray-900" />
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-              </div>
-              <span className="font-semibold text-lg text-gray-900 hidden sm:block">{SITE.name}</span>
+        <header className="fixed top-0 left-0 right-0 z-50 bg-cream-100/85 backdrop-blur-md border-b-2 border-ink/10">
+          <div className="max-w-[1200px] mx-auto w-full px-4 lg:px-6 h-16 sm:h-[68px] flex items-center justify-between gap-3">
+            <Link className="flex items-center gap-2.5 group" href="/">
+              <span className="relative inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white border-2 border-ink shadow-ink transition-all group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-ink-lg">
+                <VoicemailIcon className="h-4 w-4 text-ink" strokeWidth={2.4} />
+              </span>
+              <span className="hidden sm:flex items-center gap-2">
+                <span className="font-serif font-semibold text-[19px] tracking-[-0.015em] text-ink">{SITE.name}</span>
+                <span className="hidden md:inline-flex items-center gap-1 text-[10.5px] font-mono uppercase tracking-[0.08em] text-stone-600 bg-cream-200 border border-ink/15 px-1.5 py-0.5 rounded-full">
+                  <span className="w-1 h-1 rounded-full bg-accent-forest" />
+                  open source
+                </span>
+              </span>
             </Link>
 
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <nav className="flex items-center">
                 <NavMenu />
               </nav>
-              <Link
-                href="/"
-                className="ml-6 hidden sm:inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-full transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900">
-                Try It Free
-              </Link>
+              <a
+                href={SITE.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Star Perfect Greet on GitHub"
+                aria-label="Star on GitHub"
+                className="ml-1 inline-flex items-center justify-center gap-1.5 h-9 px-3 sm:px-3.5 text-[13px] font-semibold text-ink bg-white border-2 border-ink rounded-full hover:bg-cream-50 hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                <Github className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Star</span>
+                <Star className="w-3 h-3 text-accent-warm" fill="currentColor" />
+              </a>
+              <a
+                href={SITE.socials.buyMeACoffee}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Buy me a coffee"
+                aria-label="Buy me a coffee"
+                className="hidden md:inline-flex items-center justify-center h-9 w-9 text-ink bg-accent-warm border-2 border-ink rounded-full hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                <Coffee className="w-3.5 h-3.5" strokeWidth={2.2} />
+              </a>
             </div>
           </div>
         </header>
@@ -60,37 +80,28 @@ export function BaseLayout({ children, hideHero = false, title = "Voicemail Gree
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-6">
               <div>
                 <h3 className="text-base font-semibold mb-4">{SITE.name}</h3>
-                <p className="text-sm text-gray-500 mb-4">Create professional voicemail greetings for free, no credit card required.</p>
-                <div className="flex space-x-4">
-                  <a href={SITE.socials.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-gray-600 hover:text-gray-900">
-                      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                    </svg>
+                <p className="text-sm text-gray-500 mb-3">Create professional voicemail greetings for free, no credit card required.</p>
+                <p className="text-xs text-gray-500 mb-4">
+                  Open source under <a href={`${SITE.socials.github}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-900">{SITE.openSource.license}</a>.
+                  Built and maintained in the open.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href={SITE.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-colors">
+                    <Github className="w-3.5 h-3.5" />
+                    Star on GitHub
+                    <Star className="w-3 h-3 text-amber-500" fill="currentColor" />
                   </a>
-                  <a href={SITE.socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-gray-600 hover:text-gray-900">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                    </svg>
+                  <a
+                    href={SITE.socials.buyMeACoffee}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-colors">
+                    <Coffee className="w-3.5 h-3.5" />
+                    Buy me a coffee
                   </a>
                 </div>
               </div>

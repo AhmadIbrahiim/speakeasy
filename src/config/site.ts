@@ -14,6 +14,12 @@ export const SITE = {
     twitter: "https://twitter.com/perfectgreet",
     facebook: "https://facebook.com/perfectgreet",
     github: "https://github.com/AhmadIbrahiim/voicemail-greeting",
+    buyMeACoffee: "https://www.buymeacoffee.com/ahmadibrahiim",
+  },
+  openSource: {
+    enabled: true,
+    license: "MIT",
+    repo: "AhmadIbrahiim/voicemail-greeting",
   },
   organization: {
     name: "Perfect Greet",

@@ -3,7 +3,7 @@
 import React from "react"
 import BaseLayout from "./baseLayout"
 import CONSTANTS from "@/app/config/constants"
-import { Mic2, Music4, FileText, ArrowRight, Check, Star } from "lucide-react"
+import { Mic2, Music4, FileText, ArrowRight, Check, Star, Github, Coffee, Heart } from "lucide-react"
 import { Metadata } from "next"
 import { SITE } from "@/config/site"
 
@@ -264,20 +264,40 @@ export function Landing({ children, title }: { children: React.ReactElement; tit
               className="inline-flex items-center gap-2 bg-accent-warm text-ink px-7 py-4 rounded-full text-base font-semibold hover:-translate-y-0.5 transition-transform shadow-[0_8px_24px_rgba(245,166,35,0.3)]">
               Open workspace <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
             </a>
-            <div className="flex items-center justify-center gap-2 mt-8 text-cream-200/60 text-[13px]">
-              <Star className="w-3.5 h-3.5" fill="currentColor" />
-              <span>
-                Like the project?{" "}
-                <a href={`mailto:${SITE.contactEmail}`} className="underline hover:text-cream-100">
-                  Say hi
-                </a>{" "}
-                or{" "}
-                <a href={SITE.socials.github} className="underline hover:text-cream-100">
-                  star it on GitHub
-                </a>
-                .
-              </span>
-            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Open source — star + buy me a coffee */}
+      <section className="w-full max-w-[1200px] mx-auto px-4 md:px-6 pb-16">
+        <div className="bg-white border-[2.5px] border-ink rounded-3xl shadow-ink-xl p-8 md:p-12 grid md:grid-cols-[1fr_auto] gap-8 md:gap-10 items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 bg-ink text-cream-100 px-3.5 py-1.5 rounded-full text-xs font-medium -rotate-2 mb-4">
+              <Heart className="w-3.5 h-3.5 text-accent" fill="currentColor" /> 100% open source · {SITE.openSource.license}
+            </span>
+            <h2 className="font-serif text-[28px] md:text-[36px] leading-[1.05] tracking-[-0.02em] font-semibold mb-3 text-ink">The whole thing is on GitHub.</h2>
+            <p className="text-stone-600 text-[15.5px] leading-relaxed max-w-[520px]">
+              Code, design system, audit trail, even the embarrassing dev notes — all public under MIT. If Perfect Greet saved you a SaaS subscription, the best thanks is a GitHub star. A coffee works too.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row md:flex-col md:gap-3 md:min-w-[220px]">
+            <a
+              href={SITE.socials.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center justify-center gap-2 bg-ink text-cream-100 px-6 py-3.5 rounded-full text-[15px] font-semibold border-2 border-ink shadow-ink hover:shadow-ink-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+              <Github className="w-4 h-4" />
+              Star on GitHub
+              <Star className="w-3.5 h-3.5 ml-0.5 text-accent-warm group-hover:fill-accent-warm transition-all" />
+            </a>
+            <a
+              href={SITE.socials.buyMeACoffee}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-accent-warm text-ink px-6 py-3.5 rounded-full text-[15px] font-semibold border-2 border-ink shadow-ink hover:shadow-ink-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+              <Coffee className="w-4 h-4" />
+              Buy me a coffee
+            </a>
           </div>
         </div>
       </section>

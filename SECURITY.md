@@ -12,7 +12,7 @@ Only the latest `main` branch is supported. Older tags do not receive security f
 ## Reporting a vulnerability
 
 **Preferred:** open a private security advisory via GitHub →
-[github.com/AhmadIbrahiim/voicemail-greeting/security/advisories/new](https://github.com/AhmadIbrahiim/voicemail-greeting/security/advisories/new).
+[github.com/AhmadIbrahiim/speakeasy/security/advisories/new](https://github.com/AhmadIbrahiim/speakeasy/security/advisories/new).
 That keeps the disclosure non-public until a fix is ready.
 
 **Fallback:** email **me@ahmed-ibrahim.com** with the subject prefix `[SECURITY]`.

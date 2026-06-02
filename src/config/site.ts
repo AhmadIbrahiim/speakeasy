@@ -13,13 +13,13 @@ export const SITE = {
   socials: {
     twitter: "https://twitter.com/perfectgreet",
     facebook: "https://facebook.com/perfectgreet",
-    github: "https://github.com/AhmadIbrahiim/voicemail-greeting",
+    github: "https://github.com/AhmadIbrahiim/speakeasy",
     buyMeACoffee: "https://www.buymeacoffee.com/ahmadibrahiim",
   },
   openSource: {
     enabled: true,
     license: "MIT",
-    repo: "AhmadIbrahiim/voicemail-greeting",
+    repo: "AhmadIbrahiim/speakeasy",
   },
   organization: {
     name: "Speakeasy",

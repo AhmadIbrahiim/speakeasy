@@ -9,8 +9,8 @@ Thanks for your interest in improving Speakeasy. This project is a small Next.js
 Requirements: Node 18+ and npm.
 
 ```bash
-git clone https://github.com/AhmadIbrahiim/voicemail-greeting.git
-cd voicemail-greeting
+git clone https://github.com/AhmadIbrahiim/speakeasy.git
+cd speakeasy
 npm install
 cp .env.example .env
 npm run dev

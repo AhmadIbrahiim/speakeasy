@@ -30,8 +30,8 @@ Every "voicemail generator" SaaS charges $10–$20 a month for what is, structur
 ## Quick start
 
 ```bash
-git clone https://github.com/AhmadIbrahiim/voicemail-greeting
-cd voicemail-greeting
+git clone https://github.com/AhmadIbrahiim/speakeasy
+cd speakeasy
 cp .env.example .env   # optional — see Environment variables
 npm install
 npm run dev            # http://localhost:3000

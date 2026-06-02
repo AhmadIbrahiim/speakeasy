@@ -44,8 +44,16 @@ class CartesiaService {
    */
   public static async listVoices(): Promise<CartesiaVoiceResponse[]> {
     const cached = await VoiceCache.read()
-    if (cached && VoiceCache.isFresh(cached)) {
+    if (VoiceCache.isFresh(cached)) {
       console.log(`[voices] cache hit · ${cached.count} voices · age ${VoiceCache.ageDescription(cached)}`)
+      return cached.voices
+    }
+
+    // No API key means we cannot refresh. Serve whatever VoiceCache.read()
+    // returned, which is the bundled seed when no live cache exists, so the
+    // catalog is always populated.
+    if (!CARTESIA_API_KEY) {
+      console.log(`[voices] no API key · serving cached/seed catalog · ${cached.count} voices`)
       return cached.voices
     }
 
@@ -53,18 +61,17 @@ class CartesiaService {
 
     voicesInflight = (async () => {
       try {
-        console.log(`[voices] cache ${cached ? "stale" : "missing"} — paginating from API`)
+        console.log(`[voices] cache stale · paginating from API`)
         const voices = await CartesiaService.fetchAllVoicesPaginated()
         const saved = await VoiceCache.write(voices)
         console.log(`[voices] refreshed · ${saved.count} voices · written ${saved.fetchedAt}`)
         return voices
       } catch (error) {
-        console.error("[voices] refresh failed:", error)
-        if (cached) {
-          console.warn(`[voices] serving stale cache · ${cached.count} voices · age ${VoiceCache.ageDescription(cached)}`)
-          return cached.voices
-        }
-        return []
+        // Refresh failed. Serve the stale cache (or bundled seed) so the
+        // catalog is never empty.
+        console.error("[voices] refresh failed, serving cached/seed catalog:", error)
+        console.warn(`[voices] serving cached/seed catalog · ${cached.count} voices · age ${VoiceCache.ageDescription(cached)}`)
+        return cached.voices
       } finally {
         voicesInflight = null
       }

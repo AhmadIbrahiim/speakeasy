@@ -1,4 +1,4 @@
-# Perfect Greet — Design System
+# Speakeasy — Design System
 
 Source of truth for visual identity, tokens, and component patterns. If a future
 design decision contradicts something here, update this file first — don't drift.
@@ -11,7 +11,7 @@ Picked from three explored directions (Studio / Warm / Crisp). Variants live at
 
 ## 1. Brand posture
 
-Perfect Greet is a free voicemail-greeting generator. The home page is the product —
+Speakeasy is a free voicemail-greeting generator. The home page is the product —
 the tool lives above the fold and the user can finish their goal without ever
 scrolling. Everything below the workspace is trust-building, not sales.
 
@@ -304,7 +304,7 @@ The project's voice is **a friend explaining**, not a brand performing.
 
 ### Naming conventions
 
-- Product: **Perfect Greet** (two words, both capitalized)
+- Product: **Speakeasy** (one word, capitalized)
 - Voice model: **Sonic 3.5** (capitalize Sonic, no quotes)
 - Provider: **Cartesia** (italicize only when emphasizing it's third-party)
 

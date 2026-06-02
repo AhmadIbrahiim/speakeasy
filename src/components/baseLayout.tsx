@@ -31,7 +31,7 @@ export function BaseLayout({ children }: { children: React.ReactElement | React.
                 href={SITE.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Star Perfect Greet on GitHub"
+                title="Star Speakeasy on GitHub"
                 aria-label="Star on GitHub"
                 className="ml-1 inline-flex items-center justify-center gap-1.5 h-9 px-3 sm:px-3.5 text-[13px] font-semibold text-ink bg-white border-2 border-ink rounded-full hover:bg-cream-50 hover:shadow-ink hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                 <Github className="w-3.5 h-3.5" />

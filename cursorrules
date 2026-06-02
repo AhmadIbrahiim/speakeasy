@@ -2,7 +2,7 @@
 
 ## Project Information
 
-- Project: Perfect Greet (voicemail-greeting)
+- Project: Speakeasy (voicemail-greeting)
 - Stack: Next.js 14 App Router, React 18, TypeScript, Tailwind CSS
 - Hosting: Vercel (canonical), Render via Dockerfile, or any Node 20+ container
 - TTS Provider: Cartesia API (`@cartesia/cartesia-js` SDK, model `sonic-3.5`)
@@ -120,10 +120,10 @@ Follow this content structure for consistency:
 
 4. **Conclusion**
    - Summarize key points
-   - Include call-to-action to Perfect Greet
+   - Include call-to-action to Speakeasy
    - Use this template:
    ```markdown
-   Ready to [benefit statement]? Visit [Perfect Greet](https://perfectgreet.site) to create free, high-quality voicemail greetings that [value proposition].
+   Ready to [benefit statement]? Visit [Speakeasy](https://perfectgreet.site) to create free, high-quality voicemail greetings that [value proposition].
    ```
 
 ## Style Guide

@@ -35,7 +35,7 @@ Nobody likes waiting too long! Here's what works best:
 - People get annoyed if it's too long
 - Too short might seem unprofessional
 
-**Perfect Example:** "Hi! This is Ahmed from Perfect Greet. I can't answer right now, but please leave your name and number. I'll call you back soon! Thanks!"
+**Perfect Example:** "Hi! This is Ahmed from Speakeasy. I can't answer right now, but please leave your name and number. I'll call you back soon! Thanks!"
 
 ## 3. Words That Work Magic 🎯
 
@@ -116,9 +116,9 @@ Want to make a greeting that works like magic? Here's what to do:
 4. Add nice background music
 5. Ask a friend to listen and give feedback
 
-## The Perfect Greet Advantage 🌟
+## The Speakeasy Advantage 🌟
 
-Making all this easy is why we created [Perfect Greet](https://perfectgreet.site). It's free and super simple to use! Here's what you get:
+Making all this easy is why we created [Speakeasy](https://perfectgreet.site). It's free and super simple to use! Here's what you get:
 
 - Easy recording tools
 - Professional background music
@@ -129,6 +129,6 @@ Making all this easy is why we created [Perfect Greet](https://perfectgreet.site
 
 Remember, your voicemail greeting is like your voice handshake! It doesn't have to be perfect, but it should make people feel good. With these simple tips, you can create a greeting that makes everyone happy to leave a message.
 
-Want to try making your own professional greeting? Visit [Perfect Greet](https://perfectgreet.site) - it's free and super easy to use! No credit card needed, just come and try it! 😊
+Want to try making your own professional greeting? Visit [Speakeasy](https://perfectgreet.site) - it's free and super easy to use! No credit card needed, just come and try it! 😊
 
-![Perfect Greet](/posts/voicemail-greeting-sleek.png)
+![Speakeasy](/posts/voicemail-greeting-sleek.png)

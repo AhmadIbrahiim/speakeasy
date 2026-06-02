@@ -1,4 +1,6 @@
-# Perfect Greet
+# Speakeasy
+
+**Live demo: [voicemail.ahmed-ibrahim.com](https://voicemail.ahmed-ibrahim.com)**
 
 Free voicemail and on-hold greetings — bring your own Cartesia key, never pay a SaaS bill.
 
@@ -9,11 +11,11 @@ Free voicemail and on-hold greetings — bring your own Cartesia key, never pay 
 
 A self-hostable Next.js app that turns a script and a voice into a finished MP3 — voicemail greetings, hold messages, IVR prompts. No signup, no email gate, no per-minute charges.
 
-![Perfect Greet demo — pick a template, generate, download](docs/assets/demo.gif)
+![Speakeasy demo — pick a template, generate, download](docs/assets/demo.gif)
 
 ## Why this exists
 
-Every "voicemail generator" SaaS charges $10–$20 a month for what is, structurally, a single TTS API call followed by a mix-down. Perfect Greet costs nothing to run for visitors because each visitor brings their own Cartesia API key. Cartesia hands out 1,000 free credits per account — roughly 20 minutes of synthesized audio — which is more than enough for a personal greeting or a small business hold loop. The app's job is to make that experience pleasant, not to put a paywall in front of it.
+Every "voicemail generator" SaaS charges $10–$20 a month for what is, structurally, a single TTS API call followed by a mix-down. Speakeasy costs nothing to run for visitors because each visitor brings their own Cartesia API key. Cartesia hands out 1,000 free credits per account — roughly 20 minutes of synthesized audio — which is more than enough for a personal greeting or a small business hold loop. The app's job is to make that experience pleasant, not to put a paywall in front of it.
 
 ## What you get
 

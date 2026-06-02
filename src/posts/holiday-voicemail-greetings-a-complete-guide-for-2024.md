@@ -146,4 +146,4 @@ Track these metrics to optimize your holiday greetings:
 
 Holiday voicemail greetings are an opportunity to show your business's personality while maintaining professionalism. With proper planning and implementation, you can create memorable seasonal messages that keep your callers informed and engaged throughout the year.
 
-Need help recording your holiday greetings? Visit [Perfect Greet](https://perfectgreet.site) to create professional, free voicemail greetings for any holiday or season. Our service makes it easy to maintain a professional image year-round without any cost to your business.
+Need help recording your holiday greetings? Visit [Speakeasy](https://perfectgreet.site) to create professional, free voicemail greetings for any holiday or season. Our service makes it easy to maintain a professional image year-round without any cost to your business.

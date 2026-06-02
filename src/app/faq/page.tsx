@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 
 const faqData = [
   {
-    question: "Is Perfect Greet completely free to use?",
-    answer: "Yes, Perfect Greet is completely free to use. We don't require a credit card, registration, or any personal information to generate and download your professional voicemail greeting.",
+    question: "Is Speakeasy completely free to use?",
+    answer: "Yes, Speakeasy is completely free to use. We don't require a credit card, registration, or any personal information to generate and download your professional voicemail greeting.",
   },
   {
     question: "How long can my voicemail greeting be?",
@@ -29,7 +29,7 @@ const faqData = [
   {
     question: "What voice options are available?",
     answer:
-      "Perfect Greet offers a variety of AI voices with different accents, tones, and speaking styles. You can choose from professional, friendly, or formal voice options to match your brand or personal preference.",
+      "Speakeasy offers a variety of AI voices with different accents, tones, and speaking styles. You can choose from professional, friendly, or formal voice options to match your brand or personal preference.",
   },
   {
     question: "Can I add background music to my greeting?",

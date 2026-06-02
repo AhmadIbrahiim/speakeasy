@@ -1,6 +1,6 @@
 # scripts/
 
-These scripts are **optional content-authoring tooling**, not part of the runtime app. They are only needed if you want to regenerate blog posts or thumbnails. You do **not** need to run anything in this directory to develop or use Perfect Greet — `npm install && npm run dev` is enough.
+These scripts are **optional content-authoring tooling**, not part of the runtime app. They are only needed if you want to regenerate blog posts or thumbnails. You do **not** need to run anything in this directory to develop or use Speakeasy — `npm install && npm run dev` is enough.
 
 There are two scripts here, both written for the project maintainer's content workflow:
 
@@ -73,17 +73,17 @@ These scripts are wired to the maintainer's workflow and may not work for you ou
 - `generate-thumbnail.ts` targets a specific Gemini model (`gemini-2.0-flash-exp-image-generation`) whose availability, response shape, and image-generation quirks change without notice. You may need to swap models, parse a different response shape, or rebuild prompts.
 - Neither script is covered by the test suite — they were never meant to be part of the runtime contract. If you fork the project for your own content, expect to rewrite them.
 
-If you only care about running Perfect Greet, ignore this directory entirely.
+If you only care about running Speakeasy, ignore this directory entirely.
 
 ---
 
 ## Self-hosting without Docker (PM2)
 
-Docker is the canonical production path for Perfect Greet — see the root `README.md` "Deploy" section, plus the included `Dockerfile` and `render.yaml`. If you specifically want to self-host on a long-running VM under PM2 process management instead, three namespaced scripts live in `package.json`:
+Docker is the canonical production path for Speakeasy — see the root `README.md` "Deploy" section, plus the included `Dockerfile` and `render.yaml`. If you specifically want to self-host on a long-running VM under PM2 process management instead, three namespaced scripts live in `package.json`:
 
 | Script                   | What it does                                                                                              |
 | ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `npm run prod:pm2`       | Builds the app, removes any existing PM2 entry named `voicemail-greeting`, then starts a fresh one.       |
+| `npm run prod:pm2`       | Builds the app, removes any existing PM2 entry named `speakeasy`, then starts a fresh one.       |
 | `npm run prod:pm2:start` | Starts the PM2-managed `next start` process on port 3030.                                                 |
 | `npm run prod:pm2:stop`  | Stops the PM2-managed process.                                                                            |
 

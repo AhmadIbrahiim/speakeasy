@@ -9,7 +9,7 @@ export async function GET() {
     {
       ok: true,
       ts: new Date().toISOString(),
-      service: "voicemail-greeting",
+      service: "speakeasy",
     },
     { headers: { "Cache-Control": "no-store" } },
   )

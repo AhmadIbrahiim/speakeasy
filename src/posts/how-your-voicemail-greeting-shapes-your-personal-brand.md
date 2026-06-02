@@ -185,4 +185,4 @@ Follow these steps to craft a brand-aligned greeting:
 
 Your voicemail greeting is a powerful personal branding tool that deserves careful attention and regular updates. By crafting a professional, brand-aligned message, you can ensure that even missed calls become opportunities to strengthen your professional image.
 
-Ready to elevate your personal brand with a professional voicemail greeting? Visit [Perfect Greet](https://perfectgreet.site) to create a free, high-quality voicemail greeting that perfectly represents your personal brand. Our service helps you make the right impression, every time someone calls.
+Ready to elevate your personal brand with a professional voicemail greeting? Visit [Speakeasy](https://perfectgreet.site) to create a free, high-quality voicemail greeting that perfectly represents your personal brand. Our service helps you make the right impression, every time someone calls.

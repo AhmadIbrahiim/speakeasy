@@ -5,8 +5,8 @@
  * should read from `SITE.*` rather than hardcoding strings.
  */
 export const SITE = {
-  name: "Perfect Greet",
-  url: "https://www.perfectgreet.site",
+  name: "Speakeasy",
+  url: "https://voicemail.ahmed-ibrahim.com",
   description: "Create professional and personalized voicemail greetings for free!",
   contactEmail: "me@ahmed-ibrahim.com",
   supportEmail: "support@perfectgreet.site",
@@ -22,8 +22,8 @@ export const SITE = {
     repo: "AhmadIbrahiim/voicemail-greeting",
   },
   organization: {
-    name: "Perfect Greet",
-    logo: "https://www.perfectgreet.site/logo.png",
+    name: "Speakeasy",
+    logo: "https://voicemail.ahmed-ibrahim.com/logo.png",
   },
 } as const
 

@@ -143,7 +143,7 @@ Track these metrics:
 
 ## Conclusion
 
-Ready to improve your business communication? Visit [Perfect Greet](https://perfectgreet.site) to create professional voicemail greetings that enhance your brand image.`
+Ready to improve your business communication? Visit [Speakeasy](https://perfectgreet.site) to create professional voicemail greetings that enhance your brand image.`
   }
 
   private async generateThumbnail(fileName: string, title: string): Promise<void> {

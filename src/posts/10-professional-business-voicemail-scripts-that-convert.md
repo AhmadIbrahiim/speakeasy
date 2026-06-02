@@ -111,4 +111,4 @@ To ensure these scripts work for your business:
 
 A professional voicemail greeting is more than just a message – it's a business tool that can help convert missed calls into opportunities. Choose the script that best fits your business needs, customize it to your brand voice, and remember to keep it updated.
 
-Want to implement these scripts professionally? Try [Perfect Greet](https://perfectgreet.site) for free, high-quality voicemail greeting recordings that will help your business make a great first impression, even when you can't answer the phone.
+Want to implement these scripts professionally? Try [Speakeasy](https://perfectgreet.site) for free, high-quality voicemail greeting recordings that will help your business make a great first impression, even when you can't answer the phone.

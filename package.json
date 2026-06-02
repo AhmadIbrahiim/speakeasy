@@ -1,7 +1,8 @@
 {
-  "name": "voicemail-greeting",
+  "name": "speakeasy",
+  "homepage": "https://voicemail.ahmed-ibrahim.com",
   "version": "1.0.0",
-  "description": "Voicemail greeting generator with content pipeline",
+  "description": "Speakeasy: self-hosted voicemail, hold, and IVR audio generator (bring your own Cartesia key)",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,9 +15,9 @@
     "test": "vitest run",
     "test:ci": "vitest run --reporter=verbose",
     "test:watch": "vitest",
-    "prod:pm2:start": "pm2 start npm --name voicemail-greeting -- start -- --port 3030",
-    "prod:pm2:stop": "pm2 stop voicemail-greeting",
-    "prod:pm2": "next build && pm2 delete voicemail-greeting && npm run prod:pm2:start"
+    "prod:pm2:start": "pm2 start npm --name speakeasy -- start -- --port 3030",
+    "prod:pm2:stop": "pm2 stop speakeasy",
+    "prod:pm2": "next build && pm2 delete speakeasy && npm run prod:pm2:start"
   },
   "engines": {
     "node": ">=20.0.0"

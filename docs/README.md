@@ -1,4 +1,4 @@
-# Perfect Greet documentation
+# Speakeasy documentation
 
 The canonical entry points for users and contributors live at the repo root:
 

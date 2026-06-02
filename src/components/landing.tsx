@@ -8,7 +8,7 @@ import { Metadata } from "next"
 import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
-  title: "Perfect Greet",
+  title: "Speakeasy",
   description: "Free voicemail and on-hold greetings. Studio voices, royalty-free music, ten battle-tested templates. No signup. No credit card. No catch.",
 }
 
@@ -277,7 +277,7 @@ export function Landing({ children }: { children: React.ReactElement }) {
             </span>
             <h2 className="font-serif text-[28px] md:text-[36px] leading-[1.05] tracking-[-0.02em] font-semibold mb-3 text-ink">The whole thing is on GitHub.</h2>
             <p className="text-stone-600 text-[15.5px] leading-relaxed max-w-[520px]">
-              Code, design system, audit trail, even the embarrassing dev notes — all public under MIT. If Perfect Greet saved you a SaaS subscription, the best thanks is a GitHub star. A coffee works too.
+              Code, design system, audit trail, even the embarrassing dev notes — all public under MIT. If Speakeasy saved you a SaaS subscription, the best thanks is a GitHub star. A coffee works too.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row md:flex-col md:gap-3 md:min-w-[220px]">

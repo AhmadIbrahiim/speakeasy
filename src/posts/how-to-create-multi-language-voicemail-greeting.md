@@ -92,7 +92,7 @@ Veuillez laisser un message après le bip."
 
 **Solution:**
 
-- Use Perfect Greet's professional recording tools
+- Use Speakeasy's professional recording tools
 - Add soft background music
 - Record in a quiet room
 
@@ -128,7 +128,7 @@ Veuillez laisser un message après le bip."
 
 ### Step 3: Put It All Together
 
-🎵 Using Perfect Greet:
+🎵 Using Speakeasy:
 
 1. Upload your recordings
 2. Add gentle music
@@ -161,9 +161,9 @@ Su llamada es importante para nosotros.
 Por favor, deje un mensaje después del tono."
 ```
 
-## Perfect Greet Makes It Easy! 💫
+## Speakeasy Makes It Easy! 💫
 
-Why choose Perfect Greet for your multi-language greeting:
+Why choose Speakeasy for your multi-language greeting:
 
 ✅ **Free Features:**
 
@@ -174,7 +174,7 @@ Why choose Perfect Greet for your multi-language greeting:
 
 🎯 **How to Start:**
 
-1. Visit [Perfect Greet](https://perfectgreet.site)
+1. Visit [Speakeasy](https://perfectgreet.site)
 2. Click "Create Greeting"
 3. Follow our simple steps
 4. Download and use!
@@ -222,11 +222,11 @@ Before you go live:
 
 ## Conclusion
 
-Creating a multi-language voicemail greeting is easy with the right tools! Perfect Greet gives you everything you need to sound professional in any language. Best part? It's totally free!
+Creating a multi-language voicemail greeting is easy with the right tools! Speakeasy gives you everything you need to sound professional in any language. Best part? It's totally free!
 
-Ready to make your business sound professional in any language? Visit [Perfect Greet](https://perfectgreet.site) now - no sign-up needed, just start creating! 😊
+Ready to make your business sound professional in any language? Visit [Speakeasy](https://perfectgreet.site) now - no sign-up needed, just start creating! 😊
 
-![Perfect Greet](/posts/voicemail-greeting-sleek.png)
+![Speakeasy](/posts/voicemail-greeting-sleek.png)
 
 ## Bonus Tips! 🎁
 

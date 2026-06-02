@@ -2,7 +2,7 @@
 
 ## Welcome
 
-Thanks for your interest in improving voicemail-greeting. This project is a small Next.js app for generating voicemail greetings, and we welcome bug reports, fixes, and well-scoped feature contributions.
+Thanks for your interest in improving Speakeasy. This project is a small Next.js app for generating voicemail greetings, and we welcome bug reports, fixes, and well-scoped feature contributions.
 
 ## Setup
 

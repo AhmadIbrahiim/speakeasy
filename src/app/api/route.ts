@@ -115,7 +115,7 @@ export async function POST(req: Request) {
   const isDevelopment = process.env.NODE_ENV === "development"
 
   try {
-    const { fileId, fileUrl, backgroundUrl } = await generateVoices({
+    const { fileId, fileUrl, audioBuffer: generatedBuffer, backgroundUrl } = await generateVoices({
       text: `<break time="1.5s"/> ${text} <break time="1s"/>`,
       id,
       bg: typeof bgId === "string" ? bgId : "",
@@ -125,9 +125,14 @@ export async function POST(req: Request) {
     let audioBuffer: Buffer
     if (isDevelopment) {
       audioBuffer = fs.readFileSync(path.join("output/", `${fileId}.mp3`))
-    } else {
-      if (!fileUrl) throw new Error("Audio upload returned no URL")
+    } else if (generatedBuffer) {
+      // Freshly generated audio is already in hand. No Blob round-trip needed.
+      audioBuffer = generatedBuffer
+    } else if (fileUrl) {
+      // Blob cache hit. Pull the cached MP3 back down to stream it.
       audioBuffer = await BlobStorageService.downloadAudio(fileUrl)
+    } else {
+      throw new Error("No audio produced")
     }
 
     const headers = new Headers({

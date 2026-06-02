@@ -6,6 +6,15 @@ import { put, del, list } from "@vercel/blob"
  */
 class BlobStorageService {
   /**
+   * Whether Vercel Blob is usable. The SDK needs BLOB_READ_WRITE_TOKEN, which
+   * is only present when a Blob store is linked to the project. When it is
+   * missing we treat Blob as a disabled cache rather than a hard failure.
+   */
+  public static isConfigured(): boolean {
+    return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+  }
+
+  /**
    * Uploads an audio buffer to Vercel Blob storage
    * @param fileId Unique identifier for the file
    * @param audioBuffer The audio data buffer to store

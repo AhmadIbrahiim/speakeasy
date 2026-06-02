@@ -10,6 +10,7 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
     fileId: string
     preProcess?: boolean
     fileUrl?: string
+    audioBuffer?: Buffer
     backgroundUrl?: string
   }>(async (resolve, reject) => {
     try {
@@ -35,8 +36,9 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
             backgroundUrl: bgMusicPath,
           })
         }
-      } else {
-        // Production mode - check Vercel Blob
+      } else if (BlobStorageService.isConfigured()) {
+        // Production mode - check Vercel Blob cache. Only when a Blob store is
+        // linked; otherwise we skip straight to generation.
         try {
           const files = await BlobStorageService.listAudioFiles()
           const existingFile = files.find((url) => url.includes(`${fileId}.mp3`))
@@ -83,9 +85,19 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
           backgroundUrl: bgMusicPath,
         })
       } else {
-        // Production mode - upload to Vercel Blob
+        // Production mode - return the freshly generated buffer directly. The
+        // Blob upload is a best-effort cross-user cache: if no Blob store is
+        // linked we skip it, and a failed upload never blocks the response.
         const audioBuffer = Buffer.from(await audioResponse.arrayBuffer())
-        const fileUrl = await BlobStorageService.uploadAudio(fileId, audioBuffer)
+
+        let fileUrl: string | undefined
+        if (BlobStorageService.isConfigured()) {
+          try {
+            fileUrl = await BlobStorageService.uploadAudio(fileId, audioBuffer)
+          } catch (error) {
+            console.warn("[voices] blob upload skipped, serving generated audio directly:", error instanceof Error ? error.message : error)
+          }
+        }
 
         // Background music URL
         const bgMusicUrl = `/api/background?file=${bg}.mp3`
@@ -95,6 +107,7 @@ async function generateVoices({ text, id = "694f9389-aac1-45b6-b726-9d9369183238
           fileId: fileId,
           preProcess: false,
           fileUrl,
+          audioBuffer,
           backgroundUrl: bgMusicUrl,
         })
       }

@@ -28,7 +28,7 @@ describe("GET /api/background path-traversal allowlist", () => {
     )
     const response = await GET(request)
     expect(response.status).toBe(400)
-    const body = await response.json()
+    const body: any = await response.json()
     expect(body).toEqual({ error: "Invalid file parameter" })
   })
 
@@ -38,7 +38,7 @@ describe("GET /api/background path-traversal allowlist", () => {
     )
     const response = await GET(request)
     expect(response.status).toBe(400)
-    const body = await response.json()
+    const body: any = await response.json()
     expect(body).toEqual({ error: "Invalid file parameter" })
   })
 
@@ -48,18 +48,16 @@ describe("GET /api/background path-traversal allowlist", () => {
     )
     const response = await GET(request)
     expect(response.status).toBe(400)
-    const body = await response.json()
+    const body: any = await response.json()
     expect(body).toEqual({ error: "Invalid file parameter" })
   })
 
-  it("serves allowed mp3 from public/assets", async () => {
+  it("redirects allowed mp3 to the GitHub-hosted asset", async () => {
     const request = new NextRequest(
       `http://localhost/api/background?file=${ALLOWED_FIXTURE}`,
     )
     const response = await GET(request)
-    expect(response.status).toBe(200)
-    expect(response.headers.get("content-type")).toBe("audio/mpeg")
-    const body = await response.arrayBuffer()
-    expect(body.byteLength).toBeGreaterThan(0)
+    expect(response.status).toBe(308)
+    expect(response.headers.get("location")).toBe(`https://raw.githubusercontent.com/AhmadIbrahiim/speakeasy/main/public/assets/${ALLOWED_FIXTURE}`)
   })
 })

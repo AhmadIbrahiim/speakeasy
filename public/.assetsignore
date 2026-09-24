@@ -1,0 +1,2 @@
+# Background tracks are served from GitHub (see api/background), not uploaded.
+/assets/*

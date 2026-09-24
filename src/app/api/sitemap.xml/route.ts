@@ -1,3 +1,6 @@
+// Rendered at build time: the Worker has no filesystem to read posts from.
+export const dynamic = "force-static"
+
 import { PROD_URL } from "@/app/config/constants"
 import { getSortedPostsData } from "@/lib/posts"
 import { NextRequest } from "next/server"

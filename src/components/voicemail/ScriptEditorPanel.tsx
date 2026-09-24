@@ -11,7 +11,7 @@ interface ScriptEditorPanelProps {
   onTextChange: (value: string) => void
   target: PageTarget
   onSelectTemplate: (templateText: string) => void
-  scriptRef: React.RefObject<HTMLTextAreaElement>
+  scriptRef: React.RefObject<HTMLTextAreaElement | null>
 }
 
 export function ScriptEditorPanel({ text, onTextChange, target, onSelectTemplate, scriptRef }: ScriptEditorPanelProps) {

@@ -1,13 +1,11 @@
-import { promises as fs } from "fs"
-import path from "path"
-import { put, list } from "@vercel/blob"
 import { CartesiaVoiceResponse } from "@/types"
 import seedCache from "../data/voices-cache.json"
 
 const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000
-const CACHE_FILENAME = "voices-cache.json"
-const LOCAL_CACHE_PATH = path.join(process.cwd(), "output", CACHE_FILENAME)
-const BLOB_KEY = `cache/${CACHE_FILENAME}`
+
+// ponytail: in-memory only, per Worker isolate. Nothing is persisted server-side;
+// a cold isolate starts from the bundled seed.
+let memory: VoiceCachePayload | null = null
 
 export type VoiceCachePayload = {
   fetchedAt: string
@@ -17,10 +15,6 @@ export type VoiceCachePayload = {
 
 class VoiceCache {
   static readonly TTL_MS = TWO_WEEKS_MS
-
-  private static isDev(): boolean {
-    return process.env.NODE_ENV === "development"
-  }
 
   static isFresh(payload: VoiceCachePayload): boolean {
     const fetchedAt = new Date(payload.fetchedAt).getTime()
@@ -38,57 +32,21 @@ class VoiceCache {
   /**
    * The catalog bundled with the repo. Committed at build time so the app
    * always has a full voice list even with no CARTESIA_API_KEY and no live
-   * cache (fresh deploy, blob unreachable, local dev with no key). It is a
+   * cache (fresh deploy, cold isolate, local dev with no key). It is a
    * read-only floor. It is never written to, only refreshed by a live API
-   * fetch into the runtime cache (local file in dev, blob in prod).
+   * fetch into the in-memory cache.
    */
   static seed(): VoiceCachePayload {
     return seedCache as VoiceCachePayload
   }
 
   static async read(): Promise<VoiceCachePayload> {
-    if (this.isDev()) {
-      try {
-        const raw = await fs.readFile(LOCAL_CACHE_PATH, "utf-8")
-        return JSON.parse(raw) as VoiceCachePayload
-      } catch {
-        return this.seed()
-      }
-    }
-    try {
-      const { blobs } = await list({ prefix: BLOB_KEY })
-      const match = blobs.find((b: { pathname: string }) => b.pathname === BLOB_KEY)
-      if (!match) return this.seed()
-      const res = await fetch(match.url, { cache: "no-store" })
-      if (!res.ok) return this.seed()
-      return (await res.json()) as VoiceCachePayload
-    } catch (error) {
-      console.warn("[VoiceCache] read failed, serving bundled seed:", error)
-      return this.seed()
-    }
+    return memory ?? this.seed()
   }
 
   static async write(voices: CartesiaVoiceResponse[]): Promise<VoiceCachePayload> {
-    const payload: VoiceCachePayload = {
-      fetchedAt: new Date().toISOString(),
-      count: voices.length,
-      voices,
-    }
-    const json = JSON.stringify(payload, null, this.isDev() ? 2 : 0)
-
-    if (this.isDev()) {
-      await fs.mkdir(path.dirname(LOCAL_CACHE_PATH), { recursive: true })
-      await fs.writeFile(LOCAL_CACHE_PATH, json, "utf-8")
-      return payload
-    }
-
-    const blob = new Blob([json], { type: "application/json" })
-    await put(BLOB_KEY, blob, {
-      access: "public",
-      contentType: "application/json",
-      addRandomSuffix: false,
-    })
-    return payload
+    memory = { fetchedAt: new Date().toISOString(), count: voices.length, voices }
+    return memory
   }
 }
 

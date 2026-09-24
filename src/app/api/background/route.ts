@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ponytail: served from the public GitHub repo (CORS *) so the 224MB of
-    // tracks stay out of the Worker upload. Move to R2 once it's enabled.
+    // tracks stay out of the Worker upload.
     // The strict basename allowlist above keeps this inside public/assets.
     return NextResponse.redirect(`${ASSETS_BASE}/${fileParam}`, 308)
   } catch (error) {

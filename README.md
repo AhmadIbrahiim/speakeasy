@@ -62,20 +62,20 @@ The whole flow takes about 30 seconds:
 - **Cartesia TTS** via the official `@cartesia/cartesia-js` SDK.
 - **Voice catalog** is cached for 14 days via `src/app/server/lib/VoiceCache.ts` so the picker is instant after the first fetch.
 - **Client-side mixing** with `crunker` — the server never composes the music + voice. It only returns the raw TTS clip.
-- **R2 cache** (binding `CACHE`) stores rendered audio and the voice catalog. Best-effort: without it the app still works, just uncached.
+- **No server-side storage.** Generated audio streams straight back to the browser; nothing is saved on the server.
 - **Rate-limited proxy** on `POST /api` — 10 requests per minute per IP via `src/app/server/lib/rateLimit.ts`.
 - **Strict allowlist** on `GET /api/background` — only known lowercase `.mp3` basenames are served, blocking any path-traversal attempt.
 
 ## Deploy
 
-Production runs on **Cloudflare Workers** at https://voicemail.ahmed-ibrahim.com. Every push to `main` deploys automatically via GitHub Actions. Full steps, first-time setup, and rollback: [DEPLOY.md](DEPLOY.md).
+Production runs on **Cloudflare Workers** at https://voicemail.ahmed-ibrahim.com, deployed manually with wrangler. Steps and rollback: [DEPLOY.md](DEPLOY.md).
 
 ```bash
 npm run preview   # build + run the Worker locally (workerd)
 npm run deploy    # build + deploy to Cloudflare
 ```
 
-The `Dockerfile` / `render.yaml` still work for self-hosting (`npm run build && npm start`), minus the R2 cache.
+The `Dockerfile` / `render.yaml` still work for self-hosting (`npm run build && npm start`).
 
 ## Environment variables
 

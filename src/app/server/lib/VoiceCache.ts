@@ -1,9 +1,11 @@
-import R2Cache from "./R2Cache"
 import { CartesiaVoiceResponse } from "@/types"
 import seedCache from "../data/voices-cache.json"
 
 const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000
-const CACHE_KEY = "cache/voices-cache.json"
+
+// ponytail: in-memory only, per Worker isolate. Nothing is persisted server-side;
+// a cold isolate starts from the bundled seed.
+let memory: VoiceCachePayload | null = null
 
 export type VoiceCachePayload = {
   fetchedAt: string
@@ -30,33 +32,21 @@ class VoiceCache {
   /**
    * The catalog bundled with the repo. Committed at build time so the app
    * always has a full voice list even with no CARTESIA_API_KEY and no live
-   * cache (fresh deploy, R2 unreachable, local dev with no key). It is a
+   * cache (fresh deploy, cold isolate, local dev with no key). It is a
    * read-only floor. It is never written to, only refreshed by a live API
-   * fetch into the R2 runtime cache.
+   * fetch into the in-memory cache.
    */
   static seed(): VoiceCachePayload {
     return seedCache as VoiceCachePayload
   }
 
   static async read(): Promise<VoiceCachePayload> {
-    try {
-      const raw = await R2Cache.get(CACHE_KEY)
-      if (!raw) return this.seed()
-      return JSON.parse(new TextDecoder().decode(raw)) as VoiceCachePayload
-    } catch (error) {
-      console.warn("[VoiceCache] read failed, serving bundled seed:", error)
-      return this.seed()
-    }
+    return memory ?? this.seed()
   }
 
   static async write(voices: CartesiaVoiceResponse[]): Promise<VoiceCachePayload> {
-    const payload: VoiceCachePayload = {
-      fetchedAt: new Date().toISOString(),
-      count: voices.length,
-      voices,
-    }
-    await R2Cache.put(CACHE_KEY, JSON.stringify(payload), "application/json")
-    return payload
+    memory = { fetchedAt: new Date().toISOString(), count: voices.length, voices }
+    return memory
   }
 }
 

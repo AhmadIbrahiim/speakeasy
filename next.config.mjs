@@ -8,5 +8,5 @@ const nextConfig = {
 
 export default nextConfig
 
-// Gives `next dev` the Worker bindings (local R2) from wrangler.jsonc.
+// Gives `next dev` the Worker bindings from wrangler.jsonc.
 initOpenNextCloudflareForDev()

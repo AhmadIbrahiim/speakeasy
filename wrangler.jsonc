@@ -9,9 +9,6 @@
     "binding": "ASSETS"
   },
   "routes": [{ "pattern": "voicemail.ahmed-ibrahim.com", "custom_domain": true }],
-  // Generated audio + voice catalog cache. Disabled until R2 is enabled on the
-  // account (dashboard → R2); the app runs uncached without it.
-  // "r2_buckets": [{ "binding": "CACHE", "bucket_name": "speakeasy-cache" }],
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "speakeasy" }],
   "observability": { "enabled": true }
 }

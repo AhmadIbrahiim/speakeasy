@@ -48,7 +48,7 @@ describe("GET /api/voices — contract", () => {
 
     const res = await GET(makeRequest())
     expect(res.status).toBe(200)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(Array.isArray(body.voices)).toBe(true)
     expect(body.voices.length).toBeGreaterThan(0)
     const first = body.voices[0]
@@ -64,7 +64,7 @@ describe("GET /api/voices — contract", () => {
     // Route deliberately returns 200 with fallback data instead of 5xx so
     // the UI keeps working when Cartesia is unreachable.
     expect(res.status).toBe(200)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(Array.isArray(body.voices)).toBe(true)
     // The fallback sample list in the route currently has 3 entries — assert
     // shape and that the known sample voice id is present.
@@ -86,7 +86,7 @@ describe("GET /api/voices — contract", () => {
     }
     expect(last).toBeDefined()
     expect(last!.status).toBe(429)
-    const body = await last!.json()
+    const body: any = await last!.json()
     expect(body.error.code).toBe("rate_limited")
     expect(body.error.retry_after_seconds).toBeGreaterThan(0)
   })

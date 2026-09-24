@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 import generateVoices from "../server/config/voices"
-import BlobStorageService from "../server/lib/BlobStorage"
 import { checkRateLimit } from "../server/lib/rateLimit"
 import { getClientIp } from "../server/lib/clientIp"
 import { classifyCartesiaError, type ApiError } from "./errorMapping"
@@ -73,7 +70,7 @@ export async function POST(req: Request) {
           chunks.push(value)
         }
       }
-      raw = new TextDecoder().decode(Buffer.concat(chunks.map((c) => Buffer.from(c))))
+      raw = new TextDecoder().decode(Buffer.concat(chunks))
     }
   } catch {
     return jsonError({ code: "validation", message: "Could not read request body." }, 400)
@@ -112,28 +109,13 @@ export async function POST(req: Request) {
     return jsonError({ code: "invalid_key", message: "Add your Cartesia API key to generate audio." }, 401)
   }
 
-  const isDevelopment = process.env.NODE_ENV === "development"
-
   try {
-    const { fileId, fileUrl, audioBuffer: generatedBuffer, backgroundUrl } = await generateVoices({
+    const { audioBuffer, backgroundUrl } = await generateVoices({
       text: `<break time="1.5s"/> ${text} <break time="1s"/>`,
       id,
       bg: typeof bgId === "string" ? bgId : "",
       cartesiaApiKey,
     })
-
-    let audioBuffer: Buffer
-    if (isDevelopment) {
-      audioBuffer = fs.readFileSync(path.join("output/", `${fileId}.mp3`))
-    } else if (generatedBuffer) {
-      // Freshly generated audio is already in hand. No Blob round-trip needed.
-      audioBuffer = generatedBuffer
-    } else if (fileUrl) {
-      // Blob cache hit. Pull the cached MP3 back down to stream it.
-      audioBuffer = await BlobStorageService.downloadAudio(fileUrl)
-    } else {
-      throw new Error("No audio produced")
-    }
 
     const headers = new Headers({
       "Content-Type": "audio/mpeg",

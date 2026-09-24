@@ -1,13 +1,12 @@
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Self-contained server bundle (.next/standalone) for Docker / Render.
   output: "standalone",
-  experimental: {
-    instrumentationHook: true,
-  },
-  serverRuntimeConfig: {
-    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
-  },
 }
 
 export default nextConfig
+
+// Gives `next dev` the Worker bindings (local R2) from wrangler.jsonc.
+initOpenNextCloudflareForDev()

@@ -44,7 +44,7 @@ describe("POST /api — validation contract", () => {
       makeRequest({ id: "", text: "Hi there", cartesiaApiKey: "sk-test" }),
     )
     expect(res.status).toBe(400)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(body.error.code).toBe("validation")
     expect(body.error.message).toMatch(/voice/i)
   })
@@ -54,7 +54,7 @@ describe("POST /api — validation contract", () => {
       makeRequest({ id: "not-a-uuid", text: "Hi there", cartesiaApiKey: "sk-test" }),
     )
     expect(res.status).toBe(400)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(body.error.code).toBe("validation")
     expect(body.error.message).toMatch(/voice id/i)
   })
@@ -64,7 +64,7 @@ describe("POST /api — validation contract", () => {
       makeRequest({ id: VALID_VOICE_ID, text: "", cartesiaApiKey: "sk-test" }),
     )
     expect(res.status).toBe(400)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(body.error.code).toBe("validation")
     expect(body.error.message).toMatch(/greeting/i)
   })
@@ -77,7 +77,7 @@ describe("POST /api — validation contract", () => {
       makeRequest({ id: VALID_VOICE_ID, text: oversizedText, cartesiaApiKey: "sk-test" }),
     )
     expect(res.status).toBe(400)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(body.error.code).toBe("validation")
     expect(body.error.message).toMatch(/too long/i)
   })
@@ -95,7 +95,7 @@ describe("POST /api — validation contract", () => {
       makeRequest(undefined, { rawBody, contentLength: String(rawBody.length) }),
     )
     expect(res.status).toBe(413)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(body.error.code).toBe("validation")
     expect(body.error.message).toMatch(/too large/i)
   })
@@ -105,7 +105,7 @@ describe("POST /api — validation contract", () => {
       makeRequest({ id: VALID_VOICE_ID, text: "Hello there." }),
     )
     expect(res.status).toBe(401)
-    const body = await res.json()
+    const body: any = await res.json()
     expect(body.error.code).toBe("invalid_key")
     expect(body.error.message).toMatch(/cartesia api key/i)
   })
@@ -137,7 +137,7 @@ describe("POST /api — rate limiting", () => {
 
     const last = responses[10]
     expect(last.status).toBe(429)
-    const body = await last.json()
+    const body: any = await last.json()
     expect(body.error.code).toBe("rate_limited")
     expect(body.error.retry_after_seconds).toBeGreaterThan(0)
   })

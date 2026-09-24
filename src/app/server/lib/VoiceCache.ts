@@ -1,13 +1,9 @@
-import { promises as fs } from "fs"
-import path from "path"
-import { put, list } from "@vercel/blob"
+import R2Cache from "./R2Cache"
 import { CartesiaVoiceResponse } from "@/types"
 import seedCache from "../data/voices-cache.json"
 
 const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000
-const CACHE_FILENAME = "voices-cache.json"
-const LOCAL_CACHE_PATH = path.join(process.cwd(), "output", CACHE_FILENAME)
-const BLOB_KEY = `cache/${CACHE_FILENAME}`
+const CACHE_KEY = "cache/voices-cache.json"
 
 export type VoiceCachePayload = {
   fetchedAt: string
@@ -17,10 +13,6 @@ export type VoiceCachePayload = {
 
 class VoiceCache {
   static readonly TTL_MS = TWO_WEEKS_MS
-
-  private static isDev(): boolean {
-    return process.env.NODE_ENV === "development"
-  }
 
   static isFresh(payload: VoiceCachePayload): boolean {
     const fetchedAt = new Date(payload.fetchedAt).getTime()
@@ -38,30 +30,19 @@ class VoiceCache {
   /**
    * The catalog bundled with the repo. Committed at build time so the app
    * always has a full voice list even with no CARTESIA_API_KEY and no live
-   * cache (fresh deploy, blob unreachable, local dev with no key). It is a
+   * cache (fresh deploy, R2 unreachable, local dev with no key). It is a
    * read-only floor. It is never written to, only refreshed by a live API
-   * fetch into the runtime cache (local file in dev, blob in prod).
+   * fetch into the R2 runtime cache.
    */
   static seed(): VoiceCachePayload {
     return seedCache as VoiceCachePayload
   }
 
   static async read(): Promise<VoiceCachePayload> {
-    if (this.isDev()) {
-      try {
-        const raw = await fs.readFile(LOCAL_CACHE_PATH, "utf-8")
-        return JSON.parse(raw) as VoiceCachePayload
-      } catch {
-        return this.seed()
-      }
-    }
     try {
-      const { blobs } = await list({ prefix: BLOB_KEY })
-      const match = blobs.find((b: { pathname: string }) => b.pathname === BLOB_KEY)
-      if (!match) return this.seed()
-      const res = await fetch(match.url, { cache: "no-store" })
-      if (!res.ok) return this.seed()
-      return (await res.json()) as VoiceCachePayload
+      const raw = await R2Cache.get(CACHE_KEY)
+      if (!raw) return this.seed()
+      return JSON.parse(new TextDecoder().decode(raw)) as VoiceCachePayload
     } catch (error) {
       console.warn("[VoiceCache] read failed, serving bundled seed:", error)
       return this.seed()
@@ -74,20 +55,7 @@ class VoiceCache {
       count: voices.length,
       voices,
     }
-    const json = JSON.stringify(payload, null, this.isDev() ? 2 : 0)
-
-    if (this.isDev()) {
-      await fs.mkdir(path.dirname(LOCAL_CACHE_PATH), { recursive: true })
-      await fs.writeFile(LOCAL_CACHE_PATH, json, "utf-8")
-      return payload
-    }
-
-    const blob = new Blob([json], { type: "application/json" })
-    await put(BLOB_KEY, blob, {
-      access: "public",
-      contentType: "application/json",
-      addRandomSuffix: false,
-    })
+    await R2Cache.put(CACHE_KEY, JSON.stringify(payload), "application/json")
     return payload
   }
 }

@@ -22,12 +22,14 @@ function readingTime(content: string): number {
 }
 
 type Params = {
-  params: {
-    slug: string
-  }
+  params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
+// Only prerendered slugs exist; the Worker has no filesystem to read new posts from.
+export const dynamicParams = false
+
+export async function generateMetadata(props: Params): Promise<Metadata> {
+  const params = await props.params
   const postData = getPostBySlug(params.slug, ["title", "description", "image"])
   return {
     title: postData.title,
@@ -59,7 +61,8 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function Post({ params }: Params) {
+export default async function Post(props: Params) {
+  const params = await props.params
   const postData = getPostBySlug(params.slug, ["title", "content", "image", "date", "description"])
   const contentHtml = await markdownToHtml(postData.content)
   const minutes = readingTime(postData.content || "")

@@ -6,7 +6,7 @@
  * action — if the matching track is already playing it pauses it; otherwise
  * it stops any prior track and starts the new one.
  *
- * The audio file is resolved from `/assets/{filename}.mp3` (public folder).
+ * The audio file is resolved via `/api/background?file={filename}.mp3`.
  */
 import { useRef, useState, useEffect } from "react"
 
@@ -48,7 +48,7 @@ export function useMusicPreview(): UseMusicPreviewResult {
       }
 
       // Create new audio element with the correct assets path
-      const audio = new Audio(`/assets/${musicFileName}.mp3`)
+      const audio = new Audio(`/api/background?file=${musicFileName}.mp3`)
       musicAudioRef.current = audio
 
       audio.addEventListener("ended", () => {

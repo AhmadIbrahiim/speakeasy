@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 # Multi-stage build for Next.js on Render (and any Docker host).
 # Production runtime is pure Node: audio mixing happens client-side in the
-# browser via Crunker; the server only proxies Cartesia TTS + Vercel Blob.
+# browser via Crunker; the server only proxies Cartesia TTS.
 
 # ────────────────────────────────────────────────────────────────────────────
 # 1. Dependencies — install once, cache aggressively

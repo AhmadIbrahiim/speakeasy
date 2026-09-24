@@ -58,35 +58,38 @@ The whole flow takes about 30 seconds:
 
 ## Architecture
 
-- **Next.js 14 App Router** with a small mix of server and client components.
+- **Next.js 15 App Router** on **Cloudflare Workers** via [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) with a small mix of server and client components.
 - **Cartesia TTS** via the official `@cartesia/cartesia-js` SDK.
 - **Voice catalog** is cached for 14 days via `src/app/server/lib/VoiceCache.ts` so the picker is instant after the first fetch.
 - **Client-side mixing** with `crunker` — the server never composes the music + voice. It only returns the raw TTS clip.
-- **Vercel Blob** is optional for production: stores rendered audio across container restarts. Without it, files live on the ephemeral container disk.
+- **R2 cache** (binding `CACHE`) stores rendered audio and the voice catalog. Best-effort: without it the app still works, just uncached.
 - **Rate-limited proxy** on `POST /api` — 10 requests per minute per IP via `src/app/server/lib/rateLimit.ts`.
 - **Strict allowlist** on `GET /api/background` — only known lowercase `.mp3` basenames are served, blocking any path-traversal attempt.
 
 ## Deploy
 
-- **Vercel** (recommended): one-click via the deploy button on the project page. No special config; set `BLOB_READ_WRITE_TOKEN` if you want persistent audio cache.
-- **Render** (Docker): a Blueprint is included at `render.yaml`. The free tier sleeps after ~15 minutes idle and wipes the disk on cold start; supply a Vercel Blob token if that matters to you.
-- **Hugging Face Spaces**: a viable alternative when you need a host that ships with `ffmpeg` available.
-- **Self-host**: `npm run build && npm start`, or use the included multi-stage `Dockerfile` (final image ~230 MB, `node:20-slim` + `ffmpeg` + the Next standalone bundle).
+Production runs on **Cloudflare Workers** at https://voicemail.ahmed-ibrahim.com. Every push to `main` deploys automatically via GitHub Actions. Full steps, first-time setup, and rollback: [DEPLOY.md](DEPLOY.md).
+
+```bash
+npm run preview   # build + run the Worker locally (workerd)
+npm run deploy    # build + deploy to Cloudflare
+```
+
+The `Dockerfile` / `render.yaml` still work for self-hosting (`npm run build && npm start`), minus the R2 cache.
 
 ## Environment variables
 
-All four are **optional**. The visitor flow works on a fresh checkout with an empty `.env`.
+All three are **optional**. The visitor flow works on a fresh checkout with an empty `.env`.
 
 | Var                      | Required?         | Purpose                                                                                                              |
 | ------------------------ | ----------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `CARTESIA_API_KEY`       | Optional          | Server-side voice catalog fetch only. Audio generation always uses the visitor's BYO key from the request body.       |
-| `BLOB_READ_WRITE_TOKEN`  | Optional          | Vercel Blob token for caching rendered audio across container restarts. Without it, the audio cache is ephemeral.     |
 | `ELEVENLABS_API_KEY`     | Optional / unused | Reserved for a future ElevenLabs tab — currently disabled in the UI.                                                  |
 | `GEMINI_API_KEY`         | Optional          | Only used by the auxiliary blog-content tooling under `scripts/` (see [`scripts/README.md`](scripts/README.md)). Not needed for the app itself. |
 
 ## Security model
 
-- All four secrets above are optional; the visitor flow never requires server-side credentials.
+- All three secrets above are optional; the visitor flow never requires server-side credentials.
 - The visitor's Cartesia key is never persisted server-side. It lives in the browser's `sessionStorage` (cleared when the tab closes) and is forwarded with each generate request only.
 - `GET /api/background` is hardened against path traversal with a strict allowlist of lowercase mp3 basenames.
 - `POST /api` is rate-limited to 10 requests per minute per IP.

@@ -16,11 +16,6 @@ services:
       # when unset. NODE_ENV is set to production in the image.
       - key: NEXT_TELEMETRY_DISABLED
         value: "1"
-      # Vercel Blob storage. Generate at vercel.com/dashboard/stores.
-      # Leave blank in the dashboard if you don't have one yet — the audio
-      # cache will live on the (ephemeral) container disk instead.
-      - key: BLOB_READ_WRITE_TOKEN
-        sync: false
       # Optional: a server-side Cartesia key so the /api/voices catalog
       # can populate even before a visitor pastes their own key.
       # The audio-generation flow always uses the BYO key from the request.

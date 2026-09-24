@@ -18,7 +18,7 @@ export const MainForm = ({ target = PageTarget.MAIN }) => {
           throw new Error(`API request failed with status ${response.status}`)
         }
 
-        const data = await response.json()
+        const data: { voices?: unknown[] } = await response.json()
         return data?.voices || [] // Changed to handle the direct voices array from Cartesia API
       } catch (err) {
         console.error("Error fetching voices:", err)

@@ -29,16 +29,20 @@ export function OutputPanel({ audio: generated, isPlaying: generatedPlaying, isP
     setDemoPlaying(false)
   }
 
+  // Created on mount so the waveform shows the demo's real shape before anyone presses play.
+  useEffect(() => {
+    const a = new Audio(DEMO_SRC)
+    a.onended = () => setDemoPlaying(false)
+    a.onpause = () => setDemoPlaying(false)
+    a.onplay = () => setDemoPlaying(true)
+    demoRef.current = a
+    setDemo(a)
+    return () => a.pause()
+  }, [])
+
   const toggleDemo = () => {
-    if (!demoRef.current) {
-      const a = new Audio(DEMO_SRC)
-      a.onended = () => setDemoPlaying(false)
-      a.onpause = () => setDemoPlaying(false)
-      a.onplay = () => setDemoPlaying(true)
-      demoRef.current = a
-      setDemo(a)
-    }
     const a = demoRef.current
+    if (!a) return
     if (a.paused) void a.play().catch(() => setDemoPlaying(false))
     else a.pause()
   }
@@ -46,7 +50,6 @@ export function OutputPanel({ audio: generated, isPlaying: generatedPlaying, isP
   useEffect(() => {
     if (generated) stopDemo()
   }, [generated])
-  useEffect(() => () => demoRef.current?.pause(), [])
 
   const isDemo = !generated
   const audio = generated ?? demo

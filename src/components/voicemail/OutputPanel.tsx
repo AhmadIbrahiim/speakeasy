@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import { Download, Loader } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PlayButton } from "@/components/ui/playButton"
@@ -15,18 +16,54 @@ interface OutputPanelProps {
   downloadDisabled: boolean
 }
 
-export function OutputPanel({ audio, isPlaying, isPending, onPlay, onDownload, downloadDisabled }: OutputPanelProps) {
+const DEMO_SRC = "/demo/demo-greeting.mp3"
+
+export function OutputPanel({ audio: generated, isPlaying: generatedPlaying, isPending, onPlay, onDownload, downloadDisabled }: OutputPanelProps) {
+  // Before anything is generated, the play button plays a sample so visitors can hear the result.
+  const [demo, setDemo] = useState<HTMLAudioElement>()
+  const [demoPlaying, setDemoPlaying] = useState(false)
+  const demoRef = useRef<HTMLAudioElement | undefined>(undefined)
+
+  const stopDemo = () => {
+    demoRef.current?.pause()
+    setDemoPlaying(false)
+  }
+
+  const toggleDemo = () => {
+    if (!demoRef.current) {
+      const a = new Audio(DEMO_SRC)
+      a.onended = () => setDemoPlaying(false)
+      a.onpause = () => setDemoPlaying(false)
+      a.onplay = () => setDemoPlaying(true)
+      demoRef.current = a
+      setDemo(a)
+    }
+    const a = demoRef.current
+    if (a.paused) void a.play().catch(() => setDemoPlaying(false))
+    else a.pause()
+  }
+
+  useEffect(() => {
+    if (generated) stopDemo()
+  }, [generated])
+  useEffect(() => () => demoRef.current?.pause(), [])
+
+  const isDemo = !generated
+  const audio = generated ?? demo
+  const isPlaying = isDemo ? demoPlaying : generatedPlaying
+
   return (
     <div className="rounded-2xl bg-cream-100 border-2 border-ink overflow-hidden">
       <div className="px-5 pt-4 pb-3 flex items-center gap-3 sm:gap-4">
-        <PlayButton isPlaying={isPlaying} isLoading={isPending} onClick={onPlay} />
-        <Waveform audio={audio} isPlaying={isPlaying} className="flex-1 min-w-0" emptyMessage="Generate to see the waveform" />
+        <PlayButton isPlaying={isPlaying} isLoading={isPending} onClick={isDemo ? toggleDemo : onPlay} />
+        <Waveform audio={audio} isPlaying={isPlaying} className="flex-1 min-w-0" emptyMessage="Press play to hear a demo, or generate your own" />
       </div>
       <div className="px-5 pb-4 pt-2 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t-2 border-ink/10 bg-cream-50/40">
         <div className="font-mono text-[11px] text-stone-500">
+          {isDemo && <span className="mr-2 rounded-full bg-accent-warm/30 border border-ink/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-ink">Demo</span>}
           <span className="inline-flex items-center gap-1.5">
-            <span className={cn("w-1.5 h-1.5 rounded-full", isPlaying ? "bg-accent animate-pulse" : audio ? "bg-accent-forest" : "bg-stone-400")} />
-            {isPlaying ? "playing" : audio ? "ready" : "no preview yet"}
+            <span className={cn("w-1.5 h-1.5 rounded-full", isPlaying ? "bg-accent animate-pulse" : isDemo ? "bg-accent-warm" : "bg-accent-forest")} />
+            {isDemo ? (isPlaying ? "playing demo" : "demo greeting · press play") : isPlaying ? "playing" : "ready"}
           </span>
           <span className="mx-2 text-stone-300">·</span>
           <span>sonic-3.5</span>
@@ -43,7 +80,10 @@ export function OutputPanel({ audio, isPlaying, isPending, onPlay, onDownload, d
             Download
           </Button>
           <Button
-            onClick={onPlay}
+            onClick={() => {
+              stopDemo()
+              onPlay()
+            }}
             disabled={isPending}
             className="h-11 rounded-full border-2 border-ink bg-accent hover:bg-accent text-white font-semibold shadow-ink hover:shadow-ink-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all disabled:opacity-60 gap-2">
             {isPending && <Loader className="w-4 h-4 animate-spin" />}

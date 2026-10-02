@@ -98,6 +98,6 @@ Always include your company name in your voicemail greeting. This reassures call
 
 Avoiding these common mistakes can help you create a professional and effective voicemail greeting. Remember, your voicemail greeting is often the first impression someone has of you or your business, so make it count!
 
-By using Speakeasy, you can easily create professional voicemail greetings with a music background that enhances your message. Visit [perfectgreet.site](https://perfectgreet.site) to get started today!
+By using Speakeasy, you can easily create professional voicemail greetings with a music background that enhances your message. Visit [perfectgreet.site](https://voicemail.ahmed-ibrahim.com) to get started today!
 
 ![Speakeasy](/posts/voicemail-greeting-sleek.png)

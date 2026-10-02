@@ -20,7 +20,7 @@ While Mixavox offers a reliable service, the cost can add up, especially for sma
 
 ## Speakeasy
 
-[Speakeasy](https://perfectgreet.site) is a new player in the market, offering a similar service but with a significant advantage: it's completely free. Here are some key features of Speakeasy:
+[Speakeasy](https://voicemail.ahmed-ibrahim.com) is a new player in the market, offering a similar service but with a significant advantage: it's completely free. Here are some key features of Speakeasy:
 
 - **Cost**: Speakeasy is 100% free, with no credit card required or hidden fees.
 - **Quality**: Despite being free, Speakeasy provides high-quality recordings that are on par with paid services.
@@ -49,4 +49,4 @@ While Mixavox offers a reliable service, the cost can add up, especially for sma
 
 Both Mixavox and Speakeasy offer excellent services for creating professional voicemail greetings. However, if cost is a significant factor for your business, Speakeasy provides a compelling alternative with its free, high-quality service. By choosing Speakeasy, you can create professional voicemail greetings without any financial burden or obligations.
 
-For more information, visit [Speakeasy](https://perfectgreet.site) and start creating your professional voicemail greeting today!
+For more information, visit [Speakeasy](https://voicemail.ahmed-ibrahim.com) and start creating your professional voicemail greeting today!

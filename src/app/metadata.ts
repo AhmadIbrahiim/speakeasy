@@ -1,31 +1,20 @@
 import { Metadata } from "next"
 import { SITE } from "@/config/site"
 
+const TITLE = "Free Voicemail Greeting Maker (AI Voices, MP3 Download)"
+const DESCRIPTION =
+  "Make a free voicemail greeting with an AI voice. Pick or write a script, add optional music, and download an MP3. No account on this site and no credit card."
+
 export const metadata: Metadata = {
-  title: `Free Pro Voicemail Greeting Generator - No Credit Card Needed | ${SITE.name}`,
-  description: "Create professional and personalized voicemail greetings for free! Choose from 35+ premium voices, add background music, and download instantly. No credit card or sign-up required.",
-  keywords: "free voicemail greeting, professional voicemail, voicemail generator, custom voicemail, business greeting, no credit card, instant download, AI voice generator",
-  alternates: {
-    canonical: `${SITE.url}/`,
-  },
+  title: { absolute: `${TITLE} | ${SITE.name}` },
+  description: DESCRIPTION,
+  alternates: { canonical: `${SITE.url}/` },
   openGraph: {
-    title: `Free Pro Voicemail Greeting Generator | ${SITE.name}`,
-    description: "Create professional and personalized voicemail greetings for free! Choose from 35+ premium voices, add background music, and download instantly. No credit card or sign-up required.",
+    title: TITLE,
+    description: DESCRIPTION,
     type: "website",
     url: `${SITE.url}/`,
-    images: [
-      {
-        url: `${SITE.url}/og-image.jpg`,
-        width: 1200,
-        height: 630,
-        alt: `${SITE.name} Voicemail Generator`,
-      },
-    ],
+    siteName: SITE.name,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: `Free Pro Voicemail Greeting Generator | ${SITE.name}`,
-    description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required.",
-    images: [`${SITE.url}/og-image.jpg`],
-  },
+  twitter: { card: "summary", title: TITLE, description: DESCRIPTION },
 }

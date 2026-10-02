@@ -104,6 +104,21 @@ export function BaseLayout({ children }: { children: React.ReactElement | React.
                     </Link>
                   </li>
                   <li>
+                    <Link href="/voicemail-greetings" className="text-stone-600 hover:text-accent transition-colors">
+                      Greeting templates
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/voicemail-greeting-mp3" className="text-stone-600 hover:text-accent transition-colors">
+                      Voicemail greeting MP3
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/business-voicemail-greetings" className="text-stone-600 hover:text-accent transition-colors">
+                      Business greetings
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/posts" className="text-stone-600 hover:text-accent transition-colors">
                       Notes & guides
                     </Link>

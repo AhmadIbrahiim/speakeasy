@@ -85,16 +85,30 @@ export const FAQJsonLd = ({ questions }: FAQJsonLdProps) => {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 }
 
-export const OrganizationJsonLd = () => {
+const AUTHOR = { "@type": "Person", name: "Ahmed Ibrahim", url: "https://ahmed-ibrahim.com", sameAs: [SITE.socials.github, "https://ahmed-ibrahim.com"] }
+
+// The app itself. Every fact here is also stated on the page; no ratings or reviews are claimed.
+export const WebApplicationJsonLd = () => {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: SITE.organization.name,
+    "@type": "WebApplication",
+    name: SITE.name,
+    alternateName: "Speakeasy free voicemail greeting maker",
     url: SITE.url,
-    logo: SITE.organization.logo,
-    description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required.",
-    sameAs: [SITE.socials.twitter, SITE.socials.facebook, SITE.socials.github],
+    description:
+      "Free, open-source voicemail greeting maker. Write or pick a script, choose an AI voice, add optional background music and download an MP3. Generates speech from text; does not record your own voice.",
+    applicationCategory: "MultimediaApplication",
+    operatingSystem: "Any (web browser)",
+    browserRequirements: "Requires JavaScript",
+    isAccessibleForFree: true,
+    license: "https://opensource.org/licenses/MIT",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    featureList: ["AI voices", "Optional background music", "Greeting script templates", "MP3 download", "No account on this site"],
+    author: AUTHOR,
+    sameAs: [SITE.socials.github],
   }
 
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 }
+
+export const PersonJsonLd = () => <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...AUTHOR }) }} />

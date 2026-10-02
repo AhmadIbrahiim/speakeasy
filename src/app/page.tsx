@@ -1,17 +1,7 @@
-"use client"
-import { Landing } from "@/components/landing"
-import { MainForm } from "@/components/server/mainForm"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import HomeClient from "@/components/homeClient"
 
-// Create a client
-const queryClient = new QueryClient()
+export { metadata } from "./metadata"
 
 export default function Home() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Landing>
-        <MainForm />
-      </Landing>
-    </QueryClientProvider>
-  )
+  return <HomeClient />
 }

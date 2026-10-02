@@ -4,19 +4,21 @@ import React from "react"
 import BaseLayout from "./baseLayout"
 import CONSTANTS from "@/app/config/constants"
 import { Mic2, Music4, FileText, ArrowRight, Check, Star, Github, Coffee, Heart } from "lucide-react"
-import { Metadata } from "next"
 import { SITE } from "@/config/site"
-
-export const metadata: Metadata = {
-  title: "Speakeasy",
-  description: "Free voicemail and on-hold greetings. Studio voices, royalty-free music, ten battle-tested templates. No signup. No credit card. No catch.",
-}
 
 const TRUST_PILLS = ["Free forever", "No signup", "No credit card", "MP3 download"]
 
 const FEATURED_TEMPLATES = ["Professional - Standard", "Professional - Out of Office", "Business - Customer Service", "Medical Office", "Friendly - Personal", "Holiday - Office Closure"] as const
 
 const FAQ = [
+  {
+    q: "Can I download my voicemail greeting as an MP3?",
+    a: "Yes. Every greeting you generate downloads as an MP3 you can upload to a business phone system, voicemail app or answering machine that accepts audio files.",
+  },
+  {
+    q: "Does it record my voice?",
+    a: "No. Speakeasy generates speech from text using an AI voice and does not use your microphone. To use your own voice, record it with a voice recorder app and upload that file instead.",
+  },
   {
     q: "Is this really free?",
     a: "Yes. Forever. You bring a Cartesia API key (free, 1,000 credits to start) and we never touch your wallet. No ads either.",
@@ -76,14 +78,17 @@ export function Landing({ children }: { children: React.ReactElement }) {
           <div>
             <Stamp className="mb-7">Made with care · always free</Stamp>
             <h1 className="font-serif text-[clamp(40px,7vw,76px)] leading-[0.98] tracking-[-0.035em] font-semibold mb-6 text-balance">
-              A voicemail greeting that{" "}
+              Free voicemail greeting maker that{" "}
               <span className="relative inline-block">
                 <span className="relative z-10">doesn&apos;t sound</span>
                 <span className="absolute left-0 right-0 -bottom-0.5 h-3 bg-accent-warm/50 -z-0 -skew-x-12 translate-y-1 rounded-sm" aria-hidden />
               </span>{" "}
               like a <span className="scribble-underline">robot</span>.
             </h1>
-            <p className="text-[19px] leading-relaxed text-stone-600 max-w-[540px] mb-7">
+            <p className="text-[19px] leading-relaxed text-stone-600 max-w-[540px] mb-4">
+              Speakeasy makes a free voicemail greeting with an AI voice: pick or write a script, add optional music, and download an MP3. There is no account on this site and no credit card; the voice runs on your own free Cartesia key. It turns text into speech and does not record your own voice.
+            </p>
+            <p className="text-[17px] leading-relaxed text-stone-600 max-w-[540px] mb-7">
               Real studio voices. Real background music. Real templates for real moments — out of office, after hours, holiday closures, the call you didn&apos;t pick up. Free, forever.
             </p>
 
@@ -250,6 +255,12 @@ export function Landing({ children }: { children: React.ReactElement }) {
             </details>
           ))}
         </div>
+      </section>
+
+      {/* Guides */}
+      <section className="w-full max-w-[760px] mx-auto px-4 md:px-6 py-8 text-[15px] text-stone-600">
+        Guides: <a className="underline" href="/voicemail-greetings">free voicemail greeting templates</a>, <a className="underline" href="/voicemail-greeting-mp3">voicemail greeting MP3 download</a>,{" "}
+        <a className="underline" href="/business-voicemail-greetings">business voicemail greetings</a>, and the <a className="underline" href="/hold">on-hold message maker</a>.
       </section>
 
       {/* Final CTA */}

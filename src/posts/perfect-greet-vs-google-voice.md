@@ -153,7 +153,7 @@ Let's see who should use what:
 
 ### With Speakeasy:
 
-1. Visit [Speakeasy](https://perfectgreet.site)
+1. Visit [Speakeasy](https://voicemail.ahmed-ibrahim.com)
 2. Click "Start Recording"
 3. Make your greeting
 4. Download and use!
@@ -190,6 +190,6 @@ For most people who just want a nice voicemail greeting, Speakeasy is the better
 
 If you just want to make a professional voicemail greeting quickly and easily, Speakeasy is your best choice! It's free, simple, and gives you everything you need for a great voicemail greeting.
 
-Want to try it yourself? Visit [Speakeasy](https://perfectgreet.site) now - no sign-up needed, just start creating! 😊
+Want to try it yourself? Visit [Speakeasy](https://voicemail.ahmed-ibrahim.com) now - no sign-up needed, just start creating! 😊
 
 ![Speakeasy](/posts/voicemail-greeting-sleek.png)

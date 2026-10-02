@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Fraunces, JetBrains_Mono } from "next/font/google"
 import { GoogleTagManager } from "@next/third-parties/google"
 import "./globals.scss"
-import { OrganizationJsonLd, ServiceJsonLd } from "@/components/JsonLd"
+import { PersonJsonLd, WebApplicationJsonLd } from "@/components/JsonLd"
 import { SITE } from "@/config/site"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
@@ -17,22 +17,20 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: {
     template: "%s | Speakeasy",
-    default: "Free Pro Voicemail Greeting - No Credit Card Needed | Speakeasy",
+    default: "Free Voicemail Greeting Maker | Speakeasy",
   },
   applicationName: "Speakeasy",
 
   description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
   keywords: "free voicemail greeting, voicemail, no credit card required, free audio file, custom voicemail",
+  metadataBase: new URL(SITE.url),
   robots: "index, follow",
   openGraph: {
-    title: "Free Pro Voicemail Greeting - No Credit Card Needed | Speakeasy",
-    description: "Create professional and personalized voicemail greetings for free! No credit card or sign-up required. Generate your custom audio file in seconds and make a lasting impression.",
+    title: "Free Voicemail Greeting Maker | Speakeasy",
+    description: "Make a free voicemail greeting with an AI voice and download an MP3.",
     type: "website",
     locale: "en_US",
     siteName: "Speakeasy",
-  },
-  alternates: {
-    canonical: `${SITE.url}/`,
   },
 }
 
@@ -44,16 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}>
       <head>
-        <OrganizationJsonLd />
-        <ServiceJsonLd
-          name={`${SITE.name} Voicemail Greeting Generator`}
-          description="Create professional and personalized voicemail greetings for free! No credit card or sign-up required."
-          url={SITE.url}
-          provider={{
-            name: SITE.organization.name,
-            url: SITE.url,
-          }}
-        />
+        <WebApplicationJsonLd />
+        <PersonJsonLd />
       </head>
       <GoogleTagManager gtmId="GTM-NWHBPJB6" />
 

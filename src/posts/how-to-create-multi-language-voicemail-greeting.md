@@ -174,7 +174,7 @@ Why choose Speakeasy for your multi-language greeting:
 
 🎯 **How to Start:**
 
-1. Visit [Speakeasy](https://perfectgreet.site)
+1. Visit [Speakeasy](https://voicemail.ahmed-ibrahim.com)
 2. Click "Create Greeting"
 3. Follow our simple steps
 4. Download and use!
@@ -224,7 +224,7 @@ Before you go live:
 
 Creating a multi-language voicemail greeting is easy with the right tools! Speakeasy gives you everything you need to sound professional in any language. Best part? It's totally free!
 
-Ready to make your business sound professional in any language? Visit [Speakeasy](https://perfectgreet.site) now - no sign-up needed, just start creating! 😊
+Ready to make your business sound professional in any language? Visit [Speakeasy](https://voicemail.ahmed-ibrahim.com) now - no sign-up needed, just start creating! 😊
 
 ![Speakeasy](/posts/voicemail-greeting-sleek.png)
 

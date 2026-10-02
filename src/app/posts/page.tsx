@@ -8,7 +8,7 @@ import type { Metadata } from "next"
 import { SITE } from "@/config/site"
 
 export const metadata: Metadata = {
-  title: "Notes & guides",
+  title: "Voicemail Greeting Guides, Scripts & Tips",
   description: "Short reads on voicemail scripts, on-hold copy, and getting your voice into a phone system that doesn't sound like a robot.",
   alternates: { canonical: `${SITE.url}/posts/` },
 }

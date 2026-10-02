@@ -1,16 +1,13 @@
-"use client"
-import { Landing } from "@/components/landing"
-import { MainForm, PageTarget } from "@/components/server/mainForm"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import type { Metadata } from "next"
+import HoldClient from "@/components/holdClient"
+import { SITE } from "@/config/site"
 
-// Create a client
-const queryClient = new QueryClient()
-export default function Home() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Landing>
-        <MainForm target={PageTarget.HOLD} />
-      </Landing>
-    </QueryClientProvider>
-  )
+export const metadata: Metadata = {
+  title: "Free On-Hold Message Maker (AI Voice, MP3 Download)",
+  description: "Make a free on-hold message with an AI voice and optional background music, then download it as an MP3 for your phone system.",
+  alternates: { canonical: `${SITE.url}/hold` },
+}
+
+export default function Hold() {
+  return <HoldClient />
 }

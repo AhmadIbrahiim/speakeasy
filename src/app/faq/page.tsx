@@ -5,14 +5,14 @@ import { SITE } from "@/config/site"
 import { HelpCircle, Plus } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: `Frequently Asked Questions | ${SITE.name}`,
-  description: "Find answers to common questions about voicemail greetings, our service, and how to create the perfect greeting for your needs.",
+  title: "Voicemail Greeting FAQs: Free, MP3, Your Own Voice",
+  description: "Answers about making, downloading and using Speakeasy voicemail greetings, including whether it records your own voice.",
   alternates: {
     canonical: `${SITE.url}/faq`,
   },
   openGraph: {
-    title: `FAQ | ${SITE.name}`,
-    description: "Find answers to common questions about voicemail greetings, our service, and how to create the perfect greeting for your needs.",
+    title: "Voicemail Greeting FAQs",
+    description: "Answers about making, downloading and using Speakeasy voicemail greetings.",
     url: `${SITE.url}/faq`,
   },
 }
@@ -20,7 +20,11 @@ export const metadata: Metadata = {
 const faqData = [
   {
     question: "Is Speakeasy completely free to use?",
-    answer: "Yes, Speakeasy is completely free to use. We don't require a credit card, registration, or any personal information to generate and download your professional voicemail greeting.",
+    answer: "Yes, Speakeasy is free and open source. There is no account on this site, no credit card, and no personal information needed. Voice generation uses your own free Cartesia API key, which is stored only in your browser.",
+  },
+  {
+    question: "Does Speakeasy record my voice? Is it a voicemail recorder?",
+    answer: "No. Speakeasy generates speech from typed text using an AI voice and does not use your microphone. If you need a recording of your own voice, use a voice recorder app, then upload that file to your phone system.",
   },
   {
     question: "How long can my voicemail greeting be?",
@@ -65,7 +69,7 @@ export default function FAQPage() {
         <span className="inline-flex items-center gap-2 bg-ink text-cream-100 px-3.5 py-1.5 rounded-full text-xs font-medium -rotate-2 mb-5">
           <HelpCircle className="w-3.5 h-3.5 text-accent-warm" /> {faqData.length} questions
         </span>
-        <h1 className="font-serif text-[clamp(34px,5vw,52px)] leading-[1.05] tracking-[-0.03em] font-semibold text-ink text-balance mb-4">Frequently asked questions.</h1>
+        <h1 id="record-your-voice" className="font-serif text-[clamp(34px,5vw,52px)] leading-[1.05] tracking-[-0.03em] font-semibold text-ink text-balance mb-4">Voicemail greeting FAQs.</h1>
         <p className="text-[18px] leading-relaxed text-stone-600">Straight answers about the tool: what it costs, what it sounds like, and how to get the file onto your phone.</p>
       </section>
 
